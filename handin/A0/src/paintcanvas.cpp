@@ -134,6 +134,16 @@ bool PaintCanvas::on_expose_event( GdkEventExpose *event )
 	return Gtk::DrawingArea::on_expose_event( event );
 }
 
-void PaintCanvas::clear_canvas() {
-  // drawingarea.draw_rectangle(gc, TRUE, 0, 0, window.width, window.height)
+void PaintCanvas::clear_canvas()
+{
+  Graphics gc = get_window()->create_cairo_context();
+
+  // Clear the canvas to white.
+  //
+  gc->set_source_rgb( 1.0, 1.0, 1.0 );
+  gc->paint();
+
+  // Delete all stored shapes
+  //
+  m_shapes.clear();
 }

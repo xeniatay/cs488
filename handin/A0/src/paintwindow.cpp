@@ -14,6 +14,11 @@ PaintWindow::PaintWindow()
   m_menu_app.items().push_back(MenuElem("_Quit", Gtk::AccelKey("Q"),
     sigc::mem_fun(*this, &PaintWindow::hide)));
 
+  // Set up the clear button
+  // This clears the screen
+  m_menu_app.items().push_back(MenuElem("_Clear", Gtk::AccelKey("C"),
+    sigc::mem_fun(m_canvas, &PaintCanvas::clear_canvas)));
+
   // Set up the tools menu
 
   // We're going to be connecting a bunch of menu entries to the same

@@ -49,9 +49,9 @@ PaintWindow::PaintWindow()
 
   // Set up the radio menu group
   sigc::slot1<void, PaintCanvas::Mode> mode_slot = sigc::mem_fun(m_canvas, &PaintCanvas::set_mode);
-  m_menu_tools.items().push_back(RadioMenuElem(m_menu_tools_group, "_Line", sigc::bind(mode_slot, PaintCanvas::DRAW_LINE)));
-  m_menu_tools.items().push_back(RadioMenuElem(m_menu_tools_group, "_Oval", sigc::bind(mode_slot, PaintCanvas::DRAW_OVAL)));
-  m_menu_tools.items().push_back(RadioMenuElem(m_menu_tools_group, "_Rectangle", sigc::bind(mode_slot, PaintCanvas::DRAW_RECTANGLE)));
+  m_menu_tools.items().push_back(RadioMenuElem(m_menu_tools_group, "_Line", Gtk::AccelKey("L"), sigc::bind(mode_slot, PaintCanvas::DRAW_LINE)));
+  m_menu_tools.items().push_back(RadioMenuElem(m_menu_tools_group, "_Oval", Gtk::AccelKey("O"), sigc::bind(mode_slot, PaintCanvas::DRAW_OVAL)));
+  m_menu_tools.items().push_back(RadioMenuElem(m_menu_tools_group, "_Rectangle", Gtk::AccelKey("R"), sigc::bind(mode_slot, PaintCanvas::DRAW_RECTANGLE)));
 
   // Set up the colors slot
   sigc::slot1<void, PaintCanvas::Colour> colour_slot =

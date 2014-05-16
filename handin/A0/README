@@ -1,0 +1,8 @@
+Steps to run the 488 Paint program:
+
+1. Navigate to `cs488/handin/A0/src`
+2. From this directory, run the makefile by typing `make` into the terminal
+3. Now run the program by typing `./paint488`
+4. Begin drawing on the canvas: the default shape is a black line
+5. You can change the shape and colours of the paint program through the toolbar menus
+6. You can quit the program by pressing 'Q', or clicking the Quit button

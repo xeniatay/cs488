@@ -26,14 +26,12 @@ class PaintWindow : public Gtk::Window {
     // Each menu itself
     Gtk::Menu m_menu_app;
     Gtk::Menu m_menu_tools;
+    Gtk::Menu m_menu_colours;
     Gtk::Menu m_menu_help;
     //Gtk::Button m_quit_button;
 
     // The canvas onto which the user draws.
     PaintCanvas m_canvas;
 };
-
-//PaintWindow object;
-//sigc::slot0<void> quit_program_slot = sigc::mem_fun(object, &PaintWindow::quit_program);
 
 #endif

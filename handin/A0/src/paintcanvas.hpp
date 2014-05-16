@@ -17,92 +17,90 @@ typedef Cairo::RefPtr<Cairo::Context> Graphics;
 // draw.  Each shape is currently defined from two corners m_from
 // and m_to, and a method that asks the shape to draw itself.
 //
-class PaintShape
-{
-public:
-	virtual ~PaintShape() {}
+class PaintShape {
+  public:
+    virtual ~PaintShape() {}
+    int s_colour;
 
-	virtual void draw( Graphics gc ) = 0;
+    virtual void draw( Graphics gc ) = 0;
 
-protected:
-	PaintShape( const Point2D& from, const Point2D& to )
-		: m_from( from )
-		, m_to( to )
-	{}
+  protected:
+    PaintShape( const Point2D& from, const Point2D& to ) : m_from( from ), m_to( to ) {}
 
-protected:
-	Point2D		m_from;
-	Point2D		m_to;
+  protected:
+    Point2D   m_from;
+    Point2D   m_to;
 };
 
-class PaintLine
-	: public PaintShape
-{
-public:
-	PaintLine( const Point2D& from, const Point2D& to )
-		: PaintShape( from, to )
-	{}
+class PaintLine : public PaintShape {
+  public:
+    PaintLine( const Point2D& from, const Point2D& to )
+      : PaintShape( from, to )
+    {}
 
-	virtual void draw( Graphics gc );
+  virtual void draw( Graphics gc );
 };
 
-class PaintRect
-	: public PaintShape
-{
-public:
-	PaintRect( const Point2D& from, const Point2D& to )
-		: PaintShape( from, to )
-	{}
+class PaintRect : public PaintShape {
+  public:
+    PaintRect( const Point2D& from, const Point2D& to ) :PaintShape( from, to ) {}
 
-	virtual void draw( Graphics gc );
+  virtual void draw( Graphics gc );
 };
 
-class PaintOval
-	: public PaintShape
-{
-public:
-	PaintOval( const Point2D& from, const Point2D& to )
-		: PaintShape( from, to )
-	{}
+class PaintOval : public PaintShape {
+  public:
+    PaintOval( const Point2D& from, const Point2D& to ) :PaintShape( from, to ) {}
 
-	virtual void draw( Graphics gc );
+  virtual void draw( Graphics gc );
 };
 
-class PaintCanvas
-	: public Gtk::DrawingArea
-{
-public:
-  enum Mode {
-    DRAW_LINE,
-    DRAW_OVAL,
-    DRAW_RECTANGLE
-  };
+class PaintCanvas : public Gtk::DrawingArea {
+  public:
+    enum Mode {
+      DRAW_LINE,
+      DRAW_OVAL,
+      DRAW_RECTANGLE
+    };
 
-  PaintCanvas();
-  virtual ~PaintCanvas();
+    enum Colour {
+      BLACK,
+      RED,
+      GREEN,
+      BLUE
+    };
 
-  void set_mode(Mode mode) { m_mode = mode; }
-  void clear_canvas();
+    PaintCanvas();
+    virtual ~PaintCanvas();
 
-protected:
 
-  // Events we implement
-  // Note that we could use gtkmm's "signals and slots" mechanism
-  // instead, but for many classes there's a convenient member
-  // function one just needs to define that'll be called with the
-  // event.
+    void set_mode(Mode mode) { m_mode = mode; }
+    void clear_canvas();
+    void set_shape_colour(Colour colour) { m_colour = colour; };
 
-  virtual bool on_button_press_event(GdkEventButton* button);
-  virtual bool on_button_release_event(GdkEventButton* button);
+    // used to set shape colour when drawing
+    void on_expose_shape_event(Graphics gc, int s_colour);
 
-  virtual bool on_expose_event( GdkEventExpose *event );
+  protected:
 
-private:
-  Mode m_mode; // what to do when a user clicks
+    // Events we implement
+    // Note that we could use gtkmm's "signals and slots" mechanism
+    // instead, but for many classes there's a convenient member
+    // function one just needs to define that'll be called with the
+    // event.
 
-  Point2D m_start_pos; // position where the user last clicked
+    virtual bool on_button_press_event(GdkEventButton* button);
+    virtual bool on_button_release_event(GdkEventButton* button);
+    virtual bool on_expose_event( GdkEventExpose *event );
 
-  std::list<PaintShape*> m_shapes;
+  private:
+    Mode m_mode; // what to do when a user clicks
+
+    Point2D m_start_pos; // position where the user last clicked
+
+    std::list<PaintShape*> m_shapes;
+
+    Colour m_colour; // colour to set when user clicks
 };
 
 #endif

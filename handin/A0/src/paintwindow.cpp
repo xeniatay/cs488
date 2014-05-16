@@ -45,6 +45,20 @@ PaintWindow::PaintWindow()
   m_menu_tools.items().push_back( MenuElem("_Rectangle",
   	sigc::bind( mode_slot, PaintCanvas::DRAW_RECTANGLE ) ) );
 
+  // Set up the colors slot
+  sigc::slot1<void, PaintCanvas::Colour> colour_slot =
+    sigc::mem_fun(m_canvas, &PaintCanvas::set_shape_colour);
+
+  // Set up the colours menu
+  m_menu_colours.items().push_back( MenuElem("_Black",
+    sigc::bind( colour_slot, PaintCanvas::BLACK ) ) );
+  m_menu_colours.items().push_back( MenuElem("_Red",
+    sigc::bind( colour_slot, PaintCanvas::RED) ) );
+  m_menu_colours.items().push_back( MenuElem("_Green",
+    sigc::bind( colour_slot, PaintCanvas::GREEN) ) );
+  m_menu_colours.items().push_back( MenuElem("_Blue",
+    sigc::bind( colour_slot, PaintCanvas::BLUE) ) );
+
   // Set up the help menu
   m_menu_help.items().push_back(MenuElem("_Line Help",
     sigc::mem_fun(*this, &PaintWindow::help_line)));
@@ -52,6 +66,7 @@ PaintWindow::PaintWindow()
   // Set up the menu bar
   m_menubar.items().push_back(Gtk::Menu_Helpers::MenuElem("_Application", m_menu_app));
   m_menubar.items().push_back(Gtk::Menu_Helpers::MenuElem("_Tools", m_menu_tools));
+  m_menubar.items().push_back(Gtk::Menu_Helpers::MenuElem("_Colour", m_menu_colours));
   m_menubar.items().push_back(Gtk::Menu_Helpers::MenuElem("_Help", m_menu_help));
   m_menubar.items().back().set_right_justified(true);
 

@@ -46,10 +46,7 @@ void PaintOval::draw( Graphics gc )
 	gc->restore();
 }
 
-PaintCanvas::PaintCanvas()
-  : Gtk::DrawingArea()
-  , m_mode(DRAW_LINE)
-{
+PaintCanvas::PaintCanvas() : Gtk::DrawingArea() , m_mode(DRAW_LINE) {
 	// The DrawingArea class needs to be told that it ought to
 	// receive button presses and releases.  If you want the
 	// canvas to receive other events, you need to include them here.
@@ -99,6 +96,7 @@ bool PaintCanvas::on_button_release_event(GdkEventButton* button)
     }
 
     if (shape) {
+      shape->s_colour = m_colour;
   		m_shapes.push_back( shape );
   		on_expose_event( NULL );
     }
@@ -118,13 +116,15 @@ bool PaintCanvas::on_expose_event( GdkEventExpose *event )
 
 	// Set the colour back to black for all the primitives.
 	//
-	gc->set_source_rgb( 0.0, 0.0, 0.0 );
+	//gc->set_source_rgb( 0.0, 0.0, 0.0 );
 
 	// Iterate over the stored shapes and ask them to draw themselves.
 	//
-	for( list<PaintShape*>::iterator i = m_shapes.begin();
-			i != m_shapes.end(); ++i ) {
+	for( list<PaintShape*>::iterator i = m_shapes.begin(); i != m_shapes.end(); ++i ) {
 		PaintShape *shape = (*i);
+
+    on_expose_shape_event(gc, shape->s_colour);
+
 		shape->draw( gc );
 	}
 
@@ -146,4 +146,25 @@ void PaintCanvas::clear_canvas()
   // Delete all stored shapes
   //
   m_shapes.clear();
+}
+
+void PaintCanvas::on_expose_shape_event(Graphics gc, int s_colour)
+{
+  switch (s_colour) {
+  case BLACK:
+    gc->set_source_rgb( 0.0, 0.0, 0.0 );
+    break;
+  case RED:
+    gc->set_source_rgb( 1.0, 0.0, 0.0 );
+    break;
+  case GREEN:
+    gc->set_source_rgb( 0.0, 1.0, 0.0 );
+    break;
+  case BLUE:
+    gc->set_source_rgb( 0.0, 0.0, 1.0 );
+    break;
+  default:
+    gc->set_source_rgb( 0.0, 0.0, 0.0 );
+    break;
+  }
 }

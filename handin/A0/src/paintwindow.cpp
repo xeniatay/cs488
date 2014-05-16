@@ -7,6 +7,7 @@ PaintWindow::PaintWindow()
   // A utility class for constructing things that go into menus, which
   // we'll set up next.
   using Gtk::Menu_Helpers::MenuElem;
+  using Gtk::Menu_Helpers::RadioMenuElem;
 
   // Set up the application menu
   // The slot we use here just causes PaintWindow::hide() on this,
@@ -27,8 +28,7 @@ PaintWindow::PaintWindow()
   //
   // The type shows that this slot returns void (nothing, and takes
   // one argument, a PaintCanvas::Mode.
-  sigc::slot1<void, PaintCanvas::Mode> mode_slot =
-  	sigc::mem_fun(m_canvas, &PaintCanvas::set_mode);
+  // sigc::slot1<void, PaintCanvas::Mode> mode_slot = sigc::mem_fun(m_canvas, &PaintCanvas::set_mode);
 
   // Now we set up the actual tools. SigC::bind takes a slot and makes
   // a new slot with one fewer parameter than the one passed to it,
@@ -38,16 +38,27 @@ PaintWindow::PaintWindow()
   // declared above, and bind in the appropriate mode, making a slot
   // that calls set_mode with the given mode (line/oval/rectangle).
 
+  /*
   m_menu_tools.items().push_back( MenuElem("_Line",
   	sigc::bind( mode_slot, PaintCanvas::DRAW_LINE ) ) );
   m_menu_tools.items().push_back( MenuElem("_Oval",
   	sigc::bind( mode_slot, PaintCanvas::DRAW_OVAL ) ) );
   m_menu_tools.items().push_back( MenuElem("_Rectangle",
   	sigc::bind( mode_slot, PaintCanvas::DRAW_RECTANGLE ) ) );
+  */
+
+  // Set up the radio menu group
+  sigc::slot1<void, PaintCanvas::Mode> mode_slot = sigc::mem_fun(m_canvas, &PaintCanvas::set_mode);
+  m_menu_tools.items().push_back(RadioMenuElem(m_menu_tools_group, "_Line", sigc::bind(mode_slot, PaintCanvas::DRAW_LINE)));
+  m_menu_tools.items().push_back(RadioMenuElem(m_menu_tools_group, "_Oval", sigc::bind(mode_slot, PaintCanvas::DRAW_OVAL)));
+  m_menu_tools.items().push_back(RadioMenuElem(m_menu_tools_group, "_Rectangle", sigc::bind(mode_slot, PaintCanvas::DRAW_RECTANGLE)));
 
   // Set up the colors slot
   sigc::slot1<void, PaintCanvas::Colour> colour_slot =
     sigc::mem_fun(m_canvas, &PaintCanvas::set_shape_colour);
+
+  // Set up default colour
+  m_canvas.set_shape_colour(PaintCanvas::BLACK);
 
   // Set up the colours menu
   m_menu_colours.items().push_back( MenuElem("_Black",
@@ -62,6 +73,10 @@ PaintWindow::PaintWindow()
   // Set up the help menu
   m_menu_help.items().push_back(MenuElem("_Line Help",
     sigc::mem_fun(*this, &PaintWindow::help_line)));
+  m_menu_help.items().push_back(MenuElem("_Oval Help",
+    sigc::mem_fun(*this, &PaintWindow::help_oval)));
+  m_menu_help.items().push_back(MenuElem("_Rectangle Help",
+    sigc::mem_fun(*this, &PaintWindow::help_rectangle)));
 
   // Set up the menu bar
   m_menubar.items().push_back(Gtk::Menu_Helpers::MenuElem("_Application", m_menu_app));
@@ -105,6 +120,30 @@ void PaintWindow::help_line()
     "Drawing a Line\n"
     "\n"
     "To draw a line, press the left mouse button to mark the beginning of the line.  Drag the mouse to the end of the line and release the button.";
+
+  Gtk::MessageDialog dialog(*this, message, true, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK, true);
+
+  dialog.run();
+}
+
+void PaintWindow::help_oval()
+{
+  const char* message =
+    "Drawing an Oval\n"
+    "\n"
+    "To draw an oval, press the left mouse button to mark the top left point of the oval.  Drag the mouse to the bottom right point of the oval and release the button.";
+
+  Gtk::MessageDialog dialog(*this, message, true, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK, true);
+
+  dialog.run();
+}
+
+void PaintWindow::help_rectangle()
+{
+  const char* message =
+    "Drawing a Rectangle\n"
+    "\n"
+    "To draw a rectangle, press the left mouse button to mark the top left corner of the rectangle.  Drag the mouse to the bottom right corner of the rectangle and release the button.";
 
   Gtk::MessageDialog dialog(*this, message, true, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK, true);
 

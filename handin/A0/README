@@ -1,8 +1,23 @@
-Steps to run the 488 Paint program:
+Name: Xenia Tay
+Student Number: 20396769
+User-id: xzytay
+Assignment: 0
 
-1. Navigate to `cs488/handin/A0/src`
-2. From this directory, run the makefile by typing `make` into the terminal
-3. Now run the program by typing `./paint488`
-4. Begin drawing on the canvas: the default shape is a black line
-5. You can change the shape and colours of the paint program through the toolbar menus
-6. You can quit the program by pressing 'Q', or clicking the Quit button
+The final executable was compiled on this machine: linux.student.cs.uwaterloo.ca
+
+How to invoke my program:
+In the `handin` directory, type `./paint488`.
+
+
+How to use my extra features:
+There are no extra features.
+
+
+I have created the following data files, which are in the data directory:
+There are no extra data files.
+
+
+My program assumes the following:
+Nothing.
+
+

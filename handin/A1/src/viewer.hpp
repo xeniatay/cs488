@@ -15,7 +15,7 @@ public:
   // directly. Instead call this, which will cause an on_expose_event
   // call when the time is right.
   void invalidate();
-  
+
 protected:
 
   // Events we implement
@@ -38,6 +38,9 @@ protected:
   virtual bool on_motion_notify_event(GdkEventMotion* event);
 
 private:
+  // Takes params for x, y z coords and rgb values for cube colour
+  void draw_cube(double x, double y, double z, double r, double g, double b, double a);
+  void render_well(int width, int height);
 };
 
 #endif

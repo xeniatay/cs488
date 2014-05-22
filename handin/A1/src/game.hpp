@@ -33,13 +33,13 @@ public:
   Piece rotateCCW() const;
 
   bool isOn(int row, int col) const;
+  int cindex_;
 
 private:
   void getColumn(int col, char *buf) const;
   void getColumnRev(int col, char *buf) const;
 
   char desc_[16];
-  int cindex_;
   int margins_[4];
 };
 
@@ -101,6 +101,9 @@ class Game {
     int get(int r, int c) const;
     int& get(int r, int c);
 
+    Piece piece_;
+    int current_piece();
+
   private:
     bool doesPieceFit(const Piece& p, int x, int y) const;
 
@@ -118,7 +121,6 @@ class Game {
 
     bool stopped_;
 
-    Piece piece_;
     int px_;
     int py_;
 

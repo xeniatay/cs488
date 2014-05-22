@@ -13,6 +13,7 @@
 //---------------------------------------------------------------------------
 
 #include <algorithm>
+#include <iostream>
 
 #include "game.hpp"
 
@@ -51,7 +52,12 @@ static const Piece PIECES[] = {
         "...."
         ".xx."
         ".xx."
-        "....", 6,			1,1,1,1)
+        "....", 6,			1,1,1,1),
+  Piece(
+        "...."
+        ".xx."
+        ".x.."
+        "....", 7,      1,1,1,1)
 };
 
 Piece::Piece(const char *desc, int cindex,
@@ -155,6 +161,9 @@ Game::Game(int width, int height)
 
   board_ = new int[ sz ];
   std::fill(board_, board_ + sz, -1);
+
+  // seed prng
+  srand (time(NULL));
   generateNewPiece();
 }
 
@@ -281,7 +290,7 @@ void Game::placePiece(const Piece& p, int x, int y)
 
 void Game::generateNewPiece()
 {
-  piece_ = PIECES[ rand() % 7 ];
+  piece_ = PIECES[ rand() % 8 ];
 
   int xleft = (board_width_-3) / 2;
 
@@ -404,4 +413,8 @@ bool Game::rotateCCW()
     placePiece(piece_, px_, py_);
     return false;
   }
+}
+
+int Game::current_piece() {
+  return piece_.cindex_;
 }

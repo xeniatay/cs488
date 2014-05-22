@@ -46,6 +46,7 @@ AppWindow::AppWindow()
   m_vbox.pack_start(m_viewer);
 
   show_all();
+
 }
 
 bool AppWindow::on_key_press_event( GdkEventKey *ev )

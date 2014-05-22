@@ -3,7 +3,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-Viewer::Viewer()
+Viewer::Viewer() : m_game(20, 10)
 {
   Glib::RefPtr<Gdk::GL::Config> glconfig;
 
@@ -30,6 +30,7 @@ Viewer::Viewer()
              Gdk::BUTTON_PRESS_MASK      |
              Gdk::BUTTON_RELEASE_MASK    |
              Gdk::VISIBILITY_NOTIFY_MASK);
+
 }
 
 Viewer::~Viewer()
@@ -65,6 +66,7 @@ void Viewer::on_realize()
 
   gldrawable->gl_end();
 
+  add_new_piece();
   x_origin = 0;
   scale_factor = 0;
 }
@@ -112,15 +114,7 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
 
   render_well(10, 20);
 
-  // start game
-  draw_cube(5.0, 20.0, 0.0, .5, .5, .5, .8);
-  draw_piece_0(0, 0, 0, .2, .8, .0, .8);
-  draw_piece_1(4, 0, 0, .0, .2, .8, .8);
-  draw_piece_2(0, 4, 0, .2, .5, .8, .8);
-  draw_piece_3(4, 4, 0, .5, .9, .0, .8);
-  draw_piece_4(0, 8, 0, .0, .5, .9, .8);
-  draw_piece_5(4, 8, 0, .5, .0, .9, .8);
-  draw_piece_6(0, 12, 0, .3, .4, .5, .8);
+  draw_pieces();
 
   // We pushed a matrix onto the PROJECTION stack earlier, we
   // need to pop it.
@@ -133,6 +127,9 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   gldrawable->swap_buffers();
 
   gldrawable->gl_end();
+
+  sigc::slot0<bool> mode_slot = sigc::mem_fun(this, &Viewer::tick_handler);
+  Glib::signal_timeout().connect_seconds(mode_slot, 1);
 
   return true;
 }
@@ -157,8 +154,6 @@ bool Viewer::on_configure_event(GdkEventConfigure* event)
   // Reset to modelview matrix mode
 
   glMatrixMode(GL_MODELVIEW);
-
-  gldrawable->gl_end();
 
   return true;
 }
@@ -292,7 +287,7 @@ void Viewer::draw_cube(double x, double y, double z, double r = 0, double g = 0,
   ".x.."
   ".x.."
 */
-void Viewer::draw_piece_0(double x, double y, double z, double r = 0.2, double g = 0.8, double b = 0, double a = 0.8) {
+void Viewer::draw_piece_0(double x, double y, double z, double r, double g, double b, double a) {
   draw_cube(x + 1, y, z, r, g, b, a);
   draw_cube(x + 1, y + 1, z, r, g, b, a);
   draw_cube(x + 1, y + 2, z, r, g, b, a);
@@ -305,7 +300,7 @@ void Viewer::draw_piece_0(double x, double y, double z, double r = 0.2, double g
   ".x.."
   ".x.."
 */
-void Viewer::draw_piece_1(double x, double y, double z, double r = 0, double g = 0.2, double b = 0.8, double a = 0.8) {
+void Viewer::draw_piece_1(double x, double y, double z, double r, double g, double b, double a) {
   draw_cube(x + 1, y + 2, z, r, g, b, a);
   draw_cube(x + 2, y + 2, z, r, g, b, a);
   draw_cube(x + 1, y + 1, z, r, g, b, a);
@@ -318,7 +313,7 @@ void Viewer::draw_piece_1(double x, double y, double z, double r = 0, double g =
   "..x."
   "..x."
 */
-void Viewer::draw_piece_2(double x, double y, double z, double r = 0.2, double g = 0, double b = 0.8, double a = 0.8) {
+void Viewer::draw_piece_2(double x, double y, double z, double r, double g, double b, double a) {
   draw_cube(x + 1, y + 2, z, r, g, b, a);
   draw_cube(x + 2, y + 2, z, r, g, b, a);
   draw_cube(x + 2, y + 1, z, r, g, b, a);
@@ -331,7 +326,7 @@ void Viewer::draw_piece_2(double x, double y, double z, double r = 0.2, double g
   ".xx."
   "..x."
 */
-void Viewer::draw_piece_3(double x, double y, double z, double r = 0.5, double g = 0.9, double b = 0, double a = 0.8) {
+void Viewer::draw_piece_3(double x, double y, double z, double r, double g, double b, double a) {
   draw_cube(x + 1, y + 2, z, r, g, b, a);
   draw_cube(x + 1, y + 1, z, r, g, b, a);
   draw_cube(x + 2, y + 1, z, r, g, b, a);
@@ -344,7 +339,7 @@ void Viewer::draw_piece_3(double x, double y, double z, double r = 0.5, double g
   ".xx."
   ".x.."
 */
-void Viewer::draw_piece_4(double x, double y, double z, double r = 0, double g = 0.5, double b = 0.9, double a = 0.8) {
+void Viewer::draw_piece_4(double x, double y, double z, double r, double g, double b, double a) {
   draw_cube(x + 2, y + 2, z, r, g, b, a);
   draw_cube(x + 1, y + 1, z, r, g, b, a);
   draw_cube(x + 2, y + 1, z, r, g, b, a);
@@ -357,7 +352,7 @@ void Viewer::draw_piece_4(double x, double y, double z, double r = 0, double g =
   ".x.."
   "...."
 */
-void Viewer::draw_piece_5(double x, double y, double z, double r = 0.5, double g = 0, double b = 0.9, double a = 0.8) {
+void Viewer::draw_piece_5(double x, double y, double z, double r, double g, double b, double a) {
   draw_cube(x, y + 2, z, r, g, b, a);
   draw_cube(x + 1, y + 2, z, r, g, b, a);
   draw_cube(x + 2, y + 2, z, r, g, b, a);
@@ -370,11 +365,23 @@ void Viewer::draw_piece_5(double x, double y, double z, double r = 0.5, double g
   ".xx."
   "...."
 */
-void Viewer::draw_piece_6(double x, double y, double z, double r = 0.3, double g = 0.4, double b = 0.5, double a = 0.8) {
+void Viewer::draw_piece_6(double x, double y, double z, double r, double g, double b, double a) {
   draw_cube(x + 1, y + 2, z, r, g, b, a);
   draw_cube(x + 2, y + 2, z, r, g, b, a);
   draw_cube(x + 1, y + 1, z, r, g, b, a);
   draw_cube(x + 2, y + 1, z, r, g, b, a);
+}
+
+/* Piece 7:
+  "...."
+  ".xx."
+  ".x.."
+  "...."
+*/
+void Viewer::draw_piece_7(double x, double y, double z, double r, double g, double b, double a) {
+  draw_cube(x + 1, y + 2, z, r, g, b, a);
+  draw_cube(x + 2, y + 2, z, r, g, b, a);
+  draw_cube(x + 1, y + 1, z, r, g, b, a);
 }
 
 // Params: width, height
@@ -417,4 +424,79 @@ void Viewer::render_drawing_mode() {
 
 void Viewer::new_game() {
   draw_cube(5, 21, 0);
+}
+
+bool Viewer::tick_handler() {
+  std::cerr << "TICK: " << m_game.tick() << std::endl;
+  int tick_val = m_game.tick();
+  TetrisPiece *cur_piece = tetris_pieces.back();
+
+  switch(tick_val) {
+    case 0:
+      cur_piece->y = cur_piece->y - 1;
+      // advance 1
+      break;
+    case 1: case 2: case 3: case 4:
+      cur_piece->y = cur_piece->y - tick_val;
+      add_new_piece();
+      // advance whatever number and generate new piece
+      break;
+    default:
+      std::cerr << "game over" << std::endl;
+      // game over;
+      break;
+  }
+
+  on_expose_event(NULL);
+
+  return true;
+}
+
+void Viewer::add_new_piece() {
+  TetrisPiece *new_piece = new TetrisPiece;
+  new_piece->id = tetris_pieces.size();
+  new_piece->index = m_game.current_piece();
+  new_piece->x = 3.0;
+  new_piece->y = 20.0;
+  new_piece->z = 0;
+
+  tetris_pieces.push_back(new_piece);
+}
+
+void Viewer::draw_pieces() {
+  // Iterate over the stored pieces and ask them to draw themselves.
+  //
+  for( std::list<TetrisPiece*>::iterator i = tetris_pieces.begin(); i != tetris_pieces.end(); ++i ) {
+    TetrisPiece *piece = (*i);
+
+    switch(piece->index) {
+      case 0:
+        draw_piece_0(piece->x, piece->y, piece->z);
+        break;
+      case 1:
+        draw_piece_1(piece->x, piece->y, piece->z);
+        break;
+      case 2:
+        draw_piece_2(piece->x, piece->y, piece->z);
+        break;
+      case 3:
+        draw_piece_3(piece->x, piece->y, piece->z);
+        break;
+      case 4:
+        draw_piece_4(piece->x, piece->y, piece->z);
+        break;
+      case 5:
+        draw_piece_5(piece->x, piece->y, piece->z);
+        break;
+      case 6:
+        draw_piece_6(piece->x, piece->y, piece->z);
+        break;
+      case 7:
+        draw_piece_7(piece->x, piece->y, piece->z);
+        break;
+      default:
+        draw_piece_0(piece->x, piece->y, piece->z);
+        break;
+    }
+  }
 }

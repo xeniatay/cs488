@@ -1,5 +1,30 @@
-viewer.o viewer.d : viewer.cpp viewer.hpp /usr/include/gtkmm-2.4/gtkmm.h \
- /usr/include/glibmm-2.4/glibmm.h \
+viewer.o viewer.d : viewer.cpp viewer.hpp /usr/include/c++/4.6/list \
+ /usr/include/c++/4.6/bits/stl_algobase.h \
+ /usr/include/c++/4.6/x86_64-linux-gnu/./bits/c++config.h \
+ /usr/include/c++/4.6/x86_64-linux-gnu/./bits/os_defines.h \
+ /usr/include/features.h /usr/include/x86_64-linux-gnu/bits/predefs.h \
+ /usr/include/x86_64-linux-gnu/sys/cdefs.h \
+ /usr/include/x86_64-linux-gnu/bits/wordsize.h \
+ /usr/include/x86_64-linux-gnu/gnu/stubs.h \
+ /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
+ /usr/include/c++/4.6/x86_64-linux-gnu/./bits/cpu_defines.h \
+ /usr/include/c++/4.6/bits/functexcept.h \
+ /usr/include/c++/4.6/bits/exception_defines.h \
+ /usr/include/c++/4.6/bits/cpp_type_traits.h \
+ /usr/include/c++/4.6/ext/type_traits.h \
+ /usr/include/c++/4.6/ext/numeric_traits.h \
+ /usr/include/c++/4.6/bits/stl_pair.h /usr/include/c++/4.6/bits/move.h \
+ /usr/include/c++/4.6/bits/concept_check.h \
+ /usr/include/c++/4.6/bits/stl_iterator_base_types.h \
+ /usr/include/c++/4.6/bits/stl_iterator_base_funcs.h \
+ /usr/include/c++/4.6/bits/stl_iterator.h \
+ /usr/include/c++/4.6/debug/debug.h /usr/include/c++/4.6/bits/allocator.h \
+ /usr/include/c++/4.6/x86_64-linux-gnu/./bits/c++allocator.h \
+ /usr/include/c++/4.6/ext/new_allocator.h /usr/include/c++/4.6/new \
+ /usr/include/c++/4.6/exception /usr/include/c++/4.6/bits/range_access.h \
+ /usr/include/c++/4.6/bits/stl_list.h \
+ /usr/include/c++/4.6/initializer_list /usr/include/c++/4.6/bits/list.tcc \
+ /usr/include/gtkmm-2.4/gtkmm.h /usr/include/glibmm-2.4/glibmm.h \
  /usr/lib/x86_64-linux-gnu/glibmm-2.4/include/glibmmconfig.h \
  /usr/include/glibmm-2.4/glibmm/thread.h /usr/include/glib-2.0/glib.h \
  /usr/include/glib-2.0/glib/galloca.h /usr/include/glib-2.0/glib/gtypes.h \
@@ -8,13 +33,7 @@ viewer.o viewer.d : viewer.cpp viewer.hpp /usr/include/gtkmm-2.4/gtkmm.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stddef.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include-fixed/limits.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include-fixed/syslimits.h \
- /usr/include/limits.h /usr/include/features.h \
- /usr/include/x86_64-linux-gnu/bits/predefs.h \
- /usr/include/x86_64-linux-gnu/sys/cdefs.h \
- /usr/include/x86_64-linux-gnu/bits/wordsize.h \
- /usr/include/x86_64-linux-gnu/gnu/stubs.h \
- /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
- /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
+ /usr/include/limits.h /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
  /usr/include/x86_64-linux-gnu/bits/local_lim.h \
  /usr/include/linux/limits.h \
  /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
@@ -103,27 +122,13 @@ viewer.o viewer.d : viewer.cpp viewer.hpp /usr/include/gtkmm-2.4/gtkmm.h \
  /usr/include/glibmm-2.4/glibmm/exception.h \
  /usr/include/glibmm-2.4/glibmm/ustring.h \
  /usr/include/glibmm-2.4/glibmm/unicode.h /usr/include/c++/4.6/cctype \
- /usr/include/c++/4.6/x86_64-linux-gnu/./bits/c++config.h \
- /usr/include/c++/4.6/x86_64-linux-gnu/./bits/os_defines.h \
- /usr/include/c++/4.6/x86_64-linux-gnu/./bits/cpu_defines.h \
  /usr/include/ctype.h /usr/include/c++/4.6/iosfwd \
  /usr/include/c++/4.6/bits/stringfwd.h \
  /usr/include/c++/4.6/bits/postypes.h /usr/include/c++/4.6/cwchar \
  /usr/include/wchar.h /usr/include/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/wchar.h /usr/include/c++/4.6/iterator \
- /usr/include/c++/4.6/bits/stl_iterator_base_types.h \
- /usr/include/c++/4.6/bits/stl_iterator_base_funcs.h \
- /usr/include/c++/4.6/bits/concept_check.h \
- /usr/include/c++/4.6/bits/stl_iterator.h \
- /usr/include/c++/4.6/bits/cpp_type_traits.h \
- /usr/include/c++/4.6/ext/type_traits.h /usr/include/c++/4.6/bits/move.h \
  /usr/include/c++/4.6/ostream /usr/include/c++/4.6/ios \
- /usr/include/c++/4.6/exception /usr/include/c++/4.6/bits/char_traits.h \
- /usr/include/c++/4.6/bits/stl_algobase.h \
- /usr/include/c++/4.6/bits/functexcept.h \
- /usr/include/c++/4.6/bits/exception_defines.h \
- /usr/include/c++/4.6/ext/numeric_traits.h \
- /usr/include/c++/4.6/bits/stl_pair.h /usr/include/c++/4.6/debug/debug.h \
+ /usr/include/c++/4.6/bits/char_traits.h \
  /usr/include/c++/4.6/bits/localefwd.h \
  /usr/include/c++/4.6/x86_64-linux-gnu/./bits/c++locale.h \
  /usr/include/c++/4.6/clocale /usr/include/locale.h \
@@ -137,16 +142,11 @@ viewer.o viewer.d : viewer.cpp viewer.hpp /usr/include/gtkmm-2.4/gtkmm.h \
  /usr/include/x86_64-linux-gnu/bits/confname.h /usr/include/getopt.h \
  /usr/include/c++/4.6/x86_64-linux-gnu/./bits/atomic_word.h \
  /usr/include/c++/4.6/bits/locale_classes.h /usr/include/c++/4.6/string \
- /usr/include/c++/4.6/bits/allocator.h \
- /usr/include/c++/4.6/x86_64-linux-gnu/./bits/c++allocator.h \
- /usr/include/c++/4.6/ext/new_allocator.h /usr/include/c++/4.6/new \
  /usr/include/c++/4.6/bits/ostream_insert.h \
  /usr/include/c++/4.6/bits/cxxabi_forced.h \
  /usr/include/c++/4.6/bits/stl_function.h \
  /usr/include/c++/4.6/backward/binders.h \
- /usr/include/c++/4.6/bits/range_access.h \
  /usr/include/c++/4.6/bits/basic_string.h \
- /usr/include/c++/4.6/initializer_list \
  /usr/include/c++/4.6/bits/basic_string.tcc \
  /usr/include/c++/4.6/bits/locale_classes.tcc \
  /usr/include/c++/4.6/streambuf /usr/include/c++/4.6/bits/streambuf.tcc \
@@ -164,8 +164,7 @@ viewer.o viewer.d : viewer.cpp viewer.hpp /usr/include/gtkmm-2.4/gtkmm.h \
  /usr/include/c++/4.6/bits/sstream.tcc \
  /usr/include/glibmm-2.4/glibmm/timeval.h \
  /usr/include/sigc++-2.0/sigc++/sigc++.h \
- /usr/include/sigc++-2.0/sigc++/signal.h /usr/include/c++/4.6/list \
- /usr/include/c++/4.6/bits/stl_list.h /usr/include/c++/4.6/bits/list.tcc \
+ /usr/include/sigc++-2.0/sigc++/signal.h \
  /usr/include/sigc++-2.0/sigc++/signal_base.h \
  /usr/include/c++/4.6/cstddef \
  /usr/lib/x86_64-linux-gnu/sigc++-2.0/include/sigc++config.h \

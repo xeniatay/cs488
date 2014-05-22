@@ -1,15 +1,24 @@
 #ifndef CS488_VIEWER_HPP
 #define CS488_VIEWER_HPP
 
+#include <list>
 #include <gtkmm.h>
 #include <gtkglmm.h>
 #include "game.hpp"
 
+struct TetrisPiece {
+  int id, index;
+  double x, y, z;
+};
+
 // The "main" OpenGL widget
 class Viewer : public Gtk::GL::DrawingArea {
+Game m_game;
+
 public:
   Viewer();
   virtual ~Viewer();
+
 
   // drawing modes
   enum Mode {
@@ -40,6 +49,22 @@ public:
   void multicoloured_mode();
   void new_game();
 
+  // Takes params for x, y z coords and rgb values for cube colour
+  void draw_cube(double x, double y, double z, double r, double g, double b, double a);
+  void draw_piece_0(double x, double y, double z, double r = 0.2, double g = 0.8, double b = 0, double a = 0.8);
+  void draw_piece_1(double x, double y, double z, double r = 0, double g = 0.2, double b = 0.8, double a = 0.8);
+  void draw_piece_2(double x, double y, double z, double r = 0.2, double g = 0, double b = 0.8, double a = 0.8);
+  void draw_piece_3(double x, double y, double z, double r = 0.5, double g = 0.9, double b = 0, double a = 0.8);
+  void draw_piece_4(double x, double y, double z, double r = 0, double g = 0.5, double b = 0.9, double a = 0.8);
+  void draw_piece_5(double x, double y, double z, double r = 0.5, double g = 0, double b = 0.9, double a = 0.8);
+  void draw_piece_6(double x, double y, double z, double r = 0.5, double g = 0, double b = 0.9, double a = 0.8);
+  void draw_piece_7(double x, double y, double z, double r = .7, double g = .3, double b = .8, double a = 0.8);
+  void draw_pieces();
+  void add_new_piece();
+  void render_well(int width, int height);
+
+  bool tick_handler();
+
 protected:
 
   // Events we implement
@@ -62,23 +87,13 @@ protected:
   virtual bool on_motion_notify_event(GdkEventMotion* event);
 
 private:
-  // Takes params for x, y z coords and rgb values for cube colour
-  void draw_cube(double x, double y, double z, double r, double g, double b, double a);
-  void draw_piece_0(double x, double y, double z, double r, double g, double b, double a);
-  void draw_piece_1(double x, double y, double z, double r, double g, double b, double a);
-  void draw_piece_2(double x, double y, double z, double r, double g, double b, double a);
-  void draw_piece_3(double x, double y, double z, double r, double g, double b, double a);
-  void draw_piece_4(double x, double y, double z, double r, double g, double b, double a);
-  void draw_piece_5(double x, double y, double z, double r, double g, double b, double a);
-  void draw_piece_6(double x, double y, double z, double r, double g, double b, double a);
-  void render_well(int width, int height);
   Mode m_mode; // drawing mode
   Transform m_transform;
 
-  Game m_game(int width = 10, int height = 20);
-
   int x_origin;
   int scale_factor;
+
+  std::list<TetrisPiece*> tetris_pieces;
 };
 
 #endif

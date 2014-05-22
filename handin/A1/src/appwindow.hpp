@@ -7,7 +7,7 @@
 class AppWindow : public Gtk::Window {
 public:
   AppWindow();
-  
+
 protected:
   virtual bool on_key_press_event( GdkEventKey *ev );
 
@@ -19,6 +19,11 @@ private:
   Gtk::MenuBar m_menubar;
   // Each menu itself
   Gtk::Menu m_menu_app;
+  Gtk::Menu m_menu_mode;
+  Gtk::Menu m_menu_speed;
+
+  // Draw Mode Radio Button Menu
+  Gtk::RadioButtonGroup m_menu_mode_group;
 
   // The main OpenGL area
   Viewer m_viewer;

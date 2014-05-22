@@ -8,19 +8,29 @@ AppWindow::AppWindow()
   // A utility class for constructing things that go into menus, which
   // we'll set up next.
   using Gtk::Menu_Helpers::MenuElem;
-  
+  using Gtk::Menu_Helpers::RadioMenuElem;
+
   // Set up the application menu
   // The slot we use here just causes AppWindow::hide() on this,
   // which shuts down the application.
-  m_menu_app.items().push_back(MenuElem("_Quit", Gtk::AccelKey("q"),
+  m_menu_app.items().push_back(MenuElem("_Quit", Gtk::AccelKey("Q"),
     sigc::mem_fun(*this, &AppWindow::hide)));
-  
+
+  // Set up the draw mode radio menu group
+  sigc::slot1<void, Viewer::Mode> mode_slot = sigc::mem_fun(m_viewer, &Viewer::set_mode);
+  m_menu_mode.items().push_back(RadioMenuElem(m_menu_mode_group, "_Wire-frame", Gtk::AccelKey("W"),
+    sigc::bind(mode_slot, Viewer::WIREFRAME)));
+  m_menu_mode.items().push_back(RadioMenuElem(m_menu_mode_group, "_Face", Gtk::AccelKey("F"),
+    sigc::bind(mode_slot, Viewer::FACE)));
+  m_menu_mode.items().push_back(RadioMenuElem(m_menu_mode_group, "_Multicoloured", Gtk::AccelKey("M"),
+    sigc::bind(mode_slot, Viewer::MULTICOLOURED)));
 
   // Set up the menu bar
   m_menubar.items().push_back(Gtk::Menu_Helpers::MenuElem("_Application", m_menu_app));
-  
+  m_menubar.items().push_back(Gtk::Menu_Helpers::MenuElem("_Draw Mode", m_menu_mode));
+
   // Pack in our widgets
-  
+
   // First add the vertical box as our single "top" widget
   add(m_vbox);
 

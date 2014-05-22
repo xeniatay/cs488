@@ -10,11 +10,26 @@ public:
   Viewer();
   virtual ~Viewer();
 
+  // drawing modes
+  enum Mode {
+    WIREFRAME,
+    FACE,
+    MULTICOLOURED
+  };
+
   // A useful function that forces this widget to rerender. If you
   // want to render a new frame, do not call on_expose_event
   // directly. Instead call this, which will cause an on_expose_event
   // call when the time is right.
   void invalidate();
+
+  void set_mode(Mode mode);
+  void render_drawing_mode();
+
+  // drawing mode methods
+  void wireframe_mode();
+  void face_mode();
+  void multicoloured_mode();
 
 protected:
 
@@ -41,6 +56,7 @@ private:
   // Takes params for x, y z coords and rgb values for cube colour
   void draw_cube(double x, double y, double z, double r, double g, double b, double a);
   void render_well(int width, int height);
+  Mode m_mode; // drawing mode
 };
 
 #endif

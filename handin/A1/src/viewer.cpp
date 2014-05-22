@@ -68,6 +68,8 @@ void Viewer::on_realize()
 
 bool Viewer::on_expose_event(GdkEventExpose* event)
 {
+  render_drawing_mode();
+
   Glib::RefPtr<Gdk::GL::Drawable> gldrawable = get_gl_drawable();
 
   if (!gldrawable) return false;
@@ -187,39 +189,49 @@ bool Viewer::on_motion_notify_event(GdkEventMotion* event)
 
 // Params: x, y z coords and r, g, b colour values
 // Draws a unit cube (width = 1, height = 1, breadth = 1)
-void Viewer::draw_cube(double x, double y, double z, double r = 0, double g = 0, double b = 0, double a = 1) {
+void Viewer::draw_cube(double x, double y, double z, double r = 0, double g = 0, double b = 0, double a = 0.8) {
+  bool multicolour = (m_mode == MULTICOLOURED);
+  double r_val = 0, g_val = 0, b_val = 0;
+
   glBegin(GL_QUADS);
-    glColor4d(r, g, b, a);
+
+    r_val = fmod((r + 0.4), 1);
+    multicolour ? glColor4d( r_val, g, b, a) : glColor4d(r, g, b, a);
     glVertex3d (x, y, z); // bottom left (front)
     glVertex3d (x + 1, y, z); // bottom right (front)
     glVertex3d (x + 1, y + 1, z); // top right (front)
     glVertex3d (x, y + 1, z); // top left (front)
 
-    glColor4d(r, g, b, a);
+    r_val = fmod((r + 0.8), 1);
+    multicolour ? glColor4d( r_val, g, b, a) : glColor4d(r, g, b, a);
     glVertex3d (x, y, z + 1); // bottom left (back)
     glVertex3d (x + 1, y, z + 1); // bottom right (back)
     glVertex3d (x + 1, y + 1, z + 1); // top right (back)
     glVertex3d (x, y + 1, z + 1); // top left (back)
 
-    glColor4d(r, g, b, a);
+    g_val = fmod((g + 0.4), 1);
+    multicolour ? glColor4d( r, g_val, b, a) : glColor4d(r, g, b, a);
     glVertex3d (x, y, z); // bottom left (left)
     glVertex3d (x, y, z + 1); // bottom right (left)
     glVertex3d (x, y + 1, z + 1); // top right (left)
     glVertex3d (x, y + 1, z); // top left (left)
 
-    glColor4d(r, g, b, a);
+    g_val = fmod((r + 0.8), 1);
+    multicolour ? glColor4d( r, g_val, b, a) : glColor4d(r, g, b, a);
     glVertex3d (x, y, z); // bottom left (right)
     glVertex3d (x + 1, y, z + 1); // bottom right (right)
     glVertex3d (x + 1, y + 1, z + 1); // top right (right)
     glVertex3d (x + 1, y + 1, z); // top left (right)
 
-    glColor4d(r, g, b, a);
+    b_val = fmod((b + 0.4), 1);
+    multicolour ? glColor4d( r, g, b_val, a) : glColor4d(r, g, b, a);
     glVertex3d (x, y + 1, z); // bottom left (top)
     glVertex3d (x + 1, y + 1, z); // bottom right (top)
     glVertex3d (x + 1, y + 1, z + 1); // top right (top)
     glVertex3d (x, y + 1, z + 1); // top left (top)
 
-    glColor4d(r, g, b, a);
+    b_val = fmod((b + 0.8), 1);
+    multicolour ? glColor4d( r, g, b_val, a) : glColor4d(r, g, b, a);
     glVertex3d (x, y, z); // bottom left (bottom)
     glVertex3d (x + 1, y, z); // bottom right (bottom)
     glVertex3d (x + 1, y, z + 1); // bottom right (bottom)
@@ -233,11 +245,35 @@ void Viewer::render_well(int width, int height) {
   int i = 0;
 
   for (i = -1; i < height; i++) {
-    draw_cube(-1, i, 0, 0, 0, 1);
-    draw_cube(width, i, 0, 0, 0, 1);
+    draw_cube(-1, i, 0, .1, .1, .1);
+    draw_cube(width, i, 0, .1, .1, .1);
   }
 
   for (i = 0; i < width; i++) {
-    draw_cube(i, -1, 0, 0, 0, 1);
+    draw_cube(i, -1, 0, .1, .1, .1);
   }
 }
+
+// set game drawing mode
+void Viewer::set_mode(Mode mode) {
+  m_mode = mode;
+  on_expose_event(NULL);
+}
+
+void Viewer::render_drawing_mode() {
+  switch (m_mode) {
+    case WIREFRAME:
+      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+      break;
+    case FACE:
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+      break;
+    case MULTICOLOURED:
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+      break;
+    default:
+      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+      break;
+  }
+}
+

@@ -3,6 +3,7 @@
 
 #include <gtkmm.h>
 #include <gtkglmm.h>
+#include "game.hpp"
 
 // The "main" OpenGL widget
 class Viewer : public Gtk::GL::DrawingArea {
@@ -17,10 +18,11 @@ public:
     MULTICOLOURED
   };
 
-  enum Rotation {
+  enum Transform {
     XAXIS,
     YAXIS,
-    ZAXIS
+    ZAXIS,
+    SCALE
   };
 
   // A useful function that forces this widget to rerender. If you
@@ -63,9 +65,12 @@ private:
   void draw_cube(double x, double y, double z, double r, double g, double b, double a);
   void render_well(int width, int height);
   Mode m_mode; // drawing mode
-  Rotation m_axis;
+  Transform m_transform;
+
+  Game m_game(int width = 10, int height = 20);
 
   int x_origin;
+  int scale_factor;
 };
 
 #endif

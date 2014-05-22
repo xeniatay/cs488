@@ -1113,4 +1113,4 @@ main.o main.d : main.cpp /usr/include/gtkmm-2.4/gtkmm.h \
  /usr/include/gtkglextmm-1.2/gtkmm/gl/init.h \
  /usr/include/gtkglextmm-1.2/gtkmm/gl/widget.h \
  /usr/include/gtkglextmm-1.2/gtkmm/gl/drawingarea.h appwindow.hpp \
- viewer.hpp
+ viewer.hpp game.hpp

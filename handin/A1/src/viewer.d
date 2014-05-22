@@ -1112,5 +1112,5 @@ viewer.o viewer.d : viewer.cpp viewer.hpp /usr/include/gtkmm-2.4/gtkmm.h \
  /usr/include/gtkglextmm-1.2/gtkmm/gl/version.h \
  /usr/include/gtkglextmm-1.2/gtkmm/gl/init.h \
  /usr/include/gtkglextmm-1.2/gtkmm/gl/widget.h \
- /usr/include/gtkglextmm-1.2/gtkmm/gl/drawingarea.h \
+ /usr/include/gtkglextmm-1.2/gtkmm/gl/drawingarea.h game.hpp \
  /usr/include/c++/4.6/iostream /usr/include/GL/glu.h

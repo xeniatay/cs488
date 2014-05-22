@@ -4,7 +4,7 @@
 //
 // game.hpp/game.cpp
 //
-// An engine that implements a falling blocks game.  You won't need to 
+// An engine that implements a falling blocks game.  You won't need to
 // modify these files unless you decide to enhance the underlying game
 // logic.
 //
@@ -54,7 +54,7 @@ static const Piece PIECES[] = {
         "....", 6,			1,1,1,1)
 };
 
-Piece::Piece(const char *desc, int cindex, 
+Piece::Piece(const char *desc, int cindex,
               int left, int top, int right, int bottom)
 {
   std::copy(desc, desc + 16, desc_);
@@ -175,7 +175,7 @@ int Game::get(int r, int c) const
   return board_[ r*board_width_ + c ];
 }
 
-int& Game::get(int r, int c) 
+int& Game::get(int r, int c)
 {
   return board_[ r*board_width_ + c ];
 }
@@ -207,7 +207,7 @@ bool Game::doesPieceFit(const Piece& p, int x, int y) const
   return true;
 }
 
-void Game::removePiece(const Piece& p, int x, int y) 
+void Game::removePiece(const Piece& p, int x, int y)
 {
   for(int r = 0; r < 4; ++r) {
     for(int c = 0; c < 4; ++c) {
@@ -231,10 +231,10 @@ void Game::removeRow(int y)
   }
 }
 
-int Game::collapse() 
+int Game::collapse()
 {
   // This method is implemented in a brain-dead way.  Repeatedly
-  // walk up from the bottom of the well, removing the first full 
+  // walk up from the bottom of the well, removing the first full
   // row, stopping when there are no more full rows.  It could be
   // made much faster.  Sue me.
 
@@ -278,8 +278,8 @@ void Game::placePiece(const Piece& p, int x, int y)
     }
   }
 }
-	
-void Game::generateNewPiece() 
+
+void Game::generateNewPiece()
 {
   piece_ = PIECES[ rand() % 7 ];
 
@@ -369,7 +369,7 @@ bool Game::drop()
 
   ++ny;
   placePiece(piece_, px_, ny);
-	
+
   if(ny == py_) {
     return false;
   } else {
@@ -378,7 +378,7 @@ bool Game::drop()
   }
 }
 
-bool Game::rotateCW() 
+bool Game::rotateCW()
 {
   removePiece(piece_, px_, py_);
   Piece npiece = piece_.rotateCW();
@@ -392,7 +392,7 @@ bool Game::rotateCW()
   }
 }
 
-bool Game::rotateCCW() 
+bool Game::rotateCCW()
 {
   removePiece(piece_, px_, py_);
   Piece npiece = piece_.rotateCCW();

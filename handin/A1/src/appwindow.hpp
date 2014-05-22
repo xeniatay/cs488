@@ -3,6 +3,7 @@
 
 #include <gtkmm.h>
 #include "viewer.hpp"
+#include "game.hpp"
 
 class AppWindow : public Gtk::Window {
 public:

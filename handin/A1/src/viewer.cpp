@@ -66,6 +66,7 @@ void Viewer::on_realize()
   gldrawable->gl_end();
 
   x_origin = 0;
+  scale_factor = 0;
 }
 
 bool Viewer::on_expose_event(GdkEventExpose* event)
@@ -178,17 +179,23 @@ bool Viewer::on_button_press_event(GdkEventButton* event)
 
   switch (event->button) {
     case 1:
-      m_axis = Viewer::XAXIS;
+      m_transform = Viewer::XAXIS;
       break;
     case 2:
-      m_axis = Viewer::YAXIS;
+      m_transform = Viewer::YAXIS;
       break;
     case 3:
-      m_axis = Viewer::ZAXIS;
+      m_transform = Viewer::ZAXIS;
       break;
     default:
       break;
   }
+
+  if (event->state & GDK_SHIFT_MASK) {
+    m_transform = Viewer::SCALE;
+  }
+
+  std::cerr << "transform state: " << m_transform << std::endl;
 
   return true;
 }
@@ -203,21 +210,34 @@ bool Viewer::on_motion_notify_event(GdkEventMotion* event)
 {
   std::cerr << "Stub: Motion at " << event->x << ", " << event->y << std::endl;
 
-  int rotation_dir = ( (event->x - x_origin) < 0) ? -1 : 1;
+  int transform_dir = ( (event->x - x_origin) < 0) ? -1 : 1;
 
-  glTranslated(5.0, 12.0, 0.0);
-  glTranslated(0, 10, 0);
-
-  if (m_axis == Viewer::XAXIS) {
-    glRotated(rotation_dir * 1, 0, 1, 0);
-  } else if (m_axis == Viewer::YAXIS) {
-    glRotated(rotation_dir * 1, 1, 0, 0);
-  } else if (m_axis == Viewer::ZAXIS) {
-    glRotated(rotation_dir * 1, 0, 0, 1);
+  if (m_transform != Viewer::SCALE) {
+    glTranslated(5.0, 12.0, 0.0);
+    glTranslated(0, 10, 0);
   }
 
-  glTranslated(0, -10, 0);
-  glTranslated(-5.0, -12.0, 0.0);
+  if (m_transform == Viewer::XAXIS) {
+    glRotated(transform_dir * 0.8, 0, 1, 0);
+  } else if (m_transform == Viewer::YAXIS) {
+    glRotated(transform_dir * 0.8, 1, 0, 0);
+  } else if (m_transform == Viewer::ZAXIS) {
+    glRotated(transform_dir * 0.8, 0, 0, 1);
+  } else if (m_transform == Viewer::SCALE) {
+    if (transform_dir == 1 && scale_factor < 50) {
+      glScaled(1.02, 1.02, 1);
+      scale_factor++;
+    } else if (scale_factor > -50) {
+      glScaled(0.98, 0.98, 1);
+      scale_factor--;
+    }
+    std::cerr << "scale factor: " << scale_factor << std::endl;
+  }
+
+  if (m_transform != Viewer::SCALE) {
+    glTranslated(0, -10, 0);
+    glTranslated(-5.0, -12.0, 0.0);
+  }
 
   x_origin = event->x;
   on_expose_event(NULL);
@@ -235,44 +255,44 @@ void Viewer::draw_cube(double x, double y, double z, double r = 0, double g = 0,
     r_val = fmod((r + 0.4), 1);
     multicolour ? glColor4d( r_val, g, b, a) : glColor4d(r, g, b, a);
     glVertex3d (x, y, z); // bottom left (front)
-    glVertex3d (x + 1, y, z); // bottom right (front)
-    glVertex3d (x + 1, y + 1, z); // top right (front)
     glVertex3d (x, y + 1, z); // top left (front)
+    glVertex3d (x + 1, y + 1, z); // top right (front)
+    glVertex3d (x + 1, y, z); // bottom right (front)
 
     r_val = fmod((r + 0.8), 1);
     multicolour ? glColor4d( r_val, g, b, a) : glColor4d(r, g, b, a);
     glVertex3d (x, y, z + 1); // bottom left (back)
-    glVertex3d (x + 1, y, z + 1); // bottom right (back)
-    glVertex3d (x + 1, y + 1, z + 1); // top right (back)
     glVertex3d (x, y + 1, z + 1); // top left (back)
+    glVertex3d (x + 1, y + 1, z + 1); // top right (back)
+    glVertex3d (x + 1, y, z + 1); // bottom right (back)
 
     g_val = fmod((g + 0.4), 1);
     multicolour ? glColor4d( r, g_val, b, a) : glColor4d(r, g, b, a);
     glVertex3d (x, y, z); // bottom left (left)
-    glVertex3d (x, y, z + 1); // bottom right (left)
-    glVertex3d (x, y + 1, z + 1); // top right (left)
     glVertex3d (x, y + 1, z); // top left (left)
+    glVertex3d (x, y + 1, z + 1); // top right (left)
+    glVertex3d (x, y, z + 1); // bottom right (left)
 
     g_val = fmod((r + 0.8), 1);
     multicolour ? glColor4d( r, g_val, b, a) : glColor4d(r, g, b, a);
-    glVertex3d (x, y, z); // bottom left (right)
-    glVertex3d (x + 1, y, z + 1); // bottom right (right)
-    glVertex3d (x + 1, y + 1, z + 1); // top right (right)
+    glVertex3d (x + 1, y, z); // bottom left (right)
     glVertex3d (x + 1, y + 1, z); // top left (right)
+    glVertex3d (x + 1, y + 1, z + 1); // top right (right)
+    glVertex3d (x + 1, y, z + 1); // bottom right (right)
 
     b_val = fmod((b + 0.4), 1);
     multicolour ? glColor4d( r, g, b_val, a) : glColor4d(r, g, b, a);
     glVertex3d (x, y + 1, z); // bottom left (top)
-    glVertex3d (x + 1, y + 1, z); // bottom right (top)
-    glVertex3d (x + 1, y + 1, z + 1); // top right (top)
     glVertex3d (x, y + 1, z + 1); // top left (top)
+    glVertex3d (x + 1, y + 1, z + 1); // top right (top)
+    glVertex3d (x + 1, y + 1, z); // bottom right (top)
 
     b_val = fmod((b + 0.8), 1);
     multicolour ? glColor4d( r, g, b_val, a) : glColor4d(r, g, b, a);
     glVertex3d (x, y, z); // bottom left (bottom)
+    glVertex3d (x, y, z + 1); // top left (bottom)
+    glVertex3d (x + 1, y, z + 1); // top right (bottom)
     glVertex3d (x + 1, y, z); // bottom right (bottom)
-    glVertex3d (x + 1, y, z + 1); // bottom right (bottom)
-    glVertex3d (x, y, z + 1); // bottom left (bottom)
   glEnd();
 }
 
@@ -281,6 +301,7 @@ void Viewer::draw_cube(double x, double y, double z, double r = 0, double g = 0,
 void Viewer::render_well(int width, int height) {
   int i = 0;
 
+  draw_cube(5, 5, 5, 0.5, 0.5, 0.5);
   for (i = -1; i < height; i++) {
     draw_cube(-1, i, 0, .1, .1, .1);
     draw_cube(width, i, 0, .1, .1, .1);

@@ -38,6 +38,7 @@ public:
   void wireframe_mode();
   void face_mode();
   void multicoloured_mode();
+  void new_game();
 
 protected:
 
@@ -63,6 +64,13 @@ protected:
 private:
   // Takes params for x, y z coords and rgb values for cube colour
   void draw_cube(double x, double y, double z, double r, double g, double b, double a);
+  void draw_piece_0(double x, double y, double z, double r, double g, double b, double a);
+  void draw_piece_1(double x, double y, double z, double r, double g, double b, double a);
+  void draw_piece_2(double x, double y, double z, double r, double g, double b, double a);
+  void draw_piece_3(double x, double y, double z, double r, double g, double b, double a);
+  void draw_piece_4(double x, double y, double z, double r, double g, double b, double a);
+  void draw_piece_5(double x, double y, double z, double r, double g, double b, double a);
+  void draw_piece_6(double x, double y, double z, double r, double g, double b, double a);
   void render_well(int width, int height);
   Mode m_mode; // drawing mode
   Transform m_transform;

@@ -110,26 +110,17 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   // corners of the game board.
   glColor3d(1.0, 0.0, 0.0);
 
-  glBegin(GL_TRIANGLES);
-  glVertex3d(0.0, 0.0, 0.0);
-  glVertex3d(1.0, 0.0, 0.0);
-  glVertex3d(0.0, 1.0, 0.0);
-
-  glVertex3d(9.0, 0.0, 0.0);
-  glVertex3d(10.0, 0.0, 0.0);
-  glVertex3d(10.0, 1.0, 0.0);
-
-  glVertex3d(0.0, 19.0, 0.0);
-  glVertex3d(1.0, 20.0, 0.0);
-  glVertex3d(0.0, 20.0, 0.0);
-
-  glVertex3d(10.0, 19.0, 0.0);
-  glVertex3d(10.0, 20.0, 0.0);
-  glVertex3d(9.0, 20.0, 0.0);
-  glEnd();
-
-
   render_well(10, 20);
+
+  // start game
+  draw_cube(5.0, 20.0, 0.0, .5, .5, .5, .8);
+  draw_piece_0(0, 0, 0, .2, .8, .0, .8);
+  draw_piece_1(4, 0, 0, .0, .2, .8, .8);
+  draw_piece_2(0, 4, 0, .2, .5, .8, .8);
+  draw_piece_3(4, 4, 0, .5, .9, .0, .8);
+  draw_piece_4(0, 8, 0, .0, .5, .9, .8);
+  draw_piece_5(4, 8, 0, .5, .0, .9, .8);
+  draw_piece_6(0, 12, 0, .3, .4, .5, .8);
 
   // We pushed a matrix onto the PROJECTION stack earlier, we
   // need to pop it.
@@ -194,8 +185,6 @@ bool Viewer::on_button_press_event(GdkEventButton* event)
   if (event->state & GDK_SHIFT_MASK) {
     m_transform = Viewer::SCALE;
   }
-
-  std::cerr << "transform state: " << m_transform << std::endl;
 
   return true;
 }
@@ -296,12 +285,103 @@ void Viewer::draw_cube(double x, double y, double z, double r = 0, double g = 0,
   glEnd();
 }
 
+/*
+  Piece 0:
+  ".x.."
+  ".x.."
+  ".x.."
+  ".x.."
+*/
+void Viewer::draw_piece_0(double x, double y, double z, double r = 0.2, double g = 0.8, double b = 0, double a = 0.8) {
+  draw_cube(x + 1, y, z, r, g, b, a);
+  draw_cube(x + 1, y + 1, z, r, g, b, a);
+  draw_cube(x + 1, y + 2, z, r, g, b, a);
+  draw_cube(x + 1, y + 3, z, r, g, b, a);
+}
+
+/* Piece 1:
+  "...."
+  ".xx."
+  ".x.."
+  ".x.."
+*/
+void Viewer::draw_piece_1(double x, double y, double z, double r = 0, double g = 0.2, double b = 0.8, double a = 0.8) {
+  draw_cube(x + 1, y + 2, z, r, g, b, a);
+  draw_cube(x + 2, y + 2, z, r, g, b, a);
+  draw_cube(x + 1, y + 1, z, r, g, b, a);
+  draw_cube(x + 1, y, z, r, g, b, a);
+}
+
+/* Piece 2:
+  "...."
+  ".xx."
+  "..x."
+  "..x."
+*/
+void Viewer::draw_piece_2(double x, double y, double z, double r = 0.2, double g = 0, double b = 0.8, double a = 0.8) {
+  draw_cube(x + 1, y + 2, z, r, g, b, a);
+  draw_cube(x + 2, y + 2, z, r, g, b, a);
+  draw_cube(x + 2, y + 1, z, r, g, b, a);
+  draw_cube(x + 2, y, z, r, g, b, a);
+}
+
+/* Piece 3:
+  "...."
+  ".x.."
+  ".xx."
+  "..x."
+*/
+void Viewer::draw_piece_3(double x, double y, double z, double r = 0.5, double g = 0.9, double b = 0, double a = 0.8) {
+  draw_cube(x + 1, y + 2, z, r, g, b, a);
+  draw_cube(x + 1, y + 1, z, r, g, b, a);
+  draw_cube(x + 2, y + 1, z, r, g, b, a);
+  draw_cube(x + 2, y, z, r, g, b, a);
+}
+
+/* Piece 4:
+  "...."
+  "..x."
+  ".xx."
+  ".x.."
+*/
+void Viewer::draw_piece_4(double x, double y, double z, double r = 0, double g = 0.5, double b = 0.9, double a = 0.8) {
+  draw_cube(x + 2, y + 2, z, r, g, b, a);
+  draw_cube(x + 1, y + 1, z, r, g, b, a);
+  draw_cube(x + 2, y + 1, z, r, g, b, a);
+  draw_cube(x + 1, y, z, r, g, b, a);
+}
+
+/* Piece 5:
+  "...."
+  "xxx."
+  ".x.."
+  "...."
+*/
+void Viewer::draw_piece_5(double x, double y, double z, double r = 0.5, double g = 0, double b = 0.9, double a = 0.8) {
+  draw_cube(x, y + 2, z, r, g, b, a);
+  draw_cube(x + 1, y + 2, z, r, g, b, a);
+  draw_cube(x + 2, y + 2, z, r, g, b, a);
+  draw_cube(x + 1, y + 1, z, r, g, b, a);
+}
+
+/* Piece 6:
+  "...."
+  ".xx."
+  ".xx."
+  "...."
+*/
+void Viewer::draw_piece_6(double x, double y, double z, double r = 0.3, double g = 0.4, double b = 0.5, double a = 0.8) {
+  draw_cube(x + 1, y + 2, z, r, g, b, a);
+  draw_cube(x + 2, y + 2, z, r, g, b, a);
+  draw_cube(x + 1, y + 1, z, r, g, b, a);
+  draw_cube(x + 2, y + 1, z, r, g, b, a);
+}
+
 // Params: width, height
 // Draws a U-shaped well of unit cubes
 void Viewer::render_well(int width, int height) {
   int i = 0;
 
-  draw_cube(5, 5, 5, 0.5, 0.5, 0.5);
   for (i = -1; i < height; i++) {
     draw_cube(-1, i, 0, .1, .1, .1);
     draw_cube(width, i, 0, .1, .1, .1);
@@ -335,3 +415,6 @@ void Viewer::render_drawing_mode() {
   }
 }
 
+void Viewer::new_game() {
+  draw_cube(5, 21, 0);
+}

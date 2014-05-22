@@ -15,8 +15,8 @@ AppWindow::AppWindow()
   // which shuts down the application.
   m_menu_app.items().push_back(MenuElem("_Quit", Gtk::AccelKey("Q"),
     sigc::mem_fun(*this, &AppWindow::hide)));
-  // m_menu_app.items().push_back(MenuElem("_New game", Gtk::AccelKey("N"),
-  //  sigc::mem_fun(*this, &Viewer::new_game)));
+  m_menu_app.items().push_back(MenuElem("_New game", Gtk::AccelKey("N"),
+    sigc::mem_fun(m_viewer, &Viewer::new_game)));
 
   // Set up the draw mode radio menu group
   sigc::slot1<void, Viewer::Mode> mode_slot = sigc::mem_fun(m_viewer, &Viewer::set_mode);

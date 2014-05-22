@@ -64,6 +64,8 @@ void Viewer::on_realize()
   glClearColor(0.7, 0.7, 1.0, 0.0);
 
   gldrawable->gl_end();
+
+  x_origin = 0;
 }
 
 bool Viewer::on_expose_event(GdkEventExpose* event)
@@ -172,6 +174,22 @@ bool Viewer::on_configure_event(GdkEventConfigure* event)
 bool Viewer::on_button_press_event(GdkEventButton* event)
 {
   std::cerr << "Stub: Button " << event->button << " pressed" << std::endl;
+  std::cerr << "Button: " << event->button << std::endl;
+
+  switch (event->button) {
+    case 1:
+      m_axis = Viewer::XAXIS;
+      break;
+    case 2:
+      m_axis = Viewer::YAXIS;
+      break;
+    case 3:
+      m_axis = Viewer::ZAXIS;
+      break;
+    default:
+      break;
+  }
+
   return true;
 }
 
@@ -184,6 +202,25 @@ bool Viewer::on_button_release_event(GdkEventButton* event)
 bool Viewer::on_motion_notify_event(GdkEventMotion* event)
 {
   std::cerr << "Stub: Motion at " << event->x << ", " << event->y << std::endl;
+
+  int rotation_dir = ( (event->x - x_origin) < 0) ? -1 : 1;
+
+  glTranslated(5.0, 12.0, 0.0);
+  glTranslated(0, 10, 0);
+
+  if (m_axis == Viewer::XAXIS) {
+    glRotated(rotation_dir * 1, 0, 1, 0);
+  } else if (m_axis == Viewer::YAXIS) {
+    glRotated(rotation_dir * 1, 1, 0, 0);
+  } else if (m_axis == Viewer::ZAXIS) {
+    glRotated(rotation_dir * 1, 0, 0, 1);
+  }
+
+  glTranslated(0, -10, 0);
+  glTranslated(-5.0, -12.0, 0.0);
+
+  x_origin = event->x;
+  on_expose_event(NULL);
   return true;
 }
 

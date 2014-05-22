@@ -17,6 +17,12 @@ public:
     MULTICOLOURED
   };
 
+  enum Rotation {
+    XAXIS,
+    YAXIS,
+    ZAXIS
+  };
+
   // A useful function that forces this widget to rerender. If you
   // want to render a new frame, do not call on_expose_event
   // directly. Instead call this, which will cause an on_expose_event
@@ -57,6 +63,9 @@ private:
   void draw_cube(double x, double y, double z, double r, double g, double b, double a);
   void render_well(int width, int height);
   Mode m_mode; // drawing mode
+  Rotation m_axis;
+
+  int x_origin;
 };
 
 #endif

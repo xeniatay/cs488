@@ -189,31 +189,33 @@ int& Game::get(int r, int c)
   return board_[ r*board_width_ + c ];
 }
 
-bool Game::doesPieceFit(const Piece& p, int x, int y) const
+bool Game::doesPieceFit(const Piece& p, int x, int y)
 {
+  does_piece_fit = true;
+
   if(x + p.getLeftMargin() < 0) {
-    return false;
+    does_piece_fit = false;
   }
 
   if(x + 3 - p.getRightMargin() >= board_width_) {
-    return false;
+    does_piece_fit = false;
   }
 
   if(y + p.getBottomMargin() < 3) {
-    return false;
+    does_piece_fit = false;
   }
 
   for(int r = 0; r < 4; ++r) {
     for(int c = 0; c < 4; ++c) {
       if(p.isOn(r, c)) {
         if(get(y-r, x+c) != -1) {
-          return false;
+          does_piece_fit = false;
         }
       }
     }
   }
 
-  return true;
+  return does_piece_fit;
 }
 
 void Game::removePiece(const Piece& p, int x, int y)
@@ -305,6 +307,7 @@ int Game::tick()
     return -1;
   }
 
+  std::cerr << "x: " << px_ << " y: " << py_ << std::endl;
   removePiece(piece_, px_, py_);
   int ny = py_ - 1;
 
@@ -417,4 +420,12 @@ bool Game::rotateCCW()
 
 int Game::current_piece() {
   return piece_.cindex_;
+}
+
+int Game::px() {
+  return px_;
+}
+
+int Game::py() {
+  return py_;
 }

@@ -3,7 +3,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-Viewer::Viewer() : m_game(20, 10)
+Viewer::Viewer() : m_game(10, 20)
 {
   Glib::RefPtr<Gdk::GL::Config> glconfig;
 
@@ -69,6 +69,10 @@ void Viewer::on_realize()
   add_new_piece();
   x_origin = 0;
   scale_factor = 0;
+
+  // Start ticker
+  sigc::slot0<bool> tick_slot = sigc::mem_fun(this, &Viewer::tick_handler);
+  Glib::signal_timeout().connect(tick_slot, 1000);
 }
 
 bool Viewer::on_expose_event(GdkEventExpose* event)
@@ -127,9 +131,6 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   gldrawable->swap_buffers();
 
   gldrawable->gl_end();
-
-  sigc::slot0<bool> mode_slot = sigc::mem_fun(this, &Viewer::tick_handler);
-  Glib::signal_timeout().connect_seconds(mode_slot, 1);
 
   return true;
 }
@@ -427,14 +428,18 @@ void Viewer::new_game() {
 }
 
 bool Viewer::tick_handler() {
-  std::cerr << "TICK: " << m_game.tick() << std::endl;
+  bool next_piece = !m_game.does_piece_fit;
   int tick_val = m_game.tick();
+  std::cerr << "TICK: " << tick_val << std::endl;
   TetrisPiece *cur_piece = tetris_pieces.back();
 
   switch(tick_val) {
     case 0:
-      cur_piece->y = cur_piece->y - 1;
       // advance 1
+      cur_piece->y = cur_piece->y - 1;
+      if (next_piece) {
+        add_new_piece();
+      }
       break;
     case 1: case 2: case 3: case 4:
       cur_piece->y = cur_piece->y - tick_val;

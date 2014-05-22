@@ -101,11 +101,16 @@ class Game {
     int get(int r, int c) const;
     int& get(int r, int c);
 
+    int px_;
+    int py_;
     Piece piece_;
+    bool does_piece_fit;
     int current_piece();
+    int px();
+    int py();
 
   private:
-    bool doesPieceFit(const Piece& p, int x, int y) const;
+    bool doesPieceFit(const Piece& p, int x, int y);
 
     void removeRow(int y);
     int collapse();
@@ -121,8 +126,6 @@ class Game {
 
     bool stopped_;
 
-    int px_;
-    int py_;
 
     int* board_;
 };

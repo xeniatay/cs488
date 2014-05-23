@@ -70,7 +70,7 @@ void Viewer::on_realize()
   scale_factor = 0;
   total_time = 0;
   m_speed = 1000; // default
-  start_timer();
+  //start_timer();
   add_new_piece();
   m_height = 20;
   m_width = 10;
@@ -455,14 +455,14 @@ void Viewer::draw_pieces() {
 
     // calculate transformation
     if ( (piece->rotation == 270) || (piece->rotation == -90) ) {
-      tx = ((piece->y - piece->x) * -1) + 4;
-      ty = piece->x + piece->y;
+      tx = ((piece->y - piece->x) * -1) + 3;
+      ty = piece->x + piece->y + 1;
     } else if ( (piece->rotation == 180) || (piece->rotation == -180) ) {
       tx = 2 * piece->x + 4;
-      ty = 2 * piece->y - 4;
+      ty = 2 * piece->y - 2;
     } else if ( (piece->rotation == 90) || (piece->rotation == -270) ) {
-      tx = piece->y + piece->x;
-      ty = piece->y - piece->x - 4;
+      tx = piece->y + piece->x + 1;
+      ty = piece->y - piece->x - 3;
     }
 
     glTranslated(tx, ty, tz);
@@ -524,7 +524,6 @@ void Viewer::tick() {
   //std::cerr << "TICK: " << tick_val << " Speed: " << m_speed << std::endl;
 
   TetrisPiece *cur_piece = tetris_pieces.back();
-  std::cerr << "Viewer tick -- x: " << cur_piece->x << " y: " << cur_piece->y << std::endl;
 
   switch(tick_val) {
     case 0:
@@ -533,12 +532,12 @@ void Viewer::tick() {
         add_new_piece();
       } else {
         // advance 1
-        move_piece(0, -1);
+        move_piece();
       }
       break;
     case 1: case 2: case 3: case 4:
       // advance whatever number and generate new piece
-      move_piece(0, -1);
+      move_piece();
       add_new_piece();
       break;
     default:
@@ -552,13 +551,13 @@ void Viewer::tick() {
 
 void Viewer::press_left() {
   m_game.moveLeft();
-  move_piece(-1, 0);
+  move_piece();
   std::cerr << "hi left " << std::endl;
 }
 
 void Viewer::press_right() {
   m_game.moveRight();
-  move_piece(1, 0);
+  move_piece();
   std::cerr << "hi right " << std::endl;
 }
 
@@ -583,33 +582,16 @@ void Viewer::press_down() {
 }
 
 void Viewer::press_space() {
-  //m_game.collapse();
-  //move_piece();
-  std::cerr << "hi space " << std::endl;
+  m_game.drop();
+  move_piece();
+  std::cerr << "Drop!" << std::endl;
 }
 
-void Viewer::move_piece(double x_move, double y_move) {
+void Viewer::move_piece() {
   TetrisPiece *cur_piece = tetris_pieces.back();
-
-/*
-  if ( (cur_piece->rotation == 270) || (cur_piece->rotation == -90) ) {
-    cur_piece->x = cur_piece->x + (-1 * y_move);
-    cur_piece->y = cur_piece->y + x_move;
-  } else if ( (cur_piece->rotation == 180) || (cur_piece->rotation == -180) ) {
-    cur_piece->x = cur_piece->x + (-1 * x_move);
-    cur_piece->y = cur_piece->y + (-1 * y_move);
-  } else if ( (cur_piece->rotation == 90) || (cur_piece->rotation == -270) ) {
-    cur_piece->x = cur_piece->x + (y_move);
-    cur_piece->y = cur_piece->y + (-1 * x_move);
-  } else {
-    cur_piece->x = cur_piece->x + x_move;
-    cur_piece->y = cur_piece->y + y_move;
-  }
-  */
-    cur_piece->x = cur_piece->x + x_move;
-    cur_piece->y = cur_piece->y + y_move;
-  //cur_piece->x = m_game.px();
-  //cur_piece->y = m_game.py();
+  cur_piece->x = m_game.px();
+  cur_piece->y = m_game.py();
+  std::cerr << "Move ============== x: " << cur_piece->x << " y: " << cur_piece->y << std::endl;
   on_expose_event(NULL);
 }
 

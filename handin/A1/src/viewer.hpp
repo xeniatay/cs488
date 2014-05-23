@@ -83,7 +83,7 @@ public:
   void press_up();
   void press_down();
   void press_space();
-  void move_piece(double x, double y);
+  void move_piece();
 
   bool tick_handler();
   void tick();

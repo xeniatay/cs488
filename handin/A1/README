@@ -1,0 +1,20 @@
+Name: Xenia Tay
+Student Number: 20396769
+User-id: xzytay
+Assignment: 1
+
+The final executable was compiled on this machine: linux.student.cs.uwaterloo.ca
+
+How to invoke my program:
+In the `handin` directory, type `./game488`.
+
+
+How to use my extra features:
+My extra feature is the spinning of the game board when the game is over. This requires no action.
+
+I have created the following data files, which are in the data directory:
+There are no extra data files.
+
+My program assumes the following:
+The origin of the rotation axis is set at the bottom left corner of the Well.
+

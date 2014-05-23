@@ -66,7 +66,6 @@ void Viewer::on_realize()
 
   gldrawable->gl_end();
 
-  add_new_piece();
   x_origin = 0;
   scale_factor = 0;
 
@@ -426,13 +425,19 @@ void Viewer::render_drawing_mode() {
 }
 
 void Viewer::new_game() {
-  draw_cube(5, 21, 0);
+  tetris_pieces.clear();
+  m_game.reset();
+  on_expose_event(NULL);
 }
 
 bool Viewer::tick_handler() {
   int tick_val = m_game.tick();
-  TetrisPiece *cur_piece = tetris_pieces.back();
 
+  if (!tetris_pieces.size()) {
+    add_new_piece();
+  }
+
+  TetrisPiece *cur_piece = tetris_pieces.back();
   std::cerr << "TICK: " << tick_val << " Piece: " << cur_piece->index << " ypos: " << m_game.py() << std::endl;
 
   switch(tick_val) {

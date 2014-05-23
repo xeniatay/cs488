@@ -68,6 +68,9 @@ void Viewer::on_realize()
 
   start_timer();
   new_game();
+  matrix_layers = 0;
+  scale_factor = 0;
+  m_speed = 1000; // default
 }
 
 bool Viewer::on_expose_event(GdkEventExpose* event)
@@ -160,6 +163,7 @@ bool Viewer::on_button_press_event(GdkEventButton* event)
   //std::cerr << "Button: " << event->button << std::endl;
 
   glPushMatrix();
+  matrix_layers++;
 
   switch (event->button) {
     case 1:
@@ -426,9 +430,7 @@ void Viewer::new_game() {
   m_game.reset();
 
   x_origin = 0;
-  scale_factor = 0;
   total_time = 0;
-  m_speed = 1000; // default
   add_new_piece();
   m_height = 20;
   m_width = 10;
@@ -436,11 +438,24 @@ void Viewer::new_game() {
   collapsed = 0;
   collapsed_pieces = 0;
 
+  if (game_over == true) {
+    for (int i = 0; i < gameover_layers; i++) {
+      glPopMatrix();
+    }
+  }
+
+  gameover_layers = 0;
+  game_over = false;
+
   on_expose_event(NULL);
 }
 
 void Viewer::reset() {
-  glPopMatrix();
+  for (int i = 0; i < matrix_layers; i++) {
+    glPopMatrix();
+  }
+  matrix_layers = 0;
+  scale_factor = 0;
   on_expose_event(NULL);
 }
 
@@ -539,6 +554,11 @@ void Viewer::start_timer() {
 bool Viewer::tick_handler() {
   total_time += 100;
 
+  if (game_over) {
+    glRotated(5, 0, 0, 1);
+    on_expose_event(NULL);
+  }
+
   if (total_time % m_speed == 0) {
     tick();
   }
@@ -565,7 +585,9 @@ void Viewer::tick() {
       add_new_piece();
       break;
     default:
-      std::cerr << "game over" << std::endl;
+      glPushMatrix();
+      gameover_layers++;
+      game_over = true;
       // game over;
       break;
   }

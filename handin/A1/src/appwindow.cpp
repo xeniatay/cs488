@@ -19,12 +19,9 @@ AppWindow::AppWindow()
 
   // Set up the draw mode radio menu group
   sigc::slot1<void, Viewer::Mode> mode_slot = sigc::mem_fun(m_viewer, &Viewer::set_mode);
-  m_menu_mode.items().push_back(RadioMenuElem(m_menu_mode_group, "_Wire-frame", Gtk::AccelKey("W"),
-    sigc::bind(mode_slot, Viewer::WIREFRAME)));
-  m_menu_mode.items().push_back(RadioMenuElem(m_menu_mode_group, "_Face", Gtk::AccelKey("F"),
-    sigc::bind(mode_slot, Viewer::FACE)));
-  m_menu_mode.items().push_back(RadioMenuElem(m_menu_mode_group, "_Multicoloured", Gtk::AccelKey("M"),
-    sigc::bind(mode_slot, Viewer::MULTICOLOURED)));
+  m_menu_mode.items().push_back(RadioMenuElem(m_menu_mode_group, "_Wire-frame (W)", sigc::bind(mode_slot, Viewer::WIREFRAME)));
+  m_menu_mode.items().push_back(RadioMenuElem(m_menu_mode_group, "_Face (F)", sigc::bind(mode_slot, Viewer::FACE)));
+  m_menu_mode.items().push_back(RadioMenuElem(m_menu_mode_group, "_Multicoloured (M)", sigc::bind(mode_slot, Viewer::MULTICOLOURED)));
 
   // Set up the speed menu
   sigc::slot1<void, Viewer::Speed> speed_slot = sigc::mem_fun(m_viewer, &Viewer::set_speed);
@@ -66,15 +63,15 @@ bool AppWindow::on_key_press_event( GdkEventKey *ev ) {
 	// keys you want to process
   //std::cerr << "Key Value: " << ev->keyval << std::endl;
 
-  if( ev->keyval == 65361 ) {
+  if( ev->keyval == 65361 && !m_viewer.game_over) {
     m_viewer.press_left();
-  } else if( ev->keyval == 65362 ) {
+  } else if( ev->keyval == 65362 && !m_viewer.game_over) {
     m_viewer.press_up();
-  } else if( ev->keyval == 65363 ) {
+  } else if( ev->keyval == 65363 && !m_viewer.game_over) {
     m_viewer.press_right();
-  } else if( ev->keyval == 65364 ) {
+  } else if( ev->keyval == 65364 && !m_viewer.game_over) {
     m_viewer.press_down();
-  } else if (ev->keyval == 32) {
+  } else if (ev->keyval == 32 && !m_viewer.game_over) {
     std::cerr << "Spacebar" << std::endl;
     m_viewer.press_space();
   } else if (ev->keyval == 'q' || ev->keyval == 'Q') {
@@ -83,8 +80,13 @@ bool AppWindow::on_key_press_event( GdkEventKey *ev ) {
     m_viewer.new_game();
   } else if (ev->keyval == 'r' || ev->keyval == 'R') {
     m_viewer.reset();
+  } else if (ev->keyval == 'w' || ev->keyval == 'W') {
+    m_viewer.set_mode(m_viewer.WIREFRAME);
+  } else if (ev->keyval == 'f' || ev->keyval == 'F') {
+    m_viewer.set_mode(m_viewer.FACE);
+  } else if (ev->keyval == 'm' || ev->keyval == 'M') {
+    m_viewer.set_mode(m_viewer.MULTICOLOURED);
   }
-
   //return true;
   return Gtk::Window::on_key_press_event( ev );
 }

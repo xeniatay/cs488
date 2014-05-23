@@ -75,7 +75,7 @@ public:
   void draw_piece_3(double x, double y, double z, double r = 0.5, double g = 0.9, double b = 0, double a = 0.8);
   void draw_piece_4(double x, double y, double z, double r = 0, double g = 0.5, double b = 0.9, double a = 0.8);
   void draw_piece_5(double x, double y, double z, double r = 0.5, double g = 0, double b = 0.9, double a = 0.8);
-  void draw_piece_6(double x, double y, double z, double r = 0.5, double g = 0, double b = 0.9, double a = 0.8);
+  void draw_piece_6(double x, double y, double z, double r = 0.9, double g = 0, double b = 0.5, double a = 0.8);
   void draw_piece_7(double x, double y, double z, double r = .7, double g = .3, double b = .8, double a = 0.8);
   void draw_pieces();
   void add_new_piece();
@@ -89,7 +89,10 @@ public:
   void move_piece(double collapse);
 
   bool tick_handler();
+  bool game_over;
   void tick();
+  int matrix_layers;
+  int gameover_layers;
 
 protected:
 

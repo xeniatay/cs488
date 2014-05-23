@@ -166,6 +166,7 @@ bool Viewer::on_button_press_event(GdkEventButton* event)
   //std::cerr << "Button: " << event->button << std::endl;
 
   persist = false;
+
   glPushMatrix();
   matrix_layers++;
 
@@ -554,11 +555,11 @@ void Viewer::set_speed(Speed speed) {
 void Viewer::start_timer() {
   // Start ticker
   sigc::slot0<bool> tick_slot = sigc::mem_fun(this, &Viewer::tick_handler);
-  Glib::signal_timeout().connect(tick_slot, 50);
+  Glib::signal_timeout().connect(tick_slot, 10);
 }
 
 bool Viewer::tick_handler() {
-  total_time += 50;
+  total_time += 10;
 
   if (game_over) {
     glRotated(1, 0, 0, 1);
@@ -579,12 +580,15 @@ bool Viewer::tick_handler() {
 
   if (persist) {
     if (m_transform == Viewer::XAXIS) {
-      glRotated(m_transform_dir * 0.8, 1, 0, 0);
+      glRotated(m_transform_dir * 1, 1, 0, 0);
     } else if (m_transform == Viewer::YAXIS) {
-      glRotated(m_transform_dir * 0.8, 0, 1, 0);
+      glRotated(m_transform_dir * 1, 0, 1, 0);
     } else if (m_transform == Viewer::ZAXIS) {
-      glRotated(m_transform_dir * 0.8, 0, 0, 1);
+      glRotated(m_transform_dir * 1, 0, 0, 1);
     }
+    on_expose_event(NULL);
+  } else {
+    on_expose_event(NULL);
   }
 
   return true;

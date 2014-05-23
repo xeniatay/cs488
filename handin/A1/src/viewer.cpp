@@ -113,9 +113,6 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
 
   render_well(m_width, m_height);
 
-  // hide rows that are won
-  glTranslated(0, -1 * collapsed, 0);
-
   draw_pieces();
 
   // We pushed a matrix onto the PROJECTION stack earlier, we
@@ -437,6 +434,7 @@ void Viewer::new_game() {
   m_width = 10;
   m_xorigin = -1;
   collapsed = 0;
+  collapsed_pieces = 0;
 
   on_expose_event(NULL);
 }
@@ -450,10 +448,13 @@ void Viewer::add_new_piece() {
   TetrisPiece *new_piece = new TetrisPiece;
   new_piece->id = tetris_pieces.size();
   new_piece->index = m_game.current_piece();
-  new_piece->x = m_game.px();
-  new_piece->y = m_game.py();
+  //new_piece->x = m_game.px();
+  //new_piece->y = m_game.py();
+  new_piece->x = 3;
+  new_piece->y = 23;
   new_piece->z = 0;
   new_piece->rotation = 0;
+  new_piece->ytransform = 0;
 
   tetris_pieces.push_back(new_piece);
   //std::cerr << "Total number of pieces: " << tetris_pieces.size() << std::endl;
@@ -465,6 +466,11 @@ void Viewer::draw_pieces() {
 
   for( std::list<TetrisPiece*>::iterator i = tetris_pieces.begin(); i != tetris_pieces.end(); ++i ) {
     TetrisPiece *piece = (*i);
+
+    if (piece->id < collapsed_pieces) {
+      // hide rows that are won
+      glTranslated(0, -1 * collapsed, 0);
+    }
 
     double tx = 0, ty = 0, tz = 0;
 
@@ -497,7 +503,14 @@ void Viewer::draw_pieces() {
 
     glRotated(-1 * piece->rotation, 0, 0, 1.0);
     glTranslated(-1 * tx, -1 * ty, tz);
+
+    if (piece->id < collapsed_pieces) {
+      // hide rows that are won
+      glTranslated(0, collapsed, 0);
+    }
+
   }
+
 }
 
 void Viewer::set_speed(Speed speed) {
@@ -536,19 +549,20 @@ bool Viewer::tick_handler() {
 void Viewer::tick() {
   int tick_val = m_game.tick();
 
-  std::cerr << "TICK: " << tick_val << std::endl;
 
   switch(tick_val) {
     case 0:
       if (m_game.is_new_piece) {
-        std::cerr << "Add new piece!" << std::endl;
         add_new_piece();
       } else {
         move_piece();
       }
       break;
     case 1: case 2: case 3: case 4:
-      collapsed += tick_val;
+      std::cerr << "TICK: " << tick_val << std::endl;
+      move_piece(tick_val);
+      collapse_rows(tick_val);
+      add_new_piece();
       break;
     default:
       std::cerr << "game over" << std::endl;
@@ -557,6 +571,11 @@ void Viewer::tick() {
   }
 
   on_expose_event(NULL);
+}
+
+void Viewer::collapse_rows(int rows) {
+  collapsed += rows;
+  collapsed_pieces = tetris_pieces.size();
 }
 
 void Viewer::press_left() {
@@ -605,3 +624,9 @@ void Viewer::move_piece() {
   on_expose_event(NULL);
 }
 
+void Viewer::move_piece(double collapse) {
+  TetrisPiece *cur_piece = tetris_pieces.back();
+  cur_piece->y = cur_piece->y - collapse + 1;
+  std::cerr << "Move ============== x: " << cur_piece->x << " y: " << cur_piece->y << std::endl;
+  on_expose_event(NULL);
+}

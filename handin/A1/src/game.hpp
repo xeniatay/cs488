@@ -108,6 +108,7 @@ class Game {
     int current_piece();
     int px();
     int py();
+    int hacky_collapse_py;
 
   private:
     bool doesPieceFit(const Piece& p, int x, int y);

@@ -318,7 +318,6 @@ int Game::tick()
       stopped_ = true;
       return -1;
     } else {
-      std::cerr << "Tick: placePiece!" << std::endl;
       int rm = collapse();
       generateNewPiece();
       is_new_piece = true;

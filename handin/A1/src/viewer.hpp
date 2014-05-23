@@ -8,7 +8,7 @@
 
 struct TetrisPiece {
   int id, index;
-  double x, y, z, rotation;
+  double x, y, z, rotation, ytransform;
 };
 
 // The "main" OpenGL widget
@@ -64,6 +64,7 @@ public:
   void face_mode();
   void multicoloured_mode();
   void new_game();
+  void collapse_rows(int tick_val);
   void reset();
 
   // Takes params for x, y z coords and rgb values for cube colour
@@ -85,6 +86,7 @@ public:
   void press_down();
   void press_space();
   void move_piece();
+  void move_piece(double collapse);
 
   bool tick_handler();
   void tick();
@@ -123,6 +125,7 @@ private:
   int m_width;
   int m_xorigin;
   int collapsed;
+  int collapsed_pieces;
 
   std::list<TetrisPiece*> tetris_pieces;
 };

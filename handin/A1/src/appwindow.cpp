@@ -14,8 +14,8 @@ AppWindow::AppWindow()
   // The slot we use here just causes AppWindow::hide() on this,
   // which shuts down the application.
   m_menu_app.items().push_back(MenuElem("_Quit (Q)", sigc::mem_fun(*this, &AppWindow::hide)));
-  m_menu_app.items().push_back(MenuElem("_New game", Gtk::AccelKey("N"),
-    sigc::mem_fun(m_viewer, &Viewer::new_game)));
+  m_menu_app.items().push_back(MenuElem("_New game (N)", sigc::mem_fun(m_viewer, &Viewer::new_game)));
+  m_menu_app.items().push_back(MenuElem("_Reset (R)", sigc::mem_fun(m_viewer, &Viewer::reset)));
 
   // Set up the draw mode radio menu group
   sigc::slot1<void, Viewer::Mode> mode_slot = sigc::mem_fun(m_viewer, &Viewer::set_mode);
@@ -79,6 +79,10 @@ bool AppWindow::on_key_press_event( GdkEventKey *ev ) {
     m_viewer.press_space();
   } else if (ev->keyval == 'q' || ev->keyval == 'Q') {
     hide();
+  } else if (ev->keyval == 'n' || ev->keyval == 'N') {
+    m_viewer.new_game();
+  } else if (ev->keyval == 'r' || ev->keyval == 'R') {
+    m_viewer.reset();
   }
 
   //return true;

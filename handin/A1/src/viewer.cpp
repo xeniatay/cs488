@@ -162,6 +162,8 @@ bool Viewer::on_button_press_event(GdkEventButton* event)
   //std::cerr << "Stub: Button " << event->button << " pressed" << std::endl;
   //std::cerr << "Button: " << event->button << std::endl;
 
+  glPushMatrix();
+
   switch (event->button) {
     case 1:
       m_transform = Viewer::XAXIS;
@@ -439,6 +441,11 @@ void Viewer::new_game() {
   on_expose_event(NULL);
 }
 
+void Viewer::reset() {
+  glPopMatrix();
+  on_expose_event(NULL);
+}
+
 void Viewer::add_new_piece() {
   TetrisPiece *new_piece = new TetrisPiece;
   new_piece->id = tetris_pieces.size();
@@ -530,8 +537,6 @@ void Viewer::tick() {
   int tick_val = m_game.tick();
 
   std::cerr << "TICK: " << tick_val << std::endl;
-
-  TetrisPiece *cur_piece = tetris_pieces.back();
 
   switch(tick_val) {
     case 0:

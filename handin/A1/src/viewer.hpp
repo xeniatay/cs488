@@ -64,6 +64,7 @@ public:
   void face_mode();
   void multicoloured_mode();
   void new_game();
+  void reset();
 
   // Takes params for x, y z coords and rgb values for cube colour
   void draw_cube(double x, double y, double z, double r, double g, double b, double a);

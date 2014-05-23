@@ -13,8 +13,7 @@ AppWindow::AppWindow()
   // Set up the application menu
   // The slot we use here just causes AppWindow::hide() on this,
   // which shuts down the application.
-  m_menu_app.items().push_back(MenuElem("_Quit", Gtk::AccelKey("Q"),
-    sigc::mem_fun(*this, &AppWindow::hide)));
+  m_menu_app.items().push_back(MenuElem("_Quit (Q)", sigc::mem_fun(*this, &AppWindow::hide)));
   m_menu_app.items().push_back(MenuElem("_New game", Gtk::AccelKey("N"),
     sigc::mem_fun(m_viewer, &Viewer::new_game)));
 
@@ -59,17 +58,29 @@ AppWindow::AppWindow()
 
 }
 
-bool AppWindow::on_key_press_event( GdkEventKey *ev )
-{
-        // This is a convenient place to handle non-shortcut
-        // keys.  You'll want to look at ev->keyval.
+bool AppWindow::on_key_press_event( GdkEventKey *ev ) {
+  // This is a convenient place to handle non-shortcut
+  // keys.  You'll want to look at ev->keyval.
 
 	// An example key; delete and replace with the
 	// keys you want to process
-        if( ev->keyval == 't' ) {
-                std::cerr << "Hello!" << std::endl;
-                return true;
-        } else {
-                return Gtk::Window::on_key_press_event( ev );
-        }
+  //std::cerr << "Key Value: " << ev->keyval << std::endl;
+
+  if( ev->keyval == 65361 ) {
+    m_viewer.press_left();
+  } else if( ev->keyval == 65362 ) {
+    m_viewer.press_up();
+  } else if( ev->keyval == 65363 ) {
+    m_viewer.press_right();
+  } else if( ev->keyval == 65364 ) {
+    m_viewer.press_down();
+  } else if (ev->keyval == 32) {
+    std::cerr << "Spacebar" << std::endl;
+    m_viewer.press_space();
+  } else if (ev->keyval == 'q' || ev->keyval == 'Q') {
+    hide();
+  }
+
+  //return true;
+  return Gtk::Window::on_key_press_event( ev );
 }

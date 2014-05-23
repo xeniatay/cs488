@@ -305,7 +305,7 @@ int Game::tick()
     return -1;
   }
 
-  std::cerr << "x: " << px_ << " y: " << py_ << std::endl;
+  //std::cerr << "Game tick -- x: " << px_ << " y: " << py_ << std::endl;
   removePiece(piece_, px_, py_);
   int ny = py_ - 1;
   is_new_piece = false;

@@ -71,6 +71,9 @@ void Viewer::on_realize()
   total_time = 0;
   m_speed = 1000; // default
   start_timer();
+  add_new_piece();
+  m_height = 20;
+  m_width = 10;
 }
 
 bool Viewer::on_expose_event(GdkEventExpose* event)
@@ -114,7 +117,7 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   // corners of the game board.
   glColor3d(1.0, 0.0, 0.0);
 
-  render_well(10, 20);
+  render_well(m_width, m_height);
 
   draw_pieces();
 
@@ -197,13 +200,13 @@ bool Viewer::on_motion_notify_event(GdkEventMotion* event)
 
   if (m_transform != Viewer::SCALE) {
     glTranslated(5.0, 12.0, 0.0);
-    glTranslated(0, 10, 0);
+    glTranslated(-1 * m_width, -1 * m_height, 0);
   }
 
   if (m_transform == Viewer::XAXIS) {
-    glRotated(transform_dir * 0.8, 0, 1, 0);
-  } else if (m_transform == Viewer::YAXIS) {
     glRotated(transform_dir * 0.8, 1, 0, 0);
+  } else if (m_transform == Viewer::YAXIS) {
+    glRotated(transform_dir * 0.8, 0, 1, 0);
   } else if (m_transform == Viewer::ZAXIS) {
     glRotated(transform_dir * 0.8, 0, 0, 1);
   } else if (m_transform == Viewer::SCALE) {
@@ -218,7 +221,7 @@ bool Viewer::on_motion_notify_event(GdkEventMotion* event)
   }
 
   if (m_transform != Viewer::SCALE) {
-    glTranslated(0, -10, 0);
+    glTranslated(m_width, m_height, 0);
     glTranslated(-5.0, -12.0, 0.0);
   }
 
@@ -326,6 +329,7 @@ void Viewer::draw_piece_2(double x, double y, double z, double r, double g, doub
   "..x."
 */
 void Viewer::draw_piece_3(double x, double y, double z, double r, double g, double b, double a) {
+  // rotate piece
   draw_cube(x + 1, y - 1, z, r, g, b, a);
   draw_cube(x + 1, y - 2, z, r, g, b, a);
   draw_cube(x + 2, y - 2, z, r, g, b, a);
@@ -434,46 +438,50 @@ void Viewer::add_new_piece() {
   new_piece->x = m_game.px();
   new_piece->y = m_game.py();
   new_piece->z = 0;
+  new_piece->rotation = 0;
 
   tetris_pieces.push_back(new_piece);
-  std::cerr << "Total number of pieces: " << tetris_pieces.size() << std::endl;
+  //std::cerr << "Total number of pieces: " << tetris_pieces.size() << std::endl;
 }
 
 void Viewer::draw_pieces() {
   // Iterate over the stored pieces and ask them to draw themselves.
   //
+
   for( std::list<TetrisPiece*>::iterator i = tetris_pieces.begin(); i != tetris_pieces.end(); ++i ) {
     TetrisPiece *piece = (*i);
 
-    switch(piece->index) {
-      case 0:
-        draw_piece_0(piece->x, piece->y, piece->z);
-        break;
-      case 1:
-        draw_piece_1(piece->x, piece->y, piece->z);
-        break;
-      case 2:
-        draw_piece_2(piece->x, piece->y, piece->z);
-        break;
-      case 3:
-        draw_piece_3(piece->x, piece->y, piece->z);
-        break;
-      case 4:
-        draw_piece_4(piece->x, piece->y, piece->z);
-        break;
-      case 5:
-        draw_piece_5(piece->x, piece->y, piece->z);
-        break;
-      case 6:
-        draw_piece_6(piece->x, piece->y, piece->z);
-        break;
-      case 7:
-        draw_piece_7(piece->x, piece->y, piece->z);
-        break;
-      default:
-        draw_piece_0(piece->x, piece->y, piece->z);
-        break;
+    double tx = 0, ty = 0, tz = 0;
+
+    // calculate transformation
+    if ( (piece->rotation == 270) || (piece->rotation == -90) ) {
+      tx = ((piece->y - piece->x) * -1) + 4;
+      ty = piece->x + piece->y;
+    } else if ( (piece->rotation == 180) || (piece->rotation == -180) ) {
+      tx = 2 * piece->x + 4;
+      ty = 2 * piece->y - 4;
+    } else if ( (piece->rotation == 90) || (piece->rotation == -270) ) {
+      tx = piece->y + piece->x;
+      ty = piece->y - piece->x - 4;
     }
+
+    glTranslated(tx, ty, tz);
+    glRotated(piece->rotation, 0, 0, 1.0);
+
+    switch(piece->index) {
+      case 0: draw_piece_0(piece->x, piece->y, piece->z); break;
+      case 1: draw_piece_1(piece->x, piece->y, piece->z); break;
+      case 2: draw_piece_2(piece->x, piece->y, piece->z); break;
+      case 3: draw_piece_3(piece->x, piece->y, piece->z); break;
+      case 4: draw_piece_4(piece->x, piece->y, piece->z); break;
+      case 5: draw_piece_5(piece->x, piece->y, piece->z); break;
+      case 6: draw_piece_6(piece->x, piece->y, piece->z); break;
+      case 7: draw_piece_7(piece->x, piece->y, piece->z); break;
+      default: draw_piece_0(piece->x, piece->y, piece->z); break;
+    }
+
+    glRotated(-1 * piece->rotation, 0, 0, 1.0);
+    glTranslated(-1 * tx, -1 * ty, tz);
   }
 }
 
@@ -513,12 +521,10 @@ bool Viewer::tick_handler() {
 void Viewer::tick() {
   int tick_val = m_game.tick();
 
-  if (!tetris_pieces.size()) {
-    add_new_piece();
-  }
+  //std::cerr << "TICK: " << tick_val << " Speed: " << m_speed << std::endl;
 
   TetrisPiece *cur_piece = tetris_pieces.back();
-  std::cerr << "TICK: " << tick_val << " Speed: " << m_speed << std::endl;
+  std::cerr << "Viewer tick -- x: " << cur_piece->x << " y: " << cur_piece->y << std::endl;
 
   switch(tick_val) {
     case 0:
@@ -527,14 +533,12 @@ void Viewer::tick() {
         add_new_piece();
       } else {
         // advance 1
-        cur_piece->x = m_game.px();
-        cur_piece->y = m_game.py();
+        move_piece(0, -1);
       }
       break;
     case 1: case 2: case 3: case 4:
       // advance whatever number and generate new piece
-      cur_piece->x = m_game.px();
-      cur_piece->y = m_game.py();
+      move_piece(0, -1);
       add_new_piece();
       break;
     default:
@@ -545,3 +549,67 @@ void Viewer::tick() {
 
   on_expose_event(NULL);
 }
+
+void Viewer::press_left() {
+  m_game.moveLeft();
+  move_piece(-1, 0);
+  std::cerr << "hi left " << std::endl;
+}
+
+void Viewer::press_right() {
+  m_game.moveRight();
+  move_piece(1, 0);
+  std::cerr << "hi right " << std::endl;
+}
+
+void Viewer::press_up() {
+  bool can_rotate = m_game.rotateCW();
+  if (can_rotate) {
+    TetrisPiece *cur_piece = tetris_pieces.back();
+    cur_piece->rotation = fmod((cur_piece->rotation - 90), 360);
+    on_expose_event(NULL);
+    std::cerr << "Rotate CW: " << cur_piece->rotation << std::endl;
+  }
+}
+
+void Viewer::press_down() {
+  bool can_rotate = m_game.rotateCCW();
+  if (can_rotate) {
+    TetrisPiece *cur_piece = tetris_pieces.back();
+    cur_piece->rotation = fmod((cur_piece->rotation + 90), 360);
+    on_expose_event(NULL);
+    std::cerr << "Rotate CCW: " << cur_piece->rotation << std::endl;
+  }
+}
+
+void Viewer::press_space() {
+  //m_game.collapse();
+  //move_piece();
+  std::cerr << "hi space " << std::endl;
+}
+
+void Viewer::move_piece(double x_move, double y_move) {
+  TetrisPiece *cur_piece = tetris_pieces.back();
+
+/*
+  if ( (cur_piece->rotation == 270) || (cur_piece->rotation == -90) ) {
+    cur_piece->x = cur_piece->x + (-1 * y_move);
+    cur_piece->y = cur_piece->y + x_move;
+  } else if ( (cur_piece->rotation == 180) || (cur_piece->rotation == -180) ) {
+    cur_piece->x = cur_piece->x + (-1 * x_move);
+    cur_piece->y = cur_piece->y + (-1 * y_move);
+  } else if ( (cur_piece->rotation == 90) || (cur_piece->rotation == -270) ) {
+    cur_piece->x = cur_piece->x + (y_move);
+    cur_piece->y = cur_piece->y + (-1 * x_move);
+  } else {
+    cur_piece->x = cur_piece->x + x_move;
+    cur_piece->y = cur_piece->y + y_move;
+  }
+  */
+    cur_piece->x = cur_piece->x + x_move;
+    cur_piece->y = cur_piece->y + y_move;
+  //cur_piece->x = m_game.px();
+  //cur_piece->y = m_game.py();
+  on_expose_event(NULL);
+}
+

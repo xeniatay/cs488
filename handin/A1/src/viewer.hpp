@@ -8,7 +8,7 @@
 
 struct TetrisPiece {
   int id, index;
-  double x, y, z;
+  double x, y, z, rotation;
 };
 
 // The "main" OpenGL widget
@@ -38,6 +38,14 @@ public:
     SLOW,
     MEDIUM,
     FAST
+  };
+
+  enum KeyPress {
+    LEFT,
+    RIGHT,
+    UP,
+    DOWN,
+    SPACE
   };
 
   // A useful function that forces this widget to rerender. If you
@@ -70,6 +78,12 @@ public:
   void draw_pieces();
   void add_new_piece();
   void render_well(int width, int height);
+  void press_left();
+  void press_right();
+  void press_up();
+  void press_down();
+  void press_space();
+  void move_piece(double x, double y);
 
   bool tick_handler();
   void tick();
@@ -103,6 +117,9 @@ private:
 
   int x_origin;
   int scale_factor;
+
+  int m_height;
+  int m_width;
 
   std::list<TetrisPiece*> tetris_pieces;
 };

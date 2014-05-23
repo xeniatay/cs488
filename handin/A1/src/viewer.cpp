@@ -354,10 +354,10 @@ void Viewer::draw_piece_4(double x, double y, double z, double r, double g, doub
   "...."
 */
 void Viewer::draw_piece_5(double x, double y, double z, double r, double g, double b, double a) {
-  draw_cube(x, y + 2, z, r, g, b, a);
-  draw_cube(x + 1, y + 2, z, r, g, b, a);
-  draw_cube(x + 2, y + 2, z, r, g, b, a);
+  draw_cube(x, y + 1, z, r, g, b, a);
   draw_cube(x + 1, y + 1, z, r, g, b, a);
+  draw_cube(x + 2, y + 1, z, r, g, b, a);
+  draw_cube(x + 1, y, z, r, g, b, a);
 }
 
 /* Piece 6:
@@ -428,23 +428,27 @@ void Viewer::new_game() {
 }
 
 bool Viewer::tick_handler() {
-  bool next_piece = !m_game.does_piece_fit;
   int tick_val = m_game.tick();
-  std::cerr << "TICK: " << tick_val << std::endl;
   TetrisPiece *cur_piece = tetris_pieces.back();
+
+  std::cerr << "TICK: " << tick_val << " Piece: " << cur_piece->index << " ypos: " << m_game.py() << std::endl;
 
   switch(tick_val) {
     case 0:
-      // advance 1
-      cur_piece->y = cur_piece->y - 1;
-      if (next_piece) {
+      if (m_game.is_new_piece) {
+        std::cerr << "Add new piece!" << std::endl;
         add_new_piece();
+      } else {
+        // advance 1
+        cur_piece->x = m_game.px();
+        cur_piece->y = m_game.py();
       }
       break;
     case 1: case 2: case 3: case 4:
-      cur_piece->y = cur_piece->y - tick_val;
-      add_new_piece();
       // advance whatever number and generate new piece
+      cur_piece->x = m_game.px();
+      cur_piece->y = m_game.py();
+      add_new_piece();
       break;
     default:
       std::cerr << "game over" << std::endl;
@@ -461,11 +465,12 @@ void Viewer::add_new_piece() {
   TetrisPiece *new_piece = new TetrisPiece;
   new_piece->id = tetris_pieces.size();
   new_piece->index = m_game.current_piece();
-  new_piece->x = 3.0;
-  new_piece->y = 20.0;
+  new_piece->x = m_game.px();
+  new_piece->y = m_game.py();
   new_piece->z = 0;
 
   tetris_pieces.push_back(new_piece);
+  std::cerr << "Total number of pieces: " << tetris_pieces.size() << std::endl;
 }
 
 void Viewer::draw_pieces() {

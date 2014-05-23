@@ -104,7 +104,7 @@ class Game {
     int px_;
     int py_;
     Piece piece_;
-    bool does_piece_fit;
+    bool is_new_piece;
     int current_piece();
     int px();
     int py();

@@ -22,37 +22,37 @@ static const Piece PIECES[] = {
         ".x.."
         ".x.."
         ".x.."
-        ".x..", 0,			1,0,2,0),
+        ".x..", 0,      1,0,2,0),
   Piece(
         "...."
         ".xx."
         ".x.."
-        ".x..", 1,			1,1,1,0),
+        ".x..", 1,      1,1,1,0),
   Piece(
         "...."
         ".xx."
         "..x."
-        "..x.", 2,			1,1,1,0),
+        "..x.", 2,      1,1,1,0),
   Piece(
         "...."
         ".x.."
         ".xx."
-        "..x.", 3,			1,1,1,0),
+        "..x.", 3,      1,1,1,0),
   Piece(
         "...."
         "..x."
         ".xx."
-        ".x..", 4,			1,1,1,0),
+        ".x..", 4,      1,1,1,0),
   Piece(
         "...."
         "xxx."
         ".x.."
-        "....", 5,			0,1,1,1),
+        "....", 5,      0,1,1,1),
   Piece(
         "...."
         ".xx."
         ".xx."
-        "....", 6,			1,1,1,1),
+        "....", 6,      1,1,1,1),
   Piece(
         "...."
         ".xx."
@@ -116,7 +116,7 @@ Piece Piece::rotateCW() const
   getColumnRev(3, (char*)(ndesc+12));
 
   return Piece(ndesc, cindex_,
-		margins_[3], margins_[0], margins_[1], margins_[2]);
+    margins_[3], margins_[0], margins_[1], margins_[2]);
 }
 
 Piece Piece::rotateCCW() const
@@ -128,7 +128,7 @@ Piece Piece::rotateCCW() const
   getColumn(0, (char*)(ndesc+12));
 
   return Piece(ndesc, cindex_,
-		margins_[1], margins_[2], margins_[3], margins_[0]);
+    margins_[1], margins_[2], margins_[3], margins_[0]);
 }
 
 bool Piece::isOn(int row, int col) const
@@ -191,31 +191,29 @@ int& Game::get(int r, int c)
 
 bool Game::doesPieceFit(const Piece& p, int x, int y)
 {
-  does_piece_fit = true;
-
   if(x + p.getLeftMargin() < 0) {
-    does_piece_fit = false;
+    return false;
   }
 
   if(x + 3 - p.getRightMargin() >= board_width_) {
-    does_piece_fit = false;
+    return false;
   }
 
   if(y + p.getBottomMargin() < 3) {
-    does_piece_fit = false;
+    return false;
   }
 
   for(int r = 0; r < 4; ++r) {
     for(int c = 0; c < 4; ++c) {
       if(p.isOn(r, c)) {
         if(get(y-r, x+c) != -1) {
-          does_piece_fit = false;
+          return false;
         }
       }
     }
   }
 
-  return does_piece_fit;
+  return true;
 }
 
 void Game::removePiece(const Piece& p, int x, int y)
@@ -292,7 +290,7 @@ void Game::placePiece(const Piece& p, int x, int y)
 
 void Game::generateNewPiece()
 {
-  piece_ = PIECES[ rand() % 8 ];
+  piece_ = PIECES[ rand() % 5 ];
 
   int xleft = (board_width_-3) / 2;
 
@@ -310,6 +308,7 @@ int Game::tick()
   std::cerr << "x: " << px_ << " y: " << py_ << std::endl;
   removePiece(piece_, px_, py_);
   int ny = py_ - 1;
+  is_new_piece = false;
 
   if(!doesPieceFit(piece_, px_, ny)) {
     // Must finish off with this piece
@@ -319,8 +318,10 @@ int Game::tick()
       stopped_ = true;
       return -1;
     } else {
+      std::cerr << "Tick: placePiece!" << std::endl;
       int rm = collapse();
       generateNewPiece();
+      is_new_piece = true;
       return rm;
     }
   } else {
@@ -334,9 +335,9 @@ bool Game::moveLeft()
 {
   // Most of the piece movement methods work like this:
   //  1. remove the piece from the board.
-  // 	2. does the piece fit in its new configuration?
-  //	3a. if yes, add it to the board in its new configuration.
-  //	3b. if no, put it back where it was.
+  //  2. does the piece fit in its new configuration?
+  //  3a. if yes, add it to the board in its new configuration.
+  //  3b. if no, put it back where it was.
   // Simple and sort of silly, but satisfactory.
 
   int nx = px_ - 1;

@@ -93,6 +93,10 @@ public:
   void tick();
   int matrix_layers;
   int gameover_layers;
+  bool persist;
+  bool mouse_motion;
+  bool mouse_release;
+  int m_transform_dir;
 
 protected:
 

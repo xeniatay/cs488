@@ -71,6 +71,9 @@ void Viewer::on_realize()
   matrix_layers = 0;
   scale_factor = 0;
   m_speed = 1000; // default
+  persist = false;
+  mouse_motion = false;
+  mouse_release = false;
 }
 
 bool Viewer::on_expose_event(GdkEventExpose* event)
@@ -162,6 +165,7 @@ bool Viewer::on_button_press_event(GdkEventButton* event)
   //std::cerr << "Stub: Button " << event->button << " pressed" << std::endl;
   //std::cerr << "Button: " << event->button << std::endl;
 
+  persist = false;
   glPushMatrix();
   matrix_layers++;
 
@@ -189,14 +193,16 @@ bool Viewer::on_button_press_event(GdkEventButton* event)
 bool Viewer::on_button_release_event(GdkEventButton* event)
 {
   //std::cerr << "Stub: Button " << event->button << " released" << std::endl;
+  mouse_release = true;
   return true;
 }
 
 bool Viewer::on_motion_notify_event(GdkEventMotion* event)
 {
   //std::cerr << "Stub: Motion at " << event->x << ", " << event->y << std::endl;
+  mouse_motion = true;
 
-  int transform_dir = ( (event->x - x_origin) < 0) ? -1 : 1;
+  m_transform_dir = ( (event->x - x_origin) < 0) ? -1 : 1;
 
   if (m_transform != Viewer::SCALE) {
     glTranslated(5.0, 12.0, 0.0);
@@ -204,13 +210,13 @@ bool Viewer::on_motion_notify_event(GdkEventMotion* event)
   }
 
   if (m_transform == Viewer::XAXIS) {
-    glRotated(transform_dir * 0.8, 1, 0, 0);
+    glRotated(m_transform_dir * 0.8, 1, 0, 0);
   } else if (m_transform == Viewer::YAXIS) {
-    glRotated(transform_dir * 0.8, 0, 1, 0);
+    glRotated(m_transform_dir * 0.8, 0, 1, 0);
   } else if (m_transform == Viewer::ZAXIS) {
-    glRotated(transform_dir * 0.8, 0, 0, 1);
+    glRotated(m_transform_dir * 0.8, 0, 0, 1);
   } else if (m_transform == Viewer::SCALE) {
-    if (transform_dir == 1 && scale_factor < 50) {
+    if (m_transform_dir == 1 && scale_factor < 50) {
       glScaled(1.02, 1.02, 1);
       scale_factor++;
     } else if (scale_factor > -50) {
@@ -548,19 +554,37 @@ void Viewer::set_speed(Speed speed) {
 void Viewer::start_timer() {
   // Start ticker
   sigc::slot0<bool> tick_slot = sigc::mem_fun(this, &Viewer::tick_handler);
-  Glib::signal_timeout().connect(tick_slot, 100);
+  Glib::signal_timeout().connect(tick_slot, 50);
 }
 
 bool Viewer::tick_handler() {
-  total_time += 100;
+  total_time += 50;
 
   if (game_over) {
-    glRotated(5, 0, 0, 1);
+    glRotated(1, 0, 0, 1);
     on_expose_event(NULL);
   }
 
   if (total_time % m_speed == 0) {
     tick();
+  }
+
+  if (mouse_motion && mouse_release) {
+    persist = true;
+    std::cerr << "Persist is true" << std::endl;
+  }
+
+  mouse_motion = false;
+  mouse_release = false;
+
+  if (persist) {
+    if (m_transform == Viewer::XAXIS) {
+      glRotated(m_transform_dir * 0.8, 1, 0, 0);
+    } else if (m_transform == Viewer::YAXIS) {
+      glRotated(m_transform_dir * 0.8, 0, 1, 0);
+    } else if (m_transform == Viewer::ZAXIS) {
+      glRotated(m_transform_dir * 0.8, 0, 0, 1);
+    }
   }
 
   return true;

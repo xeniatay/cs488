@@ -290,7 +290,7 @@ void Game::placePiece(const Piece& p, int x, int y)
 
 void Game::generateNewPiece()
 {
-  piece_ = PIECES[ rand() % 5 ];
+  piece_ = PIECES[ rand() % 8 ];
 
   int xleft = (board_width_-3) / 2;
 

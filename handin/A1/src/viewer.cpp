@@ -72,7 +72,9 @@ void Viewer::on_realize()
 
   // Start ticker
   sigc::slot0<bool> tick_slot = sigc::mem_fun(this, &Viewer::tick_handler);
-  Glib::signal_timeout().connect(tick_slot, 1000);
+  // TODO change to 1s
+  //Glib::signal_timeout().connect(tick_slot, 1000);
+  Glib::signal_timeout().connect(tick_slot, 50);
 }
 
 bool Viewer::on_expose_event(GdkEventExpose* event)
@@ -290,9 +292,9 @@ void Viewer::draw_cube(double x, double y, double z, double r = 0, double g = 0,
 */
 void Viewer::draw_piece_0(double x, double y, double z, double r, double g, double b, double a) {
   draw_cube(x + 1, y, z, r, g, b, a);
-  draw_cube(x + 1, y + 1, z, r, g, b, a);
-  draw_cube(x + 1, y + 2, z, r, g, b, a);
-  draw_cube(x + 1, y + 3, z, r, g, b, a);
+  draw_cube(x + 1, y - 1, z, r, g, b, a);
+  draw_cube(x + 1, y - 2, z, r, g, b, a);
+  draw_cube(x + 1, y - 3, z, r, g, b, a);
 }
 
 /* Piece 1:
@@ -302,10 +304,10 @@ void Viewer::draw_piece_0(double x, double y, double z, double r, double g, doub
   ".x.."
 */
 void Viewer::draw_piece_1(double x, double y, double z, double r, double g, double b, double a) {
-  draw_cube(x + 1, y + 2, z, r, g, b, a);
-  draw_cube(x + 2, y + 2, z, r, g, b, a);
-  draw_cube(x + 1, y + 1, z, r, g, b, a);
-  draw_cube(x + 1, y, z, r, g, b, a);
+  draw_cube(x + 1, y - 1, z, r, g, b, a);
+  draw_cube(x + 2, y - 1, z, r, g, b, a);
+  draw_cube(x + 1, y - 2, z, r, g, b, a);
+  draw_cube(x + 1, y - 3, z, r, g, b, a);
 }
 
 /* Piece 2:
@@ -315,10 +317,10 @@ void Viewer::draw_piece_1(double x, double y, double z, double r, double g, doub
   "..x."
 */
 void Viewer::draw_piece_2(double x, double y, double z, double r, double g, double b, double a) {
-  draw_cube(x + 1, y + 2, z, r, g, b, a);
-  draw_cube(x + 2, y + 2, z, r, g, b, a);
-  draw_cube(x + 2, y + 1, z, r, g, b, a);
-  draw_cube(x + 2, y, z, r, g, b, a);
+  draw_cube(x + 1, y - 1, z, r, g, b, a);
+  draw_cube(x + 2, y - 1, z, r, g, b, a);
+  draw_cube(x + 2, y - 2, z, r, g, b, a);
+  draw_cube(x + 2, y - 3, z, r, g, b, a);
 }
 
 /* Piece 3:
@@ -328,10 +330,10 @@ void Viewer::draw_piece_2(double x, double y, double z, double r, double g, doub
   "..x."
 */
 void Viewer::draw_piece_3(double x, double y, double z, double r, double g, double b, double a) {
-  draw_cube(x + 1, y + 2, z, r, g, b, a);
-  draw_cube(x + 1, y + 1, z, r, g, b, a);
-  draw_cube(x + 2, y + 1, z, r, g, b, a);
-  draw_cube(x + 2, y, z, r, g, b, a);
+  draw_cube(x + 1, y - 1, z, r, g, b, a);
+  draw_cube(x + 1, y - 2, z, r, g, b, a);
+  draw_cube(x + 2, y - 2, z, r, g, b, a);
+  draw_cube(x + 2, y - 3, z, r, g, b, a);
 }
 
 /* Piece 4:
@@ -341,10 +343,10 @@ void Viewer::draw_piece_3(double x, double y, double z, double r, double g, doub
   ".x.."
 */
 void Viewer::draw_piece_4(double x, double y, double z, double r, double g, double b, double a) {
-  draw_cube(x + 2, y + 2, z, r, g, b, a);
-  draw_cube(x + 1, y + 1, z, r, g, b, a);
-  draw_cube(x + 2, y + 1, z, r, g, b, a);
-  draw_cube(x + 1, y, z, r, g, b, a);
+  draw_cube(x + 2, y - 1, z, r, g, b, a);
+  draw_cube(x + 1, y - 2, z, r, g, b, a);
+  draw_cube(x + 2, y - 2, z, r, g, b, a);
+  draw_cube(x + 1, y - 3, z, r, g, b, a);
 }
 
 /* Piece 5:
@@ -354,10 +356,10 @@ void Viewer::draw_piece_4(double x, double y, double z, double r, double g, doub
   "...."
 */
 void Viewer::draw_piece_5(double x, double y, double z, double r, double g, double b, double a) {
-  draw_cube(x, y + 1, z, r, g, b, a);
-  draw_cube(x + 1, y + 1, z, r, g, b, a);
-  draw_cube(x + 2, y + 1, z, r, g, b, a);
-  draw_cube(x + 1, y, z, r, g, b, a);
+  draw_cube(x, y - 1, z, r, g, b, a);
+  draw_cube(x + 1, y - 1, z, r, g, b, a);
+  draw_cube(x + 2, y - 1, z, r, g, b, a);
+  draw_cube(x + 1, y - 2, z, r, g, b, a);
 }
 
 /* Piece 6:
@@ -367,10 +369,10 @@ void Viewer::draw_piece_5(double x, double y, double z, double r, double g, doub
   "...."
 */
 void Viewer::draw_piece_6(double x, double y, double z, double r, double g, double b, double a) {
-  draw_cube(x + 1, y + 2, z, r, g, b, a);
-  draw_cube(x + 2, y + 2, z, r, g, b, a);
-  draw_cube(x + 1, y + 1, z, r, g, b, a);
-  draw_cube(x + 2, y + 1, z, r, g, b, a);
+  draw_cube(x + 1, y - 1, z, r, g, b, a);
+  draw_cube(x + 2, y - 1, z, r, g, b, a);
+  draw_cube(x + 1, y - 2, z, r, g, b, a);
+  draw_cube(x + 2, y - 2, z, r, g, b, a);
 }
 
 /* Piece 7:
@@ -380,9 +382,9 @@ void Viewer::draw_piece_6(double x, double y, double z, double r, double g, doub
   "...."
 */
 void Viewer::draw_piece_7(double x, double y, double z, double r, double g, double b, double a) {
-  draw_cube(x + 1, y + 2, z, r, g, b, a);
-  draw_cube(x + 2, y + 2, z, r, g, b, a);
-  draw_cube(x + 1, y + 1, z, r, g, b, a);
+  draw_cube(x + 1, y - 1, z, r, g, b, a);
+  draw_cube(x + 2, y - 1, z, r, g, b, a);
+  draw_cube(x + 1, y - 2, z, r, g, b, a);
 }
 
 // Params: width, height

@@ -165,7 +165,10 @@ bool Viewer::on_button_press_event(GdkEventButton* event)
   //std::cerr << "Stub: Button " << event->button << " pressed" << std::endl;
   //std::cerr << "Button: " << event->button << std::endl;
 
-  persist = false;
+  if (persist = true) {
+    persist = false;
+    on_expose_event(NULL);
+  }
 
   glPushMatrix();
   matrix_layers++;
@@ -586,8 +589,6 @@ bool Viewer::tick_handler() {
     } else if (m_transform == Viewer::ZAXIS) {
       glRotated(m_transform_dir * 1, 0, 0, 1);
     }
-    on_expose_event(NULL);
-  } else {
     on_expose_event(NULL);
   }
 

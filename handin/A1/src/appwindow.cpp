@@ -1,3 +1,7 @@
+// Xenia Tay
+// 20396769
+// xzytay
+
 #include "appwindow.hpp"
 #include <iostream>
 

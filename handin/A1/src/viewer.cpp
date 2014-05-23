@@ -1,3 +1,7 @@
+// Xenia Tay
+// 20396769
+// xzytay
+
 #include "viewer.hpp"
 #include <iostream>
 #include <GL/gl.h>

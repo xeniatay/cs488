@@ -1,3 +1,7 @@
+// Xenia Tay
+// 20396769
+// xzytay
+
 #ifndef APPWINDOW_HPP
 #define APPWINDOW_HPP
 

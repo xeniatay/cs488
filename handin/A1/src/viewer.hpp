@@ -1,3 +1,7 @@
+// Xenia Tay
+// 20396769
+// xzytay
+
 #ifndef CS488_VIEWER_HPP
 #define CS488_VIEWER_HPP
 

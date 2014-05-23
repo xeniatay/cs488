@@ -27,9 +27,19 @@ AppWindow::AppWindow()
   m_menu_mode.items().push_back(RadioMenuElem(m_menu_mode_group, "_Multicoloured", Gtk::AccelKey("M"),
     sigc::bind(mode_slot, Viewer::MULTICOLOURED)));
 
+  // Set up the speed menu
+  sigc::slot1<void, Viewer::Speed> speed_slot = sigc::mem_fun(m_viewer, &Viewer::set_speed);
+  m_menu_speed.items().push_back(RadioMenuElem(m_menu_speed_group, "_Slow", Gtk::AccelKey("1"),
+    sigc::bind(speed_slot, Viewer::SLOW)));
+  m_menu_speed.items().push_back(RadioMenuElem(m_menu_speed_group, "_Medium", Gtk::AccelKey("2"),
+    sigc::bind(speed_slot, Viewer::MEDIUM)));
+  m_menu_speed.items().push_back(RadioMenuElem(m_menu_speed_group, "_Fast", Gtk::AccelKey("3"),
+    sigc::bind(speed_slot, Viewer::FAST)));
+
   // Set up the menu bar
   m_menubar.items().push_back(Gtk::Menu_Helpers::MenuElem("_Application", m_menu_app));
   m_menubar.items().push_back(Gtk::Menu_Helpers::MenuElem("_Draw Mode", m_menu_mode));
+  m_menubar.items().push_back(Gtk::Menu_Helpers::MenuElem("_Speed", m_menu_speed));
 
   // Pack in our widgets
 

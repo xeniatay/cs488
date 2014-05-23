@@ -34,6 +34,12 @@ public:
     SCALE
   };
 
+  enum Speed {
+    SLOW,
+    MEDIUM,
+    FAST
+  };
+
   // A useful function that forces this widget to rerender. If you
   // want to render a new frame, do not call on_expose_event
   // directly. Instead call this, which will cause an on_expose_event
@@ -41,6 +47,8 @@ public:
   void invalidate();
 
   void set_mode(Mode mode);
+  void set_speed(Speed speed);
+  void start_timer();
   void render_drawing_mode();
 
   // drawing mode methods
@@ -64,6 +72,7 @@ public:
   void render_well(int width, int height);
 
   bool tick_handler();
+  void tick();
 
 protected:
 
@@ -88,6 +97,8 @@ protected:
 
 private:
   Mode m_mode; // drawing mode
+  int m_speed;
+  int total_time;
   Transform m_transform;
 
   int x_origin;

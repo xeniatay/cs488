@@ -25,6 +25,7 @@ private:
 
   // Draw Mode Radio Button Menu
   Gtk::RadioButtonGroup m_menu_mode_group;
+  Gtk::RadioButtonGroup m_menu_speed_group;
 
   // The main OpenGL area
   Viewer m_viewer;

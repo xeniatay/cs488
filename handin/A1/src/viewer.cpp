@@ -68,12 +68,9 @@ void Viewer::on_realize()
 
   x_origin = 0;
   scale_factor = 0;
-
-  // Start ticker
-  sigc::slot0<bool> tick_slot = sigc::mem_fun(this, &Viewer::tick_handler);
-  // TODO change to 1s
-  //Glib::signal_timeout().connect(tick_slot, 1000);
-  Glib::signal_timeout().connect(tick_slot, 50);
+  total_time = 0;
+  m_speed = 1000; // default
+  start_timer();
 }
 
 bool Viewer::on_expose_event(GdkEventExpose* event)
@@ -430,44 +427,6 @@ void Viewer::new_game() {
   on_expose_event(NULL);
 }
 
-bool Viewer::tick_handler() {
-  int tick_val = m_game.tick();
-
-  if (!tetris_pieces.size()) {
-    add_new_piece();
-  }
-
-  TetrisPiece *cur_piece = tetris_pieces.back();
-  std::cerr << "TICK: " << tick_val << " Piece: " << cur_piece->index << " ypos: " << m_game.py() << std::endl;
-
-  switch(tick_val) {
-    case 0:
-      if (m_game.is_new_piece) {
-        std::cerr << "Add new piece!" << std::endl;
-        add_new_piece();
-      } else {
-        // advance 1
-        cur_piece->x = m_game.px();
-        cur_piece->y = m_game.py();
-      }
-      break;
-    case 1: case 2: case 3: case 4:
-      // advance whatever number and generate new piece
-      cur_piece->x = m_game.px();
-      cur_piece->y = m_game.py();
-      add_new_piece();
-      break;
-    default:
-      std::cerr << "game over" << std::endl;
-      // game over;
-      break;
-  }
-
-  on_expose_event(NULL);
-
-  return true;
-}
-
 void Viewer::add_new_piece() {
   TetrisPiece *new_piece = new TetrisPiece;
   new_piece->id = tetris_pieces.size();
@@ -516,4 +475,73 @@ void Viewer::draw_pieces() {
         break;
     }
   }
+}
+
+void Viewer::set_speed(Speed speed) {
+  switch(speed) {
+    case SLOW:
+      m_speed = 1000;
+      break;
+    case MEDIUM:
+      m_speed = 500;
+      break;
+    case FAST:
+      m_speed = 100;
+      break;
+    default:
+      m_speed = 1000;
+      break;
+  }
+}
+
+void Viewer::start_timer() {
+  // Start ticker
+  sigc::slot0<bool> tick_slot = sigc::mem_fun(this, &Viewer::tick_handler);
+  Glib::signal_timeout().connect(tick_slot, 100);
+}
+
+bool Viewer::tick_handler() {
+  total_time += 100;
+
+  if (total_time % m_speed == 0) {
+    tick();
+  }
+
+  return true;
+}
+
+void Viewer::tick() {
+  int tick_val = m_game.tick();
+
+  if (!tetris_pieces.size()) {
+    add_new_piece();
+  }
+
+  TetrisPiece *cur_piece = tetris_pieces.back();
+  std::cerr << "TICK: " << tick_val << " Speed: " << m_speed << std::endl;
+
+  switch(tick_val) {
+    case 0:
+      if (m_game.is_new_piece) {
+        std::cerr << "Add new piece!" << std::endl;
+        add_new_piece();
+      } else {
+        // advance 1
+        cur_piece->x = m_game.px();
+        cur_piece->y = m_game.py();
+      }
+      break;
+    case 1: case 2: case 3: case 4:
+      // advance whatever number and generate new piece
+      cur_piece->x = m_game.px();
+      cur_piece->y = m_game.py();
+      add_new_piece();
+      break;
+    default:
+      std::cerr << "game over" << std::endl;
+      // game over;
+      break;
+  }
+
+  on_expose_event(NULL);
 }

@@ -66,14 +66,8 @@ void Viewer::on_realize()
 
   gldrawable->gl_end();
 
-  x_origin = 0;
-  scale_factor = 0;
-  total_time = 0;
-  m_speed = 1000; // default
-  //start_timer();
-  add_new_piece();
-  m_height = 20;
-  m_width = 10;
+  start_timer();
+  new_game();
 }
 
 bool Viewer::on_expose_event(GdkEventExpose* event)
@@ -119,6 +113,9 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
 
   render_well(m_width, m_height);
 
+  // hide rows that are won
+  glTranslated(0, -1 * collapsed, 0);
+
   draw_pieces();
 
   // We pushed a matrix onto the PROJECTION stack earlier, we
@@ -162,8 +159,8 @@ bool Viewer::on_configure_event(GdkEventConfigure* event)
 
 bool Viewer::on_button_press_event(GdkEventButton* event)
 {
-  std::cerr << "Stub: Button " << event->button << " pressed" << std::endl;
-  std::cerr << "Button: " << event->button << std::endl;
+  //std::cerr << "Stub: Button " << event->button << " pressed" << std::endl;
+  //std::cerr << "Button: " << event->button << std::endl;
 
   switch (event->button) {
     case 1:
@@ -188,13 +185,13 @@ bool Viewer::on_button_press_event(GdkEventButton* event)
 
 bool Viewer::on_button_release_event(GdkEventButton* event)
 {
-  std::cerr << "Stub: Button " << event->button << " released" << std::endl;
+  //std::cerr << "Stub: Button " << event->button << " released" << std::endl;
   return true;
 }
 
 bool Viewer::on_motion_notify_event(GdkEventMotion* event)
 {
-  std::cerr << "Stub: Motion at " << event->x << ", " << event->y << std::endl;
+  //std::cerr << "Stub: Motion at " << event->x << ", " << event->y << std::endl;
 
   int transform_dir = ( (event->x - x_origin) < 0) ? -1 : 1;
 
@@ -217,7 +214,7 @@ bool Viewer::on_motion_notify_event(GdkEventMotion* event)
       glScaled(0.98, 0.98, 1);
       scale_factor--;
     }
-    std::cerr << "scale factor: " << scale_factor << std::endl;
+    //std::cerr << "scale factor: " << scale_factor << std::endl;
   }
 
   if (m_transform != Viewer::SCALE) {
@@ -392,13 +389,13 @@ void Viewer::draw_piece_7(double x, double y, double z, double r, double g, doub
 void Viewer::render_well(int width, int height) {
   int i = 0;
 
-  for (i = -1; i < height; i++) {
+  for (i = m_xorigin; i < height; i++) {
     draw_cube(-1, i, 0, .1, .1, .1);
     draw_cube(width, i, 0, .1, .1, .1);
   }
 
   for (i = 0; i < width; i++) {
-    draw_cube(i, -1, 0, .1, .1, .1);
+    draw_cube(i, m_xorigin, 0, .1, .1, .1);
   }
 }
 
@@ -428,6 +425,17 @@ void Viewer::render_drawing_mode() {
 void Viewer::new_game() {
   tetris_pieces.clear();
   m_game.reset();
+
+  x_origin = 0;
+  scale_factor = 0;
+  total_time = 0;
+  m_speed = 1000; // default
+  add_new_piece();
+  m_height = 20;
+  m_width = 10;
+  m_xorigin = -1;
+  collapsed = 0;
+
   on_expose_event(NULL);
 }
 
@@ -521,7 +529,7 @@ bool Viewer::tick_handler() {
 void Viewer::tick() {
   int tick_val = m_game.tick();
 
-  //std::cerr << "TICK: " << tick_val << " Speed: " << m_speed << std::endl;
+  std::cerr << "TICK: " << tick_val << std::endl;
 
   TetrisPiece *cur_piece = tetris_pieces.back();
 
@@ -531,14 +539,11 @@ void Viewer::tick() {
         std::cerr << "Add new piece!" << std::endl;
         add_new_piece();
       } else {
-        // advance 1
         move_piece();
       }
       break;
     case 1: case 2: case 3: case 4:
-      // advance whatever number and generate new piece
-      move_piece();
-      add_new_piece();
+      collapsed += tick_val;
       break;
     default:
       std::cerr << "game over" << std::endl;
@@ -552,13 +557,13 @@ void Viewer::tick() {
 void Viewer::press_left() {
   m_game.moveLeft();
   move_piece();
-  std::cerr << "hi left " << std::endl;
+  //std::cerr << "hi left " << std::endl;
 }
 
 void Viewer::press_right() {
   m_game.moveRight();
   move_piece();
-  std::cerr << "hi right " << std::endl;
+  //std::cerr << "hi right " << std::endl;
 }
 
 void Viewer::press_up() {
@@ -567,7 +572,7 @@ void Viewer::press_up() {
     TetrisPiece *cur_piece = tetris_pieces.back();
     cur_piece->rotation = fmod((cur_piece->rotation - 90), 360);
     on_expose_event(NULL);
-    std::cerr << "Rotate CW: " << cur_piece->rotation << std::endl;
+    //std::cerr << "Rotate CW: " << cur_piece->rotation << std::endl;
   }
 }
 
@@ -577,14 +582,14 @@ void Viewer::press_down() {
     TetrisPiece *cur_piece = tetris_pieces.back();
     cur_piece->rotation = fmod((cur_piece->rotation + 90), 360);
     on_expose_event(NULL);
-    std::cerr << "Rotate CCW: " << cur_piece->rotation << std::endl;
+    //std::cerr << "Rotate CCW: " << cur_piece->rotation << std::endl;
   }
 }
 
 void Viewer::press_space() {
   m_game.drop();
   move_piece();
-  std::cerr << "Drop!" << std::endl;
+  //std::cerr << "Drop!" << std::endl;
 }
 
 void Viewer::move_piece() {

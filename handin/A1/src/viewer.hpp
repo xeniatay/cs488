@@ -120,6 +120,8 @@ private:
 
   int m_height;
   int m_width;
+  int m_xorigin;
+  int collapsed;
 
   std::list<TetrisPiece*> tetris_pieces;
 };

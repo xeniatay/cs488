@@ -1,3 +1,7 @@
+// Xenia Tay
+// 20396769
+// xzytay
+
 #include "viewer.hpp"
 #include <iostream>
 #include <GL/gl.h>
@@ -28,7 +32,7 @@ Viewer::Viewer()
   add_events(Gdk::BUTTON1_MOTION_MASK    |
              Gdk::BUTTON2_MOTION_MASK    |
              Gdk::BUTTON3_MOTION_MASK    |
-             Gdk::BUTTON_PRESS_MASK      | 
+             Gdk::BUTTON_PRESS_MASK      |
              Gdk::BUTTON_RELEASE_MASK    |
              Gdk::VISIBILITY_NOTIFY_MASK);
 }
@@ -61,9 +65,9 @@ void Viewer::on_realize()
   // Do some OpenGL setup.
   // First, let the base class do whatever it needs to
   Gtk::GL::DrawingArea::on_realize();
-  
+
   Glib::RefPtr<Gdk::GL::Drawable> gldrawable = get_gl_drawable();
-  
+
   if (!gldrawable)
     return;
 
@@ -83,25 +87,40 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
     return false;
 
   // Here is where your drawing code should go.
-  
-  draw_init(get_width(), get_height());
-  
-  /* A few of lines are drawn below to show how it's done. */
 
+
+  draw_init(get_width(), get_height());
   set_colour(Colour(0.1, 0.1, 0.1));
 
-  draw_line(Point2D(0.1*get_width(), 0.1*get_height()), 
-            Point2D(0.9*get_width(), 0.9*get_height()));
-  draw_line(Point2D(0.9*get_width(), 0.1*get_height()),
-            Point2D(0.1*get_width(), 0.9*get_height()));
-
+  // left vertical
   draw_line(Point2D(0.1*get_width(), 0.1*get_height()),
-            Point2D(0.2*get_width(), 0.1*get_height()));
-  draw_line(Point2D(0.1*get_width(), 0.1*get_height()), 
-            Point2D(0.1*get_width(), 0.2*get_height()));
+            Point2D(0.1*get_width(), 0.9*get_height()));
+  // right vertical
+  draw_line(Point2D(0.9*get_width(), 0.1*get_height()),
+            Point2D(0.9*get_width(), 0.9*get_height()));
+  // top horiz
+  draw_line(Point2D(0.1*get_width(), 0.1*get_height()),
+            Point2D(0.9*get_width(), 0.1*get_height()));
+  // bottom horiz
+  draw_line(Point2D(0.1*get_width(), 0.9*get_height()),
+            Point2D(0.9*get_width(), 0.9*get_height()));
 
   draw_complete();
-            
+
+  /* A few of lines are drawn below to show how it's done. */
+  //draw_init(get_width(), get_height());
+  //set_colour(Colour(0.1, 0.1, 0.1));
+  //draw_line(Point2D(0.1*get_width(), 0.1*get_height()),
+            //Point2D(0.9*get_width(), 0.9*get_height()));
+  //draw_line(Point2D(0.9*get_width(), 0.1*get_height()),
+            //Point2D(0.1*get_width(), 0.9*get_height()));
+  //draw_line(Point2D(0.1*get_width(), 0.1*get_height()),
+            //Point2D(0.2*get_width(), 0.1*get_height()));
+  //draw_line(Point2D(0.1*get_width(), 0.1*get_height()),
+            //Point2D(0.1*get_width(), 0.2*get_height()));
+
+  //draw_complete();
+
   // Swap the contents of the front and back buffers so we see what we
   // just drew. This should only be done if double buffering is enabled.
   gldrawable->swap_buffers();
@@ -116,7 +135,7 @@ bool Viewer::on_configure_event(GdkEventConfigure* event)
   Glib::RefPtr<Gdk::GL::Drawable> gldrawable = get_gl_drawable();
 
   if (!gldrawable) return false;
-  
+
   if (!gldrawable->gl_begin(get_gl_context()))
     return false;
 

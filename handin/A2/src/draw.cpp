@@ -1,3 +1,7 @@
+// Xenia Tay
+// 20396769
+// xzytay
+
 /****************************************************************************
  *
  * CS488 -- Introduction to Computer Graphics
@@ -46,7 +50,7 @@ void draw_init(int width, int height)
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   glTranslated(0.0, (double)height, 0.0);
-  glScaled(1.0, -1.0, 1.0); 
+  glScaled(1.0, -1.0, 1.0);
 
   glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
   glEnable(GL_LINE_SMOOTH);

@@ -1,3 +1,7 @@
+// Xenia Tay
+// 20396769
+// xzytay
+
 #include "a2.hpp"
 
 // Return a matrix to represent a counterclockwise rotation of "angle"

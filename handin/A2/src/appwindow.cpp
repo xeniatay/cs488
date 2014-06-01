@@ -1,3 +1,7 @@
+// Xenia Tay
+// 20396769
+// xzytay
+
 #include "appwindow.hpp"
 
 AppWindow::AppWindow()
@@ -7,19 +11,19 @@ AppWindow::AppWindow()
   // A utility class for constructing things that go into menus, which
   // we'll set up next.
   using Gtk::Menu_Helpers::MenuElem;
-  
+
   // Set up the application menu
   // The slot we use here just causes AppWindow::hide() on this,
   // which shuts down the application.
   m_menu_app.items().push_back(MenuElem("_Quit", Gtk::AccelKey("q"),
     sigc::mem_fun(*this, &AppWindow::hide)));
-  
+
 
   // Set up the menu bar
   m_menubar.items().push_back(Gtk::Menu_Helpers::MenuElem("_Application", m_menu_app));
-  
+
   // Pack in our widgets
-  
+
   // First add the vertical box as our single "top" widget
   add(m_vbox);
 

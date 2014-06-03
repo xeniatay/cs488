@@ -280,11 +280,9 @@ private:
   double v_[4];
 };
 
-class Matrix4x4
-{
+class Matrix4x4 {
 public:
-  Matrix4x4()
-  {
+  Matrix4x4() {
     // Construct an identity matrix
     std::fill(v_, v_+16, 0.0);
     v_[0] = 1.0;
@@ -292,13 +290,12 @@ public:
     v_[10] = 1.0;
     v_[15] = 1.0;
   }
-  Matrix4x4(const Matrix4x4& other)
-  {
+
+  Matrix4x4(const Matrix4x4& other) {
     std::copy(other.v_, other.v_+16, v_);
   }
-  Matrix4x4(const Vector4D row1, const Vector4D row2, const Vector4D row3,
-             const Vector4D row4)
-  {
+
+  Matrix4x4(const Vector4D row1, const Vector4D row2, const Vector4D row3, const Vector4D row4) {
     v_[0] = row1[0];
     v_[1] = row1[1];
     v_[2] = row1[2];
@@ -319,53 +316,48 @@ public:
     v_[14] = row4[2];
     v_[15] = row4[3];
   }
-  Matrix4x4(double *vals)
-  {
+
+  Matrix4x4(double *vals) {
     std::copy(vals, vals + 16, (double*)v_);
   }
 
-  Matrix4x4& operator=(const Matrix4x4& other)
-  {
+  Matrix4x4& operator=(const Matrix4x4& other) {
     std::copy(other.v_, other.v_+16, v_);
     return *this;
   }
 
-  Vector4D getRow(size_t row) const
-  {
+  Vector4D getRow(size_t row) const {
     return Vector4D(v_[4*row], v_[4*row+1], v_[4*row+2], v_[4*row+3]);
   }
-  double *getRow(size_t row)
-  {
+
+  double *getRow(size_t row) {
     return (double*)v_ + 4*row;
   }
 
-  Vector4D getColumn(size_t col) const
-  {
+  Vector4D getColumn(size_t col) const {
     return Vector4D(v_[col], v_[4+col], v_[8+col], v_[12+col]);
   }
 
-  Vector4D operator[](size_t row) const
-  {
-    return getRow(row);
-  }
-  double *operator[](size_t row)
-  {
+  Vector4D operator[](size_t row) const {
     return getRow(row);
   }
 
-  Matrix4x4 transpose() const
-  {
+  double *operator[](size_t row) {
+    return getRow(row);
+  }
+
+  Matrix4x4 transpose() const {
     return Matrix4x4(getColumn(0), getColumn(1),
                       getColumn(2), getColumn(3));
   }
+
   Matrix4x4 invert() const;
 
-  const double *begin() const
-  {
+  const double *begin() const {
     return (double*)v_;
   }
-  const double *end() const
-  {
+
+  const double *end() const {
     return begin() + 16;
   }
 
@@ -373,8 +365,7 @@ private:
   double v_[16];
 };
 
-inline Matrix4x4 operator *(const Matrix4x4& a, const Matrix4x4& b)
-{
+inline Matrix4x4 operator *(const Matrix4x4& a, const Matrix4x4& b) {
   Matrix4x4 ret;
 
   for(size_t i = 0; i < 4; ++i) {

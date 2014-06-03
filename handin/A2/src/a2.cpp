@@ -40,9 +40,8 @@ Matrix4x4 translation(const Vector3D& displacement)
   Matrix4x4 t;
 
   // Subst the delta x and delta y values
-  t[0][3] = displacement[0];
-  t[1][3] = displacement[1];
-  //v[2][3] = displacement[2];
+  t[0][2] = displacement[0];
+  t[1][2] = displacement[1];
 
   return t;
 }
@@ -57,4 +56,19 @@ Matrix4x4 scaling(const Vector3D& scale)
   s[2][2] = scale[2];
 
   return s;
+}
+
+Matrix4x4 reflection(char axis) {
+  Matrix4x4 r;
+
+  char x = 'x', y = 'y', z = 'z';
+
+  if (axis == x) {
+    r[1][1] = -1;
+  } else if (axis == y) {
+    r[0][0] = -1;
+  } else if (axis == z) {
+  }
+
+  return r;
 }

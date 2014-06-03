@@ -20,4 +20,7 @@ Matrix4x4 translation(const Vector3D& displacement);
 // Return a matrix to represent a nonuniform scale with the given factors.
 Matrix4x4 scaling(const Vector3D& scale);
 
+// Return a matrix to represent a reflection with the given axis.
+Matrix4x4 reflection(char axis);
+
 #endif

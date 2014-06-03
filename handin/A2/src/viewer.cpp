@@ -3,10 +3,12 @@
 // xzytay
 
 #include "viewer.hpp"
+#include "a2.hpp"
 #include <iostream>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include "draw.hpp"
+#include <math.h>
 
 Viewer::Viewer()
 {
@@ -88,8 +90,9 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
 
   // Here is where your drawing code should go.
 
-
   draw_init(get_width(), get_height());
+
+  // WIREFRAME BOX
   set_colour(Colour(0.1, 0.1, 0.1));
 
   // left vertical
@@ -105,21 +108,67 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   draw_line(Point2D(0.1*get_width(), 0.9*get_height()),
             Point2D(0.9*get_width(), 0.9*get_height()));
 
+  // GNOMON
+  set_colour(Colour(0.9, 0.9, 0.9));
+
+  Point2D origin = Point2D(0.5 * get_width(), 0.5 * get_height());
+
+  Matrix4x4 modelGnomon = rotation(90, 'z');
+
+  // cross x and y to get z axis
+  Vector3D xaxis = Vector3D(0.25 * get_width(), 0, 1);
+  Vector3D yaxis = Vector3D(0, 0.25 * get_height(), 1);
+  Vector3D zaxis = modelGnomon * xaxis;
+  zaxis[0] = fabs(zaxis[0]);
+  zaxis[1] = fabs(zaxis[1]);
+
+  std::cerr << "Origin: " << origin << std::endl;
+
+  std::cerr << "zaxis after rotate: " << zaxis << std::endl;
+
+/*
+  Vector3D zaxisNorm = zaxis;
+  zaxisNorm.normalize();
+
+  std::cerr << "zaxisNorm: " << zaxisNorm << std::endl;
+
+  zaxisNorm[0] = fabs(zaxisNorm[0]);
+  zaxisNorm[1] = fabs(zaxisNorm[1]);
+  zaxisNorm[2] = fabs(zaxisNorm[2]);
+  std::cerr << zaxis.length() << std::endl;
+
+  std::cerr << "zaxisNorm after fabs: " << zaxisNorm << std::endl;
+*/
+
+  modelGnomon = reflection('x');
+
+  std::cerr << "yaxis before reflection: " << yaxis << std::endl;
+  yaxis = modelGnomon * yaxis;
+
+  std::cerr << "yaxis after reflection: " << yaxis << std::endl;
+
+  Vector3D displaceToOrigin = Vector3D(0.5 * get_width(), 0.5 * get_height(), 0);
+  modelGnomon = translation(displaceToOrigin);
+  std::cerr << "modelGnomon from translate: " << modelGnomon << std::endl;
+
+
+  std::cerr << "xaxis before translate: " << xaxis << std::endl;
+  xaxis = modelGnomon * xaxis;
+  yaxis = modelGnomon * yaxis;
+  zaxis = modelGnomon * zaxis;
+
+  std::cerr << "xaxis after translate: " << xaxis << std::endl;
+  std::cerr << "yaxis after translate: " << yaxis << std::endl;
+  std::cerr << "zaxis after translate: " << zaxis << std::endl;
+
+  // x-axis
+  draw_line(origin, Point2D(xaxis[0], xaxis[1]));
+  // y-axis
+  draw_line(origin, Point2D(yaxis[0], yaxis[1]));
+  // z-axis
+  draw_line(origin, Point2D(zaxis[0], zaxis[1]));
+
   draw_complete();
-
-  /* A few of lines are drawn below to show how it's done. */
-  //draw_init(get_width(), get_height());
-  //set_colour(Colour(0.1, 0.1, 0.1));
-  //draw_line(Point2D(0.1*get_width(), 0.1*get_height()),
-            //Point2D(0.9*get_width(), 0.9*get_height()));
-  //draw_line(Point2D(0.9*get_width(), 0.1*get_height()),
-            //Point2D(0.1*get_width(), 0.9*get_height()));
-  //draw_line(Point2D(0.1*get_width(), 0.1*get_height()),
-            //Point2D(0.2*get_width(), 0.1*get_height()));
-  //draw_line(Point2D(0.1*get_width(), 0.1*get_height()),
-            //Point2D(0.1*get_width(), 0.2*get_height()));
-
-  //draw_complete();
 
   // Swap the contents of the front and back buffers so we see what we
   // just drew. This should only be done if double buffering is enabled.

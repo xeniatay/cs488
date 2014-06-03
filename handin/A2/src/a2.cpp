@@ -35,6 +35,7 @@ Matrix4x4 rotation(double angle, char axis)
 }
 
 // Return a matrix to represent a displacement of the given vector.
+// Third coordinate in multiplication vector has to be 1
 Matrix4x4 translation(const Vector3D& displacement)
 {
   Matrix4x4 t;

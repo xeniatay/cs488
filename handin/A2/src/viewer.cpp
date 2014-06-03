@@ -108,66 +108,71 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   draw_line(Point2D(0.1*get_width(), 0.9*get_height()),
             Point2D(0.9*get_width(), 0.9*get_height()));
 
-  // GNOMON
+  // origin
+  Point2D origin = Point2D(0.5 * get_width(), 0.5 * get_height());
+  Vector3D displaceToOrigin = Vector3D(0.5 * get_width(), 0.5 * get_height(), 0);
+  Matrix4x4 translateToOrigin = translation(displaceToOrigin);
+
+  // MODEL COORDINATE GNOMON
+  // ======================
   set_colour(Colour(0.9, 0.9, 0.9));
 
-  Point2D origin = Point2D(0.5 * get_width(), 0.5 * get_height());
+  Matrix4x4 modelGnomon = rotation(90, 'y');
 
-  Matrix4x4 modelGnomon = rotation(90, 'z');
+  Vector3D MCx = Vector3D(0.25 * get_width(), 0, 1);
+  Vector3D MCy = Vector3D(0, 0.25 * get_height(), 1);
+  Vector3D MCz = Vector3D(0, 0, 1);
 
-  // cross x and y to get z axis
-  Vector3D xaxis = Vector3D(0.25 * get_width(), 0, 1);
-  Vector3D yaxis = Vector3D(0, 0.25 * get_height(), 1);
-  Vector3D zaxis = modelGnomon * xaxis;
-  zaxis[0] = fabs(zaxis[0]);
-  zaxis[1] = fabs(zaxis[1]);
+  /* is z axis just 0, 0, 0???
+  // z = x rotated by 90deg about y axis
+  Vector3D MCz = modelGnomon * MCx;
+
+  // adjust values of MCz
+  MCz[0] = fabs(MCz[0]);
+  MCz[1] = fabs(MCz[1]);
+  MCz[2] = 1;
+  */
 
   std::cerr << "Origin: " << origin << std::endl;
-
-  std::cerr << "zaxis after rotate: " << zaxis << std::endl;
-
-/*
-  Vector3D zaxisNorm = zaxis;
-  zaxisNorm.normalize();
-
-  std::cerr << "zaxisNorm: " << zaxisNorm << std::endl;
-
-  zaxisNorm[0] = fabs(zaxisNorm[0]);
-  zaxisNorm[1] = fabs(zaxisNorm[1]);
-  zaxisNorm[2] = fabs(zaxisNorm[2]);
-  std::cerr << zaxis.length() << std::endl;
-
-  std::cerr << "zaxisNorm after fabs: " << zaxisNorm << std::endl;
-*/
+  //std::cerr << "MCz after rotate: " << MCz << std::endl;
 
   modelGnomon = reflection('x');
+  MCy = modelGnomon * MCy;
 
-  std::cerr << "yaxis before reflection: " << yaxis << std::endl;
-  yaxis = modelGnomon * yaxis;
+  //std::cerr << "MCy before reflection: " << MCy << std::endl;
+  //std::cerr << "MCy after reflection: " << MCy << std::endl;
 
-  std::cerr << "yaxis after reflection: " << yaxis << std::endl;
+  //std::cerr << "MCx before translate: " << MCx << std::endl;
+  //std::cerr << "MCy before translate: " << MCy << std::endl;
+  //std::cerr << "MCz before translate: " << MCz << std::endl;
 
-  Vector3D displaceToOrigin = Vector3D(0.5 * get_width(), 0.5 * get_height(), 0);
-  modelGnomon = translation(displaceToOrigin);
-  std::cerr << "modelGnomon from translate: " << modelGnomon << std::endl;
+  MCx = translateToOrigin * MCx;
+  MCy = translateToOrigin * MCy;
+  MCz = translateToOrigin * MCz;
 
+  std::cerr << "MCx after translate: " << MCx << std::endl;
+  std::cerr << "MCy after translate: " << MCy << std::endl;
+  std::cerr << "MCz after translate: " << MCz << std::endl;
 
-  std::cerr << "xaxis before translate: " << xaxis << std::endl;
-  xaxis = modelGnomon * xaxis;
-  yaxis = modelGnomon * yaxis;
-  zaxis = modelGnomon * zaxis;
+  draw_line(origin, Point2D(MCx[0], MCx[1]));
+  draw_line(origin, Point2D(MCy[0], MCy[1]));
+  draw_line(origin, Point2D(MCz[0], MCz[1]));
 
-  std::cerr << "xaxis after translate: " << xaxis << std::endl;
-  std::cerr << "yaxis after translate: " << yaxis << std::endl;
-  std::cerr << "zaxis after translate: " << zaxis << std::endl;
+  // WORLD COORDINATE GNOMON
+  // ======================
+  set_colour(Colour(0.9, 0.0, 0.0));
 
-  // x-axis
-  draw_line(origin, Point2D(xaxis[0], xaxis[1]));
-  // y-axis
-  draw_line(origin, Point2D(yaxis[0], yaxis[1]));
-  // z-axis
-  draw_line(origin, Point2D(zaxis[0], zaxis[1]));
+  Vector3D WCx = Vector3D(0.25 * get_width(), 0, 1);
+  Vector3D WCy = Vector3D(0, 0.25 * get_height(), 1);
 
+  Matrix4x4 worldGnomon = reflection('x');
+  WCy = worldGnomon * WCy;
+
+  WCx = translateToOrigin * WCx;
+  WCy = translateToOrigin * WCy;
+
+  draw_line(origin, Point2D(WCx[0], WCx[1]));
+  draw_line(origin, Point2D(WCy[0], WCy[1]));
   draw_complete();
 
   // Swap the contents of the front and back buffers so we see what we

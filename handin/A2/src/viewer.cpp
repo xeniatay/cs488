@@ -125,10 +125,10 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   set_colour(Colour(0.9, 0.9, 0.9));
 
   // Apply modelGnomon matrix
-  MCx = m_mc_matrix * MCx;
-  MCy = m_mc_matrix * MCy;
-  MCz = m_mc_matrix * MCz;
-  mc_origin = m_mc_matrix * mc_origin;
+  MCx = m_mc_coords_matrix * MCx;
+  MCy = m_mc_coords_matrix * MCy;
+  MCz = m_mc_coords_matrix * MCz;
+  mc_origin = m_mc_coords_matrix * mc_origin;
 
   // Apply viewGnomon matrix
   MCx = m_vc_matrix * MCx;
@@ -206,7 +206,6 @@ bool Viewer::on_motion_notify_event(GdkEventMotion* event)
 
   m_axis_dir = ( (event->x - mouse_origin) < 0) ? -1 : 1;
 
-  /*
   switch (m_mode) {
     case VIEW_ROTATE:
       do_view_rotate();
@@ -232,8 +231,6 @@ bool Viewer::on_motion_notify_event(GdkEventMotion* event)
     default:
       break;
   }
-  */
-  do_model_translate();
 
   mouse_origin = event->x;
 
@@ -254,13 +251,19 @@ void Viewer::do_view_perspective() {
 }
 
 void Viewer::do_model_rotate() {
+  double angle = 1 * m_axis_dir;
+
   if (m_axis == Viewer::XAXIS) {
-    //m_vc_matrix = m_vc_matrix * rotation(30 * m_axis_dir, 'x');
+    m_mc_matrix = rotation(angle, 'x');
   } else if (m_axis == Viewer::YAXIS) {
-    //m_mc_matrix = m_mc_matrix * rotation(30 * m_axis_dir, 'y');
+    m_mc_matrix = rotation(angle, 'y');
   } else if (m_axis == Viewer::ZAXIS) {
-    //m_mc_matrix = m_mc_matrix * rotation(30 * m_axis_dir, 'z');
+    m_mc_matrix = rotation(angle, 'z');
   }
+
+  m_mc_coords_matrix = m_mc_matrix;
+
+  print_mc();
 }
 
 void Viewer::do_model_translate() {
@@ -276,12 +279,26 @@ void Viewer::do_model_translate() {
     m_mc_matrix = scaling(scaleFactor);
   }
 
+  m_mc_coords_matrix = m_mc_matrix;
+
   print_mc();
   print_axes();
 }
 
 void Viewer::do_model_scale() {
+  double scaleFactor = (m_axis_dir > 0) ? 1.05 : 0.95;
 
+  if (m_axis == Viewer::XAXIS) {
+    m_mc_matrix = scaling( Vector3D(scaleFactor, 1, 1) );
+  } else if (m_axis == Viewer::YAXIS) {
+    m_mc_matrix = scaling( Vector3D(1, scaleFactor, 1) );
+  } else if (m_axis == Viewer::ZAXIS) {
+    // TODO idk
+    m_mc_matrix = scaling( Vector3D(1, 1, scaleFactor) );
+  }
+
+  print_mc();
+  print_axes();
 }
 
 void Viewer::do_viewport() {
@@ -291,6 +308,7 @@ void Viewer::do_viewport() {
 void Viewer::reset() {
   mouse_origin = 0;
   m_mc_matrix = Matrix4x4();
+  m_mc_coords_matrix = Matrix4x4();
   m_vc_matrix = Matrix4x4();
 
   MCx = Vector3D(0.25 * get_width(), 0, 1);
@@ -324,6 +342,10 @@ void Viewer::reset() {
   lbFar = scaling(scaleToFarPlane) * lb;
   rtFar = scaling(scaleToFarPlane) * rt;
   rbFar = scaling(scaleToFarPlane) * rb;
+
+  set_mode(MODEL_ROTATE);
+
+  on_expose_event(NULL);
 }
 
 void Viewer::print_cube() {

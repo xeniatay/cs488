@@ -95,6 +95,7 @@ private:
   // You will want to declare some more matrices here
   Matrix4x4 m_projection;
   Matrix4x4 m_mc_matrix;
+  Matrix4x4 m_mc_coords_matrix;
   Matrix4x4 m_vc_matrix;
 
   Vector3D MCx;

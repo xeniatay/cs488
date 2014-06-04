@@ -92,11 +92,10 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
 
   // Here is where your drawing code should go.
 
-  draw_init(get_width(), get_height());
-
   // WIREFRAME BOX
   // ======================
-  set_colour(Colour(0.1, 0.1, 0.1));
+
+  unset_origin();
 
   // Apply modelGnomon matrix
   lt = m_mc_matrix * lt;
@@ -118,11 +117,8 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   rtFar = m_vc_matrix * rtFar;
   rbFar = m_vc_matrix * rbFar;
 
-  draw_2D_cube();
-
   // MODEL COORDINATE GNOMON
   // ======================
-  set_colour(Colour(0.9, 0.9, 0.9));
 
   // Apply modelGnomon matrix
   MCx = m_mc_coords_matrix * MCx;
@@ -136,11 +132,8 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   MCz = m_vc_matrix * MCz;
   mc_origin = m_vc_matrix * mc_origin;
 
-  draw_model_axes();
-
   // WORLD COORDINATE GNOMON
   // ======================
-  set_colour(Colour(0.9, 0.0, 0.0));
 
   // Apply viewGnomon matrix
   WCx = m_vc_matrix * WCx;
@@ -148,7 +141,18 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   WCz = m_vc_matrix * WCz;
   origin = m_vc_matrix * origin;
 
+  set_origin();
+
+  draw_init(get_width(), get_height());
+  set_colour(Colour(0.1, 0.1, 0.1));
+  draw_2D_cube();
+
+  set_colour(Colour(0.9, 0.9, 0.9));
+  draw_model_axes();
+
+  set_colour(Colour(0.9, 0.0, 0.0));
   draw_world_axes();
+
   draw_complete();
 
   // Swap the contents of the front and back buffers so we see what we
@@ -270,7 +274,7 @@ void Viewer::do_view_perspective() {
 }
 
 void Viewer::do_model_rotate() {
-  double angle = 1 * m_axis_dir;
+  double angle = 0.1 * m_axis_dir;
 
   if (m_axis == Viewer::XAXIS) {
     m_mc_matrix = rotation(angle, 'x');
@@ -283,6 +287,8 @@ void Viewer::do_model_rotate() {
   m_mc_coords_matrix = m_mc_matrix;
 
   print_mc();
+  print_cube();
+  print_axes();
 }
 
 void Viewer::do_model_translate() {
@@ -345,7 +351,9 @@ void Viewer::reset() {
   origin = Vector3D(0.5 * get_width(), 0.5 * get_height(), 1);
   mc_origin = origin;
   displaceToOrigin = Vector3D(0.5 * get_width(), 0.5 * get_height(), 0);
+  displaceFromOrigin = Vector3D(-0.5 * get_width(), -0.5 * get_height(), 0);
   translateToOrigin = translation(displaceToOrigin);
+  translateFromOrigin = translation(displaceFromOrigin);
 
   // BUILD WIREFRAME BOX
   // =====================
@@ -364,6 +372,7 @@ void Viewer::reset() {
 
   set_mode(MODEL_ROTATE);
 
+  set_origin();
   on_expose_event(NULL);
 }
 
@@ -393,57 +402,92 @@ void Viewer::print_axes() {
   std::cerr << "MCz: " << MCz << std::endl;
 }
 
-void Viewer::draw_2D_cube() {
+void Viewer::set_origin() {
   // TRANSLATE ALL PLANES
-  Vector3D lt2D = translateToOrigin * lt;
-  Vector3D lb2D = translateToOrigin * lb;
-  Vector3D rt2D = translateToOrigin * rt;
-  Vector3D rb2D = translateToOrigin * rb;
-  Vector3D lt2DFar = translateToOrigin * ltFar;
-  Vector3D lb2DFar = translateToOrigin * lbFar;
-  Vector3D rt2DFar = translateToOrigin * rtFar;
-  Vector3D rb2DFar = translateToOrigin * rbFar;
+  lt[2] = 1;
+  lb[2] = 1;
+  rt[2] = 1;
+  rb[2] = 1;
+  ltFar[2] = 1;
+  lbFar[2] = 1;
+  rtFar[2] = 1;
+  rbFar[2] = 1;
+  WCx[2] = 1;
+  WCy[2] = 1;
+  WCz[2] = 1;
+  MCx[2] = 1;
+  MCy[2] = 1;
+  MCz[2] = 1;
 
+  lt = translateToOrigin * lt;
+  lb = translateToOrigin * lb;
+  rt = translateToOrigin * rt;
+  rb = translateToOrigin * rb;
+  ltFar = translateToOrigin * ltFar;
+  lbFar = translateToOrigin * lbFar;
+  rtFar = translateToOrigin * rtFar;
+  rbFar = translateToOrigin * rbFar;
+
+  WCx = translateToOrigin * WCx;
+  WCy = translateToOrigin * WCy;
+  WCz = translateToOrigin * WCz;
+
+  MCx = translateToOrigin * MCx;
+  MCy = translateToOrigin * MCy;
+  MCz = translateToOrigin * MCz;
+}
+
+void Viewer::unset_origin() {
+  // TRANSLATE ALL PLANES
+  lt = translateFromOrigin * lt;
+  lb = translateFromOrigin * lb;
+  rt = translateFromOrigin * rt;
+  rb = translateFromOrigin * rb;
+  ltFar = translateFromOrigin * ltFar;
+  lbFar = translateFromOrigin * lbFar;
+  rtFar = translateFromOrigin * rtFar;
+  rbFar = translateFromOrigin * rbFar;
+
+  WCx = translateFromOrigin * WCx;
+  WCy = translateFromOrigin * WCy;
+  WCz = translateFromOrigin * WCz;
+
+  MCx = translateFromOrigin * MCx;
+  MCy = translateFromOrigin * MCy;
+  MCz = translateFromOrigin * MCz;
+}
+
+void Viewer::draw_2D_cube() {
   /// draw near plane
-  draw_line(Point2D(lb2D[0], lb2D[1]), Point2D(lt2D[0], lt2D[1])); // left vert2Dical
-  draw_line(Point2D(rb2D[0], rb2D[1]), Point2D(rt2D[0], rt2D[1])); // right vert2Dical
-  draw_line(Point2D(lt2D[0], lt2D[1]), Point2D(rt2D[0], rt2D[1])); // top horiz
-  draw_line(Point2D(lb2D[0], lb2D[1]), Point2D(rb2D[0], rb2D[1])); // bottom horiz
+  draw_line(Point2D(lb[0], lb[1]), Point2D(lt[0], lt[1])); // left vertical
+  draw_line(Point2D(rb[0], rb[1]), Point2D(rt[0], rt[1])); // right vertical
+  draw_line(Point2D(lt[0], lt[1]), Point2D(rt[0], rt[1])); // top horiz
+  draw_line(Point2D(lb[0], lb[1]), Point2D(rb[0], rb[1])); // bottom horiz
   // draw far plane
-  draw_line(Point2D(lb2DFar[0], lb2DFar[1]), Point2D(lt2DFar[0], lt2DFar[1])); // left vert2Dical
-  draw_line(Point2D(rb2DFar[0], rb2DFar[1]), Point2D(rt2DFar[0], rt2DFar[1])); // right vert2Dical
-  draw_line(Point2D(lt2DFar[0], lt2DFar[1]), Point2D(rt2DFar[0], rt2DFar[1])); // top horiz
-  draw_line(Point2D(lb2DFar[0], lb2DFar[1]), Point2D(rb2DFar[0], rb2DFar[1])); // bottom horiz
+  draw_line(Point2D(lbFar[0], lbFar[1]), Point2D(ltFar[0], ltFar[1])); // left vertical
+  draw_line(Point2D(rbFar[0], rbFar[1]), Point2D(rtFar[0], rtFar[1])); // right vertical
+  draw_line(Point2D(ltFar[0], ltFar[1]), Point2D(rtFar[0], rtFar[1])); // top horiz
+  draw_line(Point2D(lbFar[0], lbFar[1]), Point2D(rbFar[0], rbFar[1])); // bottom horiz
   // draw left plane
-  draw_line(Point2D(lb2DFar[0], lb2DFar[1]), Point2D(lt2DFar[0], lt2DFar[1])); // left vert2Dical
-  draw_line(Point2D(lb2D[0], lb2D[1]), Point2D(lt2D[0], lt2D[1])); // right vert2Dical
-  draw_line(Point2D(lt2DFar[0], lt2DFar[1]), Point2D(lt2D[0], lt2D[1])); // top horiz
-  draw_line(Point2D(lb2DFar[0], lb2DFar[1]), Point2D(lb2D[0], lb2D[1])); // bottom horiz
+  draw_line(Point2D(lbFar[0], lbFar[1]), Point2D(ltFar[0], ltFar[1])); // left vertical
+  draw_line(Point2D(lb[0], lb[1]), Point2D(lt[0], lt[1])); // right vertical
+  draw_line(Point2D(ltFar[0], ltFar[1]), Point2D(lt[0], lt[1])); // top horiz
+  draw_line(Point2D(lbFar[0], lbFar[1]), Point2D(lb[0], lb[1])); // bottom horiz
   // draw right plane
-  draw_line(Point2D(rb2DFar[0], rb2DFar[1]), Point2D(rt2DFar[0], rt2DFar[1])); // left vert2Dical
-  draw_line(Point2D(rb2D[0], rb2D[1]), Point2D(rt2D[0], rt2D[1])); // right vert2Dical
-  draw_line(Point2D(rt2DFar[0], rt2DFar[1]), Point2D(rt2D[0], rt2D[1])); // top horiz
-  draw_line(Point2D(rb2DFar[0], rb2DFar[1]), Point2D(rb2D[0], rb2D[1])); // bottom horiz
+  draw_line(Point2D(rbFar[0], rbFar[1]), Point2D(rtFar[0], rtFar[1])); // left vertical
+  draw_line(Point2D(rb[0], rb[1]), Point2D(rt[0], rt[1])); // right vertical
+  draw_line(Point2D(rtFar[0], rtFar[1]), Point2D(rt[0], rt[1])); // top horiz
+  draw_line(Point2D(rbFar[0], rbFar[1]), Point2D(rb[0], rb[1])); // bottom horiz
 }
 
 void Viewer::draw_world_axes() {
-  // Translate to origin
-  Vector3D WC2Dx = translateToOrigin * WCx;
-  Vector3D WC2Dy = translateToOrigin * WCy;
-  Vector3D WC2Dz = translateToOrigin * WCz;
-
-  draw_line(Point2D(origin[0], origin[1]), Point2D(WC2Dx[0], WC2Dx[1]));
-  draw_line(Point2D(origin[0], origin[1]), Point2D(WC2Dy[0], WC2Dy[1]));
-  draw_line(Point2D(origin[0], origin[1]), Point2D(WC2Dz[0], WC2Dz[1]));
+  draw_line(Point2D(origin[0], origin[1]), Point2D(WCx[0], WCx[1]));
+  draw_line(Point2D(origin[0], origin[1]), Point2D(WCy[0], WCy[1]));
+  draw_line(Point2D(origin[0], origin[1]), Point2D(WCz[0], WCz[1]));
 }
 
 void Viewer::draw_model_axes() {
-  // Translate to Origin
-  Vector3D MC2Dx = translateToOrigin * MCx;
-  Vector3D MC2Dy = translateToOrigin * MCy;
-  Vector3D MC2Dz = translateToOrigin * MCz;
-
-  draw_line(Point2D(mc_origin[0], mc_origin[1]), Point2D(MC2Dx[0], MC2Dx[1]));
-  draw_line(Point2D(mc_origin[0], mc_origin[1]), Point2D(MC2Dy[0], MC2Dy[1]));
-  draw_line(Point2D(mc_origin[0], mc_origin[1]), Point2D(MC2Dz[0], MC2Dz[1]));
+  draw_line(Point2D(mc_origin[0], mc_origin[1]), Point2D(MCx[0], MCx[1]));
+  draw_line(Point2D(mc_origin[0], mc_origin[1]), Point2D(MCy[0], MCy[1]));
+  draw_line(Point2D(mc_origin[0], mc_origin[1]), Point2D(MCz[0], MCz[1]));
 }

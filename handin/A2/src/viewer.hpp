@@ -68,6 +68,9 @@ public:
   void do_model_scale();
   void do_viewport();
 
+  void set_origin();
+  void unset_origin();
+
 protected:
 
   // Events we implement
@@ -115,6 +118,8 @@ private:
   Vector3D mc_origin;
   Vector3D displaceToOrigin;
   Matrix4x4 translateToOrigin;
+  Vector3D displaceFromOrigin;
+  Matrix4x4 translateFromOrigin;
 
   Vector3D lt;
   Vector3D lb;

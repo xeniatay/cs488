@@ -35,14 +35,15 @@ Matrix4x4 rotation(double angle, char axis)
 }
 
 // Return a matrix to represent a displacement of the given vector.
-// Third coordinate in multiplication vector has to be 1
+// Multiplication vector has to be a Vector4D, fourth coord is 1
 Matrix4x4 translation(const Vector3D& displacement)
 {
   Matrix4x4 t;
 
   // Subst the delta x and delta y values
-  t[0][2] = displacement[0];
-  t[1][2] = displacement[1];
+  t[0][3] = displacement[0];
+  t[1][3] = displacement[1];
+  t[2][3] = displacement[2];
 
   return t;
 }

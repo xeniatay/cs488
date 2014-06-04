@@ -63,12 +63,19 @@ bool AppWindow::on_key_press_event( GdkEventKey *ev ) {
   } else if (ev->keyval == 'r' || ev->keyval == 'R') {
     m_viewer.reset();
   } else if (ev->keyval == 'o' || ev->keyval == 'O') {
+    m_viewer.set_mode(m_viewer.VIEW_ROTATE);
   } else if (ev->keyval == 'n' || ev->keyval == 'N') {
+    m_viewer.set_mode(m_viewer.VIEW_TRANSLATE);
   } else if (ev->keyval == 'p' || ev->keyval == 'P') {
+    m_viewer.set_mode(m_viewer.VIEW_PERSPECTIVE);
   } else if (ev->keyval == 'r' || ev->keyval == 'R') {
+    m_viewer.set_mode(m_viewer.MODEL_ROTATE);
   } else if (ev->keyval == 's' || ev->keyval == 'S') {
+    m_viewer.set_mode(m_viewer.MODEL_TRANSLATE);
   } else if (ev->keyval == 't' || ev->keyval == 'T') {
+    m_viewer.set_mode(m_viewer.MODEL_SCALE);
   } else if (ev->keyval == 'v' || ev->keyval == 'V') {
+    m_viewer.set_mode(m_viewer.VIEWPORT);
   }
 
   //return true;

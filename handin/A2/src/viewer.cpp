@@ -271,7 +271,9 @@ void Viewer::do_model_translate() {
   } else if (m_axis == Viewer::YAXIS) {
     m_mc_matrix = translation( Vector3D(0, displacement * get_height(), 0) );
   } else if (m_axis == Viewer::ZAXIS) {
-    m_mc_matrix = translation( Vector3D(0, 0, displacement) );
+    // TODO the axes here are broken
+    Vector3D scaleFactor = (m_axis_dir > 0) ? Vector3D(1.05, 1.05, 1) : Vector3D(0.95, 0.95, 1);
+    m_mc_matrix = scaling(scaleFactor);
   }
 
   print_mc();

@@ -52,9 +52,9 @@ Matrix4x4 scaling(const Vector3D& scale)
 {
   Matrix4x4 s;
 
-  s[0][1] = scale[0];
+  s[0][0] = scale[0];
   s[1][1] = scale[1];
-  s[2][2] = scale[2];
+  //s[2][2] = scale[2];
 
   return s;
 }

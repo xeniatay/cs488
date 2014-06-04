@@ -90,28 +90,71 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
 
   // Here is where your drawing code should go.
 
-  draw_init(get_width(), get_height());
-
-  // WIREFRAME BOX
-  set_colour(Colour(0.1, 0.1, 0.1));
-
-  // left vertical
-  draw_line(Point2D(0.1*get_width(), 0.1*get_height()),
-            Point2D(0.1*get_width(), 0.9*get_height()));
-  // right vertical
-  draw_line(Point2D(0.9*get_width(), 0.1*get_height()),
-            Point2D(0.9*get_width(), 0.9*get_height()));
-  // top horiz
-  draw_line(Point2D(0.1*get_width(), 0.1*get_height()),
-            Point2D(0.9*get_width(), 0.1*get_height()));
-  // bottom horiz
-  draw_line(Point2D(0.1*get_width(), 0.9*get_height()),
-            Point2D(0.9*get_width(), 0.9*get_height()));
-
-  // origin
+  // ORIGIN HELPERS
+  // ======================
   Point2D origin = Point2D(0.5 * get_width(), 0.5 * get_height());
   Vector3D displaceToOrigin = Vector3D(0.5 * get_width(), 0.5 * get_height(), 0);
   Matrix4x4 translateToOrigin = translation(displaceToOrigin);
+
+  draw_init(get_width(), get_height());
+
+  // WIREFRAME BOX
+  // ======================
+  set_colour(Colour(0.1, 0.1, 0.1));
+
+  // NEAR PLANE
+  Vector3D lt = Vector3D(-0.4 * get_width(), -0.4 * get_height(), 1);
+  Vector3D lb = Vector3D(-0.4 * get_width(), 0.4 * get_height(), 1);
+  Vector3D rt = Vector3D(0.4 * get_width(), -0.4 * get_height(), 1);
+  Vector3D rb = Vector3D(0.4 * get_width(), 0.4 * get_height(), 1);
+
+  // FAR PLANE
+  Vector3D scaleToFarPlane = Vector3D(0.5, 0.5, 0);
+  Vector3D ltFar = scaling(scaleToFarPlane) * lt;
+  Vector3D lbFar = scaling(scaleToFarPlane) * lb;
+  Vector3D rtFar = scaling(scaleToFarPlane) * rt;
+  Vector3D rbFar = scaling(scaleToFarPlane) * rb;
+
+  std::cerr << "lt: " << lt << std::endl;
+  std::cerr << "lb: " << lb << std::endl;
+  std::cerr << "rt: " << rt << std::endl;
+  std::cerr << "rb: " << rb << std::endl;
+
+  // TRANSLATE ALL PLANES
+  lt = translateToOrigin * lt;
+  lb = translateToOrigin * lb;
+  rt = translateToOrigin * rt;
+  rb = translateToOrigin * rb;
+  ltFar = translateToOrigin * ltFar;
+  lbFar = translateToOrigin * lbFar;
+  rtFar = translateToOrigin * rtFar;
+  rbFar = translateToOrigin * rbFar;
+
+  std::cerr << "lt: " << lt << std::endl;
+  std::cerr << "lb: " << lb << std::endl;
+  std::cerr << "rt: " << rt << std::endl;
+  std::cerr << "rb: " << rb << std::endl;
+
+  /// draw near plane
+  draw_line(Point2D(lb[0], lb[1]), Point2D(lt[0], lt[1])); // left vertical
+  draw_line(Point2D(rb[0], rb[1]), Point2D(rt[0], rt[1])); // right vertical
+  draw_line(Point2D(lt[0], lt[1]), Point2D(rt[0], rt[1])); // top horiz
+  draw_line(Point2D(lb[0], lb[1]), Point2D(rb[0], rb[1])); // bottom horiz
+  // draw far plane
+  draw_line(Point2D(lbFar[0], lbFar[1]), Point2D(ltFar[0], ltFar[1])); // left vertical
+  draw_line(Point2D(rbFar[0], rbFar[1]), Point2D(rtFar[0], rtFar[1])); // right vertical
+  draw_line(Point2D(ltFar[0], ltFar[1]), Point2D(rtFar[0], rtFar[1])); // top horiz
+  draw_line(Point2D(lbFar[0], lbFar[1]), Point2D(rbFar[0], rbFar[1])); // bottom horiz
+  // draw left plane
+  draw_line(Point2D(lbFar[0], lbFar[1]), Point2D(ltFar[0], ltFar[1])); // left vertical
+  draw_line(Point2D(lb[0], lb[1]), Point2D(lt[0], lt[1])); // right vertical
+  draw_line(Point2D(ltFar[0], ltFar[1]), Point2D(lt[0], lt[1])); // top horiz
+  draw_line(Point2D(lbFar[0], lbFar[1]), Point2D(lb[0], lb[1])); // bottom horiz
+  // draw right plane
+  draw_line(Point2D(rbFar[0], rbFar[1]), Point2D(rtFar[0], rtFar[1])); // left vertical
+  draw_line(Point2D(rb[0], rb[1]), Point2D(rt[0], rt[1])); // right vertical
+  draw_line(Point2D(rtFar[0], rtFar[1]), Point2D(rt[0], rt[1])); // top horiz
+  draw_line(Point2D(rbFar[0], rbFar[1]), Point2D(rb[0], rb[1])); // bottom horiz
 
   // MODEL COORDINATE GNOMON
   // ======================
@@ -164,15 +207,18 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
 
   Vector3D WCx = Vector3D(0.25 * get_width(), 0, 1);
   Vector3D WCy = Vector3D(0, 0.25 * get_height(), 1);
+  Vector3D WCz = Vector3D(0, 0, 1);
 
   Matrix4x4 worldGnomon = reflection('x');
   WCy = worldGnomon * WCy;
 
   WCx = translateToOrigin * WCx;
   WCy = translateToOrigin * WCy;
+  WCz = translateToOrigin * WCz;
 
   draw_line(origin, Point2D(WCx[0], WCx[1]));
   draw_line(origin, Point2D(WCy[0], WCy[1]));
+  draw_line(origin, Point2D(WCz[0], WCz[1]));
   draw_complete();
 
   // Swap the contents of the front and back buffers so we see what we

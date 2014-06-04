@@ -142,6 +142,12 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   // ======================
   set_colour(Colour(0.9, 0.0, 0.0));
 
+  // Apply viewGnomon matrix
+  WCx = m_vc_matrix * WCx;
+  WCy = m_vc_matrix * WCy;
+  WCz = m_vc_matrix * WCz;
+  origin = m_vc_matrix * origin;
+
   draw_world_axes();
   draw_complete();
 
@@ -243,7 +249,20 @@ void Viewer::do_view_rotate() {
 }
 
 void Viewer::do_view_translate() {
+  double displacement = 0.01 * m_axis_dir;
 
+  if (m_axis == Viewer::XAXIS) {
+    m_vc_matrix = translation( Vector3D(displacement * get_width(), 0, 0) );
+  } else if (m_axis == Viewer::YAXIS) {
+    m_vc_matrix = translation( Vector3D(0, displacement * get_height(), 0) );
+  } else if (m_axis == Viewer::ZAXIS) {
+    // TODO the axes here are broken
+    Vector3D scaleFactor = (m_axis_dir > 0) ? Vector3D(1.05, 1.05, 1) : Vector3D(0.95, 0.95, 1);
+    m_vc_matrix = scaling(scaleFactor);
+  }
+
+  print_vc();
+  print_axes();
 }
 
 void Viewer::do_view_perspective() {

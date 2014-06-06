@@ -23,4 +23,7 @@ Matrix4x4 scaling(const Vector3D& scale);
 // Return a matrix to represent a reflection with the given axis.
 Matrix4x4 reflection(char axis);
 
+Matrix4x4 projection(double near, double far, double angle);
+Point3D homogenizeProjection(Point3D p, double z);
+
 #endif

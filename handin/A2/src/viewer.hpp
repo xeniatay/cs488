@@ -121,17 +121,19 @@ private:
   Vector3D displaceFromOrigin;
   Matrix4x4 translateFromOrigin;
 
-  Vector3D lt;
-  Vector3D lb;
-  Vector3D rt;
-  Vector3D rb;
+  Point3D lt;
+  Point3D lb;
+  Point3D rt;
+  Point3D rb;
 
   // FAR PLANE
   Vector3D scaleToFarPlane;
-  Vector3D ltFar;
-  Vector3D lbFar;
-  Vector3D rtFar;
-  Vector3D rbFar;
+  Point3D ltFar;
+  Point3D lbFar;
+  Point3D rtFar;
+  Point3D rbFar;
+
+  double m_near, m_far, m_fov, m_aspect;
 };
 
 #endif

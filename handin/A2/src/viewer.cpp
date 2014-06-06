@@ -54,7 +54,17 @@ void Viewer::invalidate()
 void Viewer::set_perspective(double fov, double aspect,
                              double near, double far)
 {
-  // Fill me in!
+
+  lbFar = projection(m_near, m_far, m_fov) * lb;
+  ltFar = projection(m_near, m_far, m_fov) * lt;
+  rbFar = projection(m_near, m_far, m_fov) * rb;
+  rtFar = projection(m_near, m_far, m_fov) * rt;
+
+  lbFar = homogenizeProjection(lbFar, lb[2]);
+  ltFar = homogenizeProjection(ltFar, lt[2]);
+  rbFar = homogenizeProjection(rbFar, rb[2]);
+  rtFar = homogenizeProjection(rtFar, rt[2]);
+
 }
 
 void Viewer::reset_view()
@@ -140,6 +150,8 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   WCy = m_vc_matrix * WCy;
   WCz = m_vc_matrix * WCz;
   origin = m_vc_matrix * origin;
+
+  set_perspective(m_fov, m_near, m_far, m_aspect);
 
   set_origin();
 
@@ -260,9 +272,7 @@ void Viewer::do_view_translate() {
   } else if (m_axis == Viewer::YAXIS) {
     m_vc_matrix = translation( Vector3D(0, displacement * get_height(), 0) );
   } else if (m_axis == Viewer::ZAXIS) {
-    // TODO the axes here are broken
-    Vector3D scaleFactor = (m_axis_dir > 0) ? Vector3D(1.05, 1.05, 1) : Vector3D(0.95, 0.95, 1);
-    m_vc_matrix = scaling(scaleFactor);
+    m_vc_matrix = translation( Vector3D(0, 0, displacement) );
   }
 
   print_vc();
@@ -299,9 +309,7 @@ void Viewer::do_model_translate() {
   } else if (m_axis == Viewer::YAXIS) {
     m_mc_matrix = translation( Vector3D(0, displacement * get_height(), 0) );
   } else if (m_axis == Viewer::ZAXIS) {
-    // TODO the axes here are broken
-    Vector3D scaleFactor = (m_axis_dir > 0) ? Vector3D(1.05, 1.05, 1) : Vector3D(0.95, 0.95, 1);
-    m_mc_matrix = scaling(scaleFactor);
+    m_vc_matrix = translation( Vector3D(0, 0, displacement) );
   }
 
   m_mc_coords_matrix = m_mc_matrix;
@@ -336,6 +344,11 @@ void Viewer::reset() {
   m_mc_coords_matrix = Matrix4x4();
   m_vc_matrix = Matrix4x4();
 
+  m_near = 2;
+  m_far = 10;
+  m_fov = 90;
+  m_aspect = 2;
+
   MCx = Vector3D(0.25 * get_width(), 0, 1);
   MCy = Vector3D(0, 0.25 * get_height(), 1);
   MCy = reflection('x') * MCy;
@@ -358,10 +371,10 @@ void Viewer::reset() {
   // BUILD WIREFRAME BOX
   // =====================
   // NEAR PLANE
-  lt = Vector3D(-0.4 * get_width(), -0.4 * get_height(), 1);
-  lb = Vector3D(-0.4 * get_width(), 0.4 * get_height(), 1);
-  rt = Vector3D(0.4 * get_width(), -0.4 * get_height(), 1);
-  rb = Vector3D(0.4 * get_width(), 0.4 * get_height(), 1);
+  lt = Point3D(-0.4 * get_width(), -0.4 * get_height(), m_near);
+  lb = Point3D(-0.4 * get_width(), 0.4 * get_height(), m_near);
+  rt = Point3D(0.4 * get_width(), -0.4 * get_height(), m_near);
+  rb = Point3D(0.4 * get_width(), 0.4 * get_height(), m_near);
 
   // FAR PLANE
   scaleToFarPlane = Vector3D(0.7, 0.7, 0);
@@ -404,6 +417,7 @@ void Viewer::print_axes() {
 
 void Viewer::set_origin() {
   // TRANSLATE ALL PLANES
+  /*
   lt[2] = 1;
   lb[2] = 1;
   rt[2] = 1;
@@ -418,6 +432,7 @@ void Viewer::set_origin() {
   MCx[2] = 1;
   MCy[2] = 1;
   MCz[2] = 1;
+  */
 
   lt = translateToOrigin * lt;
   lb = translateToOrigin * lb;

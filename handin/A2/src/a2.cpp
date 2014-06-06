@@ -14,6 +14,9 @@ Matrix4x4 rotation(double angle, char axis)
 
   char x = 'x', y = 'y', z = 'z';
 
+  // convert angle to radians
+  angle = M_PI / 180 * angle;
+
   if (axis == x) {
     r[1][1] = cos(angle);
     r[1][2] = -1 * sin(angle);
@@ -41,8 +44,9 @@ Matrix4x4 translation(const Vector3D& displacement)
   Matrix4x4 t;
 
   // Subst the delta x and delta y values
-  t[0][2] = displacement[0];
-  t[1][2] = displacement[1];
+  t[0][3] = displacement[0];
+  t[1][3] = displacement[1];
+  t[2][3] = displacement[2];
 
   return t;
 }
@@ -59,6 +63,7 @@ Matrix4x4 scaling(const Vector3D& scale)
   return s;
 }
 
+// Return a matrix to represent a reflection along the x or y axis
 Matrix4x4 reflection(char axis) {
   Matrix4x4 r;
 
@@ -72,4 +77,36 @@ Matrix4x4 reflection(char axis) {
   }
 
   return r;
+}
+
+Matrix4x4 projection(double near, double far, double fov) {
+  Matrix4x4 p;
+
+  // convert fov to radians
+  fov = M_PI / 180 * fov;
+
+  double scale = 1 / tan(fov/2);
+
+  p[0][0] = p[1][1] = scale;
+  p[2][2] = -1 * far / (far - near);
+  p[3][2] = -1 * far * near / (far - near);
+  p[2][3] = -1;
+  p[3][3] = 0;
+
+/*
+  p[2][2] = (far + near) / (far - near);
+  p[2][3] = (-2 * far * near) / (far - near);
+  p[3][2] = 1;
+  p[3][3] = 0;
+*/
+
+  return p;
+}
+
+Point3D homogenizeProjection(Point3D p, double z) {
+  p[0] = p[0] / z;
+  p[1] = p[1] / z;
+  p[2] = p[2] / z;
+
+  return p;
 }

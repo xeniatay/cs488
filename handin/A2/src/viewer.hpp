@@ -101,13 +101,13 @@ private:
   Matrix4x4 m_mc_coords_matrix;
   Matrix4x4 m_vc_matrix;
 
-  Vector3D MCx;
-  Vector3D MCy;
-  Vector3D MCz;
+  Point3D MCx;
+  Point3D MCy;
+  Point3D MCz;
 
-  Vector3D WCx;
-  Vector3D WCy;
-  Vector3D WCz;
+  Point3D WCx;
+  Point3D WCy;
+  Point3D WCz;
 
   Mode m_mode;
   Axis m_axis;

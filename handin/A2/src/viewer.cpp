@@ -107,36 +107,28 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
 
   unset_origin();
 
-  // Apply modelGnomon matrix
+  // Apply model coordinate matrix
   lt = m_mc_matrix * lt;
   lb = m_mc_matrix * lb;
   rt = m_mc_matrix * rt;
   rb = m_mc_matrix * rb;
-  ltFar = m_mc_matrix * ltFar;
-  lbFar = m_mc_matrix * lbFar;
-  rtFar = m_mc_matrix * rtFar;
-  rbFar = m_mc_matrix * rbFar;
 
-  // Apply viewGnomon matrix
+  // Apply view coordinate matrix
   lt = m_vc_matrix * lt;
   lb = m_vc_matrix * lb;
   rt = m_vc_matrix * rt;
   rb = m_vc_matrix * rb;
-  ltFar = m_vc_matrix * ltFar;
-  lbFar = m_vc_matrix * lbFar;
-  rtFar = m_vc_matrix * rtFar;
-  rbFar = m_vc_matrix * rbFar;
 
   // MODEL COORDINATE GNOMON
   // ======================
 
-  // Apply modelGnomon matrix
+  // Apply model coordinate matrix
   MCx = m_mc_coords_matrix * MCx;
   MCy = m_mc_coords_matrix * MCy;
   MCz = m_mc_coords_matrix * MCz;
   mc_origin = m_mc_coords_matrix * mc_origin;
 
-  // Apply viewGnomon matrix
+  // Apply view coordinate matrix
   MCx = m_vc_matrix * MCx;
   MCy = m_vc_matrix * MCy;
   MCz = m_vc_matrix * MCz;
@@ -145,13 +137,19 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   // WORLD COORDINATE GNOMON
   // ======================
 
-  // Apply viewGnomon matrix
+  // Apply view coordinate matrix
   WCx = m_vc_matrix * WCx;
   WCy = m_vc_matrix * WCy;
   WCz = m_vc_matrix * WCz;
   origin = m_vc_matrix * origin;
 
+  std::cerr << "---------- on_expose_event -----------" << std::endl;
+  print_cube();
+
   set_perspective(m_fov, m_near, m_far, m_aspect);
+
+  print_cube();
+  std::cerr << "---------- end on_expose_event -----------" << std::endl;
 
   set_origin();
 
@@ -284,7 +282,7 @@ void Viewer::do_view_perspective() {
 }
 
 void Viewer::do_model_rotate() {
-  double angle = 0.1 * m_axis_dir;
+  double angle = 10 * m_axis_dir;
 
   if (m_axis == Viewer::XAXIS) {
     m_mc_matrix = rotation(angle, 'x');
@@ -297,8 +295,6 @@ void Viewer::do_model_rotate() {
   m_mc_coords_matrix = m_mc_matrix;
 
   print_mc();
-  print_cube();
-  print_axes();
 }
 
 void Viewer::do_model_translate() {
@@ -349,15 +345,15 @@ void Viewer::reset() {
   m_fov = 90;
   m_aspect = 2;
 
-  MCx = Vector3D(0.25 * get_width(), 0, 1);
-  MCy = Vector3D(0, 0.25 * get_height(), 1);
+  MCx = Point3D(0.25 * get_width(), 0, 1);
+  MCy = Point3D(0, 0.25 * get_height(), 1);
   MCy = reflection('x') * MCy;
-  MCz = Vector3D(0, 0, 1);
+  MCz = Point3D(0, 0, 1);
 
-  WCx = Vector3D(0.25 * get_width(), 0, 1);
-  WCy = Vector3D(0, 0.25 * get_height(), 1);
+  WCx = Point3D(0.25 * get_width(), 0, 1);
+  WCy = Point3D(0, 0.25 * get_height(), 1);
   WCy = reflection('x') * WCy;
-  WCz = Vector3D(0, 0, 1);
+  WCz = Point3D(0, 0, 1);
 
   // ORIGIN HELPERS
   // ======================
@@ -390,10 +386,16 @@ void Viewer::reset() {
 }
 
 void Viewer::print_cube() {
+  std::cerr << "---- start print cube ----" << std::endl;
   std::cerr << "lt: " << lt << std::endl;
   std::cerr << "lb: " << lb << std::endl;
   std::cerr << "rt: " << rt << std::endl;
   std::cerr << "rb: " << rb << std::endl;
+  std::cerr << "ltFar: " << ltFar << std::endl;
+  std::cerr << "lbFar: " << lbFar << std::endl;
+  std::cerr << "rtFar: " << rtFar << std::endl;
+  std::cerr << "rbFar: " << rbFar << std::endl;
+  std::cerr << "---- end print cube ----" << std::endl;
 }
 
 void Viewer::print_mc() {
@@ -416,24 +418,6 @@ void Viewer::print_axes() {
 }
 
 void Viewer::set_origin() {
-  // TRANSLATE ALL PLANES
-  /*
-  lt[2] = 1;
-  lb[2] = 1;
-  rt[2] = 1;
-  rb[2] = 1;
-  ltFar[2] = 1;
-  lbFar[2] = 1;
-  rtFar[2] = 1;
-  rbFar[2] = 1;
-  WCx[2] = 1;
-  WCy[2] = 1;
-  WCz[2] = 1;
-  MCx[2] = 1;
-  MCy[2] = 1;
-  MCz[2] = 1;
-  */
-
   lt = translateToOrigin * lt;
   lb = translateToOrigin * lb;
   rt = translateToOrigin * rt;
@@ -483,6 +467,7 @@ void Viewer::draw_2D_cube() {
   draw_line(Point2D(rbFar[0], rbFar[1]), Point2D(rtFar[0], rtFar[1])); // right vertical
   draw_line(Point2D(ltFar[0], ltFar[1]), Point2D(rtFar[0], rtFar[1])); // top horiz
   draw_line(Point2D(lbFar[0], lbFar[1]), Point2D(rbFar[0], rbFar[1])); // bottom horiz
+  /*
   // draw left plane
   draw_line(Point2D(lbFar[0], lbFar[1]), Point2D(ltFar[0], ltFar[1])); // left vertical
   draw_line(Point2D(lb[0], lb[1]), Point2D(lt[0], lt[1])); // right vertical
@@ -493,6 +478,7 @@ void Viewer::draw_2D_cube() {
   draw_line(Point2D(rb[0], rb[1]), Point2D(rt[0], rt[1])); // right vertical
   draw_line(Point2D(rtFar[0], rtFar[1]), Point2D(rt[0], rt[1])); // top horiz
   draw_line(Point2D(rbFar[0], rbFar[1]), Point2D(rb[0], rb[1])); // bottom horiz
+  */
 }
 
 void Viewer::draw_world_axes() {

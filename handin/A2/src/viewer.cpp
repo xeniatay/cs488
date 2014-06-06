@@ -55,15 +55,21 @@ void Viewer::set_perspective(double fov, double aspect,
                              double near, double far)
 {
 
+  std::cerr << "------- start set_perspective ---- " << std::endl;
+
   lbFar = projection(m_near, m_far, m_fov) * lb;
   ltFar = projection(m_near, m_far, m_fov) * lt;
   rbFar = projection(m_near, m_far, m_fov) * rb;
   rtFar = projection(m_near, m_far, m_fov) * rt;
+  print_cube();
 
   lbFar = homogenizeProjection(lbFar, lb[2]);
   ltFar = homogenizeProjection(ltFar, lt[2]);
   rbFar = homogenizeProjection(rbFar, rb[2]);
   rtFar = homogenizeProjection(rtFar, rt[2]);
+
+  print_cube();
+  std::cerr << "------- end set_perspective ---- " << std::endl;
 
 }
 
@@ -144,14 +150,13 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   origin = m_vc_matrix * origin;
 
   std::cerr << "---------- on_expose_event -----------" << std::endl;
-  print_cube();
 
   set_perspective(m_fov, m_near, m_far, m_aspect);
 
-  print_cube();
+  set_origin();
+
   std::cerr << "---------- end on_expose_event -----------" << std::endl;
 
-  set_origin();
 
   draw_init(get_width(), get_height());
   set_colour(Colour(0.1, 0.1, 0.1));
@@ -272,9 +277,6 @@ void Viewer::do_view_translate() {
   } else if (m_axis == Viewer::ZAXIS) {
     m_vc_matrix = translation( Vector3D(0, 0, displacement) );
   }
-
-  print_vc();
-  print_axes();
 }
 
 void Viewer::do_view_perspective() {
@@ -282,6 +284,8 @@ void Viewer::do_view_perspective() {
 }
 
 void Viewer::do_model_rotate() {
+  std::cerr << "---- start model rotate ----" << std::endl;
+
   double angle = 10 * m_axis_dir;
 
   if (m_axis == Viewer::XAXIS) {
@@ -294,10 +298,12 @@ void Viewer::do_model_rotate() {
 
   m_mc_coords_matrix = m_mc_matrix;
 
-  print_mc();
+  std::cerr << "---- end model rotate ----" << std::endl;
 }
 
 void Viewer::do_model_translate() {
+  std::cerr << "---- start model translate ----" << std::endl;
+
   double displacement = 0.01 * m_axis_dir;
 
   if (m_axis == Viewer::XAXIS) {
@@ -305,13 +311,14 @@ void Viewer::do_model_translate() {
   } else if (m_axis == Viewer::YAXIS) {
     m_mc_matrix = translation( Vector3D(0, displacement * get_height(), 0) );
   } else if (m_axis == Viewer::ZAXIS) {
-    m_vc_matrix = translation( Vector3D(0, 0, displacement) );
+    m_mc_matrix = translation( Vector3D(0, 0, displacement) );
   }
 
   m_mc_coords_matrix = m_mc_matrix;
-
   print_mc();
-  print_axes();
+  print_cube();
+
+  std::cerr << "---- end model translate ----" << std::endl;
 }
 
 void Viewer::do_model_scale() {
@@ -325,9 +332,6 @@ void Viewer::do_model_scale() {
     // TODO idk
     m_mc_matrix = scaling( Vector3D(1, 1, scaleFactor) );
   }
-
-  print_mc();
-  print_axes();
 }
 
 void Viewer::do_viewport() {
@@ -341,7 +345,7 @@ void Viewer::reset() {
   m_vc_matrix = Matrix4x4();
 
   m_near = 2;
-  m_far = 10;
+  m_far = m_near + 8;
   m_fov = 90;
   m_aspect = 2;
 
@@ -458,7 +462,7 @@ void Viewer::unset_origin() {
 
 void Viewer::draw_2D_cube() {
   /// draw near plane
-  draw_line(Point2D(lb[0], lb[1]), Point2D(lt[0], lt[1])); // left vertical
+  draw_line(Point2D(lbv[0], lbv[1]), Point2D(lt[0], lt[1])); // left vertical
   draw_line(Point2D(rb[0], rb[1]), Point2D(rt[0], rt[1])); // right vertical
   draw_line(Point2D(lt[0], lt[1]), Point2D(rt[0], rt[1])); // top horiz
   draw_line(Point2D(lb[0], lb[1]), Point2D(rb[0], rb[1])); // bottom horiz

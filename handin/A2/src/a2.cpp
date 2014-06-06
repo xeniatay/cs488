@@ -106,7 +106,13 @@ Matrix4x4 projection(double near, double far, double fov) {
 Point3D homogenizeProjection(Point3D p, double z) {
   p[0] = p[0] / z;
   p[1] = p[1] / z;
-  p[2] = p[2] / z;
+
+  return p;
+}
+
+Point3D reverseHomogenizeProjection(Point3D p, double z) {
+  p[0] = p[0] * z;
+  p[1] = p[1] * z;
 
   return p;
 }

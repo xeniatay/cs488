@@ -133,6 +133,8 @@ private:
   Point3D rtFar;
   Point3D rbFar;
 
+  Vector3D lbv;
+
   double m_near, m_far, m_fov, m_aspect;
 };
 

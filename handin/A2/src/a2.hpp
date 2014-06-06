@@ -25,5 +25,6 @@ Matrix4x4 reflection(char axis);
 
 Matrix4x4 projection(double near, double far, double angle);
 Point3D homogenizeProjection(Point3D p, double z);
+Point3D reverseHomogenizeProjection(Point3D p, double z);
 
 #endif

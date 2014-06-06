@@ -57,6 +57,7 @@ public:
   void print_axes();
 
   void draw_2D_cube();
+  void draw_viewport();
   void draw_model_axes();
   void draw_world_axes();
 
@@ -66,10 +67,15 @@ public:
   void do_model_rotate();
   void do_model_translate();
   void do_model_scale();
-  void do_viewport();
+  void do_viewport(GdkEventMotion* event);
 
   void set_origin();
   void unset_origin();
+
+  void set_viewport_aspect();
+
+  void set_wc_to_origin();
+  void unset_wc_from_origin();
 
 protected:
 
@@ -98,6 +104,7 @@ private:
   // You will want to declare some more matrices here
   Matrix4x4 m_projection;
   Matrix4x4 m_mc_matrix;
+  Matrix4x4 m_mc_scale_matrix;
   Matrix4x4 m_mc_coords_matrix;
   Matrix4x4 m_vc_matrix;
 
@@ -113,9 +120,13 @@ private:
   Axis m_axis;
   int m_axis_dir;
   int mouse_origin;
+  int mouse_x_origin;
+  int mouse_y_origin;
+  int mouse_x_on_release;
+  int mouse_y_on_release;
 
-  Vector3D origin;
-  Vector3D mc_origin;
+  Point3D origin;
+  Point3D mc_origin;
   Vector3D displaceToOrigin;
   Matrix4x4 translateToOrigin;
   Vector3D displaceFromOrigin;
@@ -135,7 +146,7 @@ private:
 
   Vector3D lbv;
 
-  double m_near, m_far, m_fov, m_aspect;
+  double m_near, m_far, m_fov, m_aspect, m_width, m_height;
 };
 
 #endif

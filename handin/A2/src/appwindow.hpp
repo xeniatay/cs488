@@ -25,6 +25,7 @@ private:
   Gtk::Menu m_menu_app;
   Gtk::Menu m_menu_mode;
 
+
   // Draw Mode Radio Button Menu
   Gtk::RadioButtonGroup m_menu_mode_group;
 

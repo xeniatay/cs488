@@ -309,6 +309,10 @@ void Viewer::do_view_translate() {
 }
 
 void Viewer::do_view_perspective() {
+  double translation = 1 * m_axis_dir;
+
+  m_near += translation;
+  m_far += translation;
 
 }
 

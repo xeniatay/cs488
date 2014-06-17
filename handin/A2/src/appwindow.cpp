@@ -46,6 +46,11 @@ AppWindow::AppWindow()
   m_viewer.set_size_request(300, 300);
   m_vbox.pack_start(m_viewer);
 
+  Gtk::Label label("some label");
+  label.set_text(m_viewer.m_label);
+
+  m_vbox.pack_start(label);
+
   show_all();
 }
 

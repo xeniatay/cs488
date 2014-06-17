@@ -8,6 +8,7 @@
 #include <gtkmm.h>
 #include <gtkglmm.h>
 #include "algebra.hpp"
+#include <cstring>
 
 // The "main" OpenGL widget
 class Viewer : public Gtk::GL::DrawingArea {
@@ -76,6 +77,10 @@ public:
 
   void set_wc_to_origin();
   void unset_wc_from_origin();
+
+  std::string m_label;
+
+  void set_label();
 
 protected:
 

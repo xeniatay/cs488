@@ -164,11 +164,11 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   WCz = m_vc_matrix * WCz;
   origin = m_vc_matrix * origin;
 
-  std::cerr << "---------- on_expose_event -----------" << std::endl;
+  //std::cerr << "---------- on_expose_event -----------" << std::endl;
 
   set_perspective(m_fov, m_near, m_far, m_aspect);
 
-  std::cerr << "---------- end on_expose_event -----------" << std::endl;
+  //std::cerr << "---------- end on_expose_event -----------" << std::endl;
 
   set_origin();
 
@@ -213,7 +213,7 @@ bool Viewer::on_configure_event(GdkEventConfigure* event)
 
 bool Viewer::on_button_press_event(GdkEventButton* event)
 {
-  std::cerr << "Stub: Button " << event->button << " pressed" << std::endl;
+  //std::cerr << "Stub: Button " << event->button << " pressed" << std::endl;
 
   // get axis
   switch (event->button) {
@@ -242,13 +242,13 @@ bool Viewer::on_button_press_event(GdkEventButton* event)
 
 bool Viewer::on_button_release_event(GdkEventButton* event)
 {
-  std::cerr << "Stub: Button " << event->button << " released" << std::endl;
+  //std::cerr << "Stub: Button " << event->button << " released" << std::endl;
   return true;
 }
 
 bool Viewer::on_motion_notify_event(GdkEventMotion* event)
 {
-  std::cerr << "Stub: Motion at " << event->x << ", " << event->y << std::endl;
+  //std::cerr << "Stub: Motion at " << event->x << ", " << event->y << std::endl;
 
   m_axis_dir = ( (event->x - mouse_origin) < 0) ? -1 : 1;
 
@@ -314,10 +314,12 @@ void Viewer::do_view_perspective() {
   m_near += translation;
   m_far += translation;
 
+  //std::cerr << "m_near, m_far : " << m_near << " " << m_far << std::endl;
+
 }
 
 void Viewer::do_model_rotate() {
-  std::cerr << "---- start model rotate ----" << std::endl;
+  //std::cerr << "---- start model rotate ----" << std::endl;
 
   double angle = 2 * m_axis_dir;
 
@@ -331,11 +333,11 @@ void Viewer::do_model_rotate() {
 
   m_mc_coords_matrix = m_mc_matrix;
 
-  std::cerr << "---- end model rotate ----" << std::endl;
+  //std::cerr << "---- end model rotate ----" << std::endl;
 }
 
 void Viewer::do_model_translate() {
-  std::cerr << "---- start model translate ----" << std::endl;
+  //std::cerr << "---- start model translate ----" << std::endl;
 
   double displacement = 0.01 * m_axis_dir;
 
@@ -348,10 +350,10 @@ void Viewer::do_model_translate() {
   }
 
   m_mc_coords_matrix = m_mc_matrix;
-  print_mc();
-  print_axes();
+  //print_mc();
+  //print_axes();
 
-  std::cerr << "---- end model translate ----" << std::endl;
+  //std::cerr << "---- end model translate ----" << std::endl;
 }
 
 void Viewer::do_model_scale() {
@@ -431,7 +433,7 @@ void Viewer::reset() {
 
   set_viewport_aspect();
 
-  set_mode(MODEL_ROTATE);
+  //set_mode(MODEL_ROTATE);
 
   set_wc_to_origin();
   set_origin();
@@ -570,4 +572,35 @@ void Viewer::draw_model_axes() {
   draw_line(Point2D(mc_origin[0], mc_origin[1]), Point2D(MCx[0], MCx[1]));
   draw_line(Point2D(mc_origin[0], mc_origin[1]), Point2D(MCy[0], MCy[1]));
   //draw_line(Point2D(mc_origin[0], mc_origin[1]), Point2D(MCz[0], MCz[1]));
+}
+
+void Viewer::set_label() {
+  m_label = "Mode: ";
+  switch (m_mode) {
+    case VIEW_ROTATE:
+      m_label += "View Rotate";
+      break;
+    case VIEW_TRANSLATE:
+      m_label += "View Translate";
+      break;
+    case VIEW_PERSPECTIVE:
+      m_label += "View Perspective";
+      break;
+    case MODEL_ROTATE:
+      m_label += "Model Rotate";
+      break;
+    case MODEL_TRANSLATE:
+      m_label += "Model Translate";
+      break;
+    case MODEL_SCALE:
+      m_label += "Model Scale";
+      break;
+    case VIEWPORT:
+      m_label += "Viewport";
+      break;
+    default:
+      break;
+  }
+
+  m_label = m_label + " Near Plane: 10, Far Plane: 2\n";
 }

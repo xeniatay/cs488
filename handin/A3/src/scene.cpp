@@ -1,5 +1,8 @@
 #include "scene.hpp"
 #include <iostream>
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include "a2.hpp"
 
 using std::cerr;
 using std::endl;
@@ -10,6 +13,8 @@ SN all_scenenodes;
 SceneNode::SceneNode(const std::string& name) : m_name(name) {
 
   this->m_id = all_scenenodes.size() + 1;
+  transform = Matrix4x4();
+
   all_scenenodes.push_back(this);
 
   //cerr << "Init sceneNode: " << name << " " << this->m_id << endl;
@@ -31,19 +36,22 @@ void SceneNode::walk_gl(bool picking) const
 void SceneNode::rotate(char axis, double angle)
 {
   std::cerr << "Stub: Rotate " << m_name << " around " << axis << " by " << angle << std::endl;
-  // Fill me in
+
+  transform = transform * rotation(90, axis);
 }
 
 void SceneNode::scale(const Vector3D& amount)
 {
   std::cerr << "Stub: Scale " << m_name << " by " << amount << std::endl;
-  // Fill me in
+
+  transform = transform * scaling(amount);
 }
 
 void SceneNode::translate(const Vector3D& amount)
 {
   std::cerr << "Stub: Translate " << m_name << " by " << amount << std::endl;
-  // Fill me in
+
+  transform = transform * translation(amount);
 }
 
 bool SceneNode::is_joint() const
@@ -97,6 +105,7 @@ GeometryNode::~GeometryNode() {
 void GeometryNode::walk_gl(bool picking) const
 {
   cerr << "GeometryNode Walk GL" << endl;
+  m_material->apply_gl();
   // Fill me in
   this->m_primitive->walk_gl(false);
 }

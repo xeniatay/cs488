@@ -14,10 +14,7 @@ Sphere::~Sphere() {
 
 void Sphere::walk_gl(bool picking) const
 {
-  std::cerr << "Sphere walk_gl hi" << std::endl;
-
-  //get_material();
-  //this->m_material;
+  cerr << "Sphere Walk GL" << endl;
 
   // display list
   GLuint listName = glGenLists(1);

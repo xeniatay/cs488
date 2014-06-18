@@ -99,11 +99,12 @@ class GeometryNode : public SceneNode {
     void set_material(Material* material)
     {
       m_material = material;
-      std::cerr << "Set material? " << material << std::endl;
     }
 
     Material* m_material;
     Primitive* m_primitive;
+
+    Matrix4x4 transform;
 
   protected:
 };

@@ -5,8 +5,13 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-Viewer::Viewer()
-{
+using std::cerr;
+using std::endl;
+
+typedef std::list<SceneNode*> SN;
+extern SN all_scenenodes;
+
+Viewer::Viewer() {
   Glib::RefPtr<Gdk::GL::Config> glconfig;
 
   // Ask for an OpenGL Setup with
@@ -44,6 +49,7 @@ void Viewer::invalidate()
   // Force a rerender
   Gtk::Allocation allocation = get_allocation();
   get_window()->invalidate_rect( allocation, false);
+
 }
 
 void Viewer::on_realize()
@@ -65,10 +71,14 @@ void Viewer::on_realize()
   glEnable(GL_DEPTH_TEST);
 
   gldrawable->gl_end();
+
+  cerr << "On realize!" << endl;
+  reset();
 }
 
 bool Viewer::on_expose_event(GdkEventExpose* event)
 {
+  cerr << "On expose event!" << endl;
   Glib::RefPtr<Gdk::GL::Drawable> gldrawable = get_gl_drawable();
 
   if (!gldrawable) return false;
@@ -92,6 +102,8 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   // Set up lighting
 
   // Draw stuff
+  create_sphere();
+  m_scenenode->walk_gl();
 
   draw_trackball_circle();
 
@@ -184,4 +196,16 @@ void Viewer::draw_trackball_circle()
   glEnd();
   glColor3f(0.0, 0.0, 0.0);
   glDisable(GL_LINE_SMOOTH);
+}
+
+void Viewer::create_sphere() {
+
+}
+
+void Viewer::draw_sphere() {
+}
+
+void Viewer::reset() {
+  m_scenenode = all_scenenodes.front();
+  cerr << "M_SCENENODE: " << m_scenenode->m_name << endl;
 }

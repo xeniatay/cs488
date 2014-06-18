@@ -1,18 +1,31 @@
 #include "scene.hpp"
 #include <iostream>
 
-SceneNode::SceneNode(const std::string& name)
-  : m_name(name)
-{
+using std::cerr;
+using std::endl;
+
+typedef std::list<SceneNode*> SN;
+SN all_scenenodes;
+
+SceneNode::SceneNode(const std::string& name) : m_name(name) {
+
+  this->m_id = all_scenenodes.size() + 1;
+  all_scenenodes.push_back(this);
+
+  //cerr << "Init sceneNode: " << name << " " << this->m_id << endl;
 }
 
-SceneNode::~SceneNode()
-{
-}
+SceneNode::~SceneNode() { }
 
 void SceneNode::walk_gl(bool picking) const
 {
-  // Fill me in
+  cerr << "SceneNode Walk GL" << endl;
+
+  for( std::list<SceneNode*>::const_iterator i = m_children.begin(); i != m_children.end(); ++i ) {
+    SceneNode *node = (*i);
+    node->walk_gl();
+  }
+
 }
 
 void SceneNode::rotate(char axis, double angle)
@@ -38,9 +51,7 @@ bool SceneNode::is_joint() const
   return false;
 }
 
-JointNode::JointNode(const std::string& name)
-  : SceneNode(name)
-{
+JointNode::JointNode(const std::string& name) : SceneNode(name) {
 }
 
 JointNode::~JointNode()
@@ -71,18 +82,21 @@ void JointNode::set_joint_y(double min, double init, double max)
   m_joint_y.max = max;
 }
 
-GeometryNode::GeometryNode(const std::string& name, Primitive* primitive)
-  : SceneNode(name),
-    m_primitive(primitive)
-{
+GeometryNode::GeometryNode(const std::string& name, Primitive* primitive) : SceneNode(name), m_primitive(primitive) {
+
+  //cerr << "Init geometryNode: " << name << endl;
+
+  this->m_primitive = primitive;
+  this->m_name = name;
+
 }
 
-GeometryNode::~GeometryNode()
-{
+GeometryNode::~GeometryNode() {
 }
 
 void GeometryNode::walk_gl(bool picking) const
 {
+  cerr << "GeometryNode Walk GL" << endl;
   // Fill me in
+  this->m_primitive->walk_gl(false);
 }
- 

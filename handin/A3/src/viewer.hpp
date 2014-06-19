@@ -25,6 +25,7 @@ class Viewer : public Gtk::GL::DrawingArea {
     void draw_sphere();
 
     SceneNode *m_scenenode;
+    GeometryNode *m_geonode;
 
   protected:
 

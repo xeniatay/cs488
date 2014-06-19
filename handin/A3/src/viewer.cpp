@@ -11,6 +11,9 @@ using std::endl;
 typedef std::list<SceneNode*> SN;
 extern SN all_scenenodes;
 
+typedef std::list<GeometryNode*> GN;
+extern GN all_geonodes;
+
 Viewer::Viewer() {
   Glib::RefPtr<Gdk::GL::Config> glconfig;
 
@@ -104,6 +107,7 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   // Draw stuff
   create_sphere();
   m_scenenode->walk_gl();
+  //m_geonode->walk_gl();
 
   draw_trackball_circle();
 
@@ -207,5 +211,6 @@ void Viewer::draw_sphere() {
 
 void Viewer::reset() {
   m_scenenode = all_scenenodes.front();
+  m_geonode = all_geonodes.front();
   cerr << "M_SCENENODE: " << m_scenenode->m_name << endl;
 }

@@ -5,13 +5,15 @@
 #include "algebra.hpp"
 #include "primitive.hpp"
 #include "material.hpp"
+#include <GL/gl.h>
+#include <GL/glu.h>
 
 class SceneNode {
   public:
     SceneNode(const std::string& name);
     virtual ~SceneNode();
 
-    virtual void walk_gl(bool picking = false) const;
+    virtual void walk_gl(bool picking = false);
 
     const Matrix4x4& get_transform() const { return m_trans; }
     const Matrix4x4& get_inverse() const { return m_invtrans; }
@@ -32,7 +34,7 @@ class SceneNode {
     {
       m_children.push_back(child);
 
-      std::cerr << "SceneNode " << this->m_name << " add child" << std::endl;
+      //std::cerr << "SceneNode " << this->m_name << " add child" << std::endl;
     }
 
     void remove_child(SceneNode* child)
@@ -47,17 +49,21 @@ class SceneNode {
     void translate(const Vector3D& amount);
 
     // Returns true if and only if this node is a JointNode
-    virtual bool is_joint() const;
+    virtual bool is_joint();
 
     // Useful for picking
     int m_id;
     std::string m_name;
 
-  protected:
+    void printTM();
+
+    void gl_mult_trans();
 
     // Transformations
     Matrix4x4 m_trans;
     Matrix4x4 m_invtrans;
+    Matrix4x4 m_rot;
+    GLfloat m_gl_trans[16];
 
     // Hierarchy
     typedef std::list<SceneNode*> ChildList;
@@ -69,9 +75,9 @@ class JointNode : public SceneNode {
     JointNode(const std::string& name);
     virtual ~JointNode();
 
-    virtual void walk_gl(bool bicking = false) const;
+    virtual void walk_gl(bool bicking = false);
 
-    virtual bool is_joint() const;
+    virtual bool is_joint();
 
     void set_joint_x(double min, double init, double max);
     void set_joint_y(double min, double init, double max);
@@ -81,8 +87,6 @@ class JointNode : public SceneNode {
     };
 
 
-  protected:
-
     JointRange m_joint_x, m_joint_y;
 };
 
@@ -91,7 +95,7 @@ class GeometryNode : public SceneNode {
     GeometryNode(const std::string& name, Primitive* primitive);
     virtual ~GeometryNode();
 
-    virtual void walk_gl(bool picking = false) const;
+    virtual void walk_gl(bool picking = false);
 
     const Material* get_material() const;
     Material* get_material();
@@ -104,9 +108,8 @@ class GeometryNode : public SceneNode {
     Material* m_material;
     Primitive* m_primitive;
 
-    Matrix4x4 transform;
+    void transform_node();
 
-  protected:
 };
 
 #endif

@@ -4,6 +4,8 @@
 #include <math.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include "trackball.h"
+#include "events.h"
 
 using std::cerr;
 using std::endl;
@@ -76,7 +78,7 @@ void Viewer::on_realize()
   gldrawable->gl_end();
 
   cerr << "On realize!" << endl;
-  reset();
+  reset_all();
 }
 
 bool Viewer::on_expose_event(GdkEventExpose* event)
@@ -105,10 +107,9 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   // Set up lighting
 
   // Draw stuff
-  create_sphere();
   m_scenenode->walk_gl();
-  //m_geonode->walk_gl();
 
+  // TODO make this optional
   draw_trackball_circle();
 
   // Swap the contents of the front and back buffers so we see what we
@@ -149,6 +150,24 @@ bool Viewer::on_configure_event(GdkEventConfigure* event)
 bool Viewer::on_button_press_event(GdkEventButton* event)
 {
   std::cerr << "Stub: Button " << event->button << " pressed" << std::endl;
+
+  switch (event->button) {
+    case 1:
+      // B1
+      break;
+    case 2:
+      // B2
+      break;
+    case 3:
+      // B3
+      break;
+    default:
+      break;
+  }
+
+  x_origin = event->x;
+  y_origin = event->y;
+
   return true;
 }
 
@@ -161,6 +180,17 @@ bool Viewer::on_button_release_event(GdkEventButton* event)
 bool Viewer::on_motion_notify_event(GdkEventMotion* event)
 {
   std::cerr << "Stub: Motion at " << event->x << ", " << event->y << std::endl;
+
+  float x_current = event->x,
+        y_current = event->y;
+
+  //vPerformTransfo((float)x_origin, x_current, (float)y_origin, y_current);
+
+  x_origin = x_current;
+  y_origin = y_current;
+
+  invalidate();
+
   return true;
 }
 
@@ -202,15 +232,35 @@ void Viewer::draw_trackball_circle()
   glDisable(GL_LINE_SMOOTH);
 }
 
-void Viewer::create_sphere() {
+void Viewer::reset_position() {
 
 }
 
-void Viewer::draw_sphere() {
+void Viewer::reset_orientation() {
+
 }
 
-void Viewer::reset() {
+void Viewer::reset_joints() {
+
+}
+
+void Viewer::reset_all() {
+  x_origin = 0;
+  y_origin = 0;
+
   m_scenenode = all_scenenodes.front();
   m_geonode = all_geonodes.front();
   cerr << "M_SCENENODE: " << m_scenenode->m_name << endl;
+}
+
+void Viewer::undo() {
+
+}
+
+void Viewer::redo() {
+
+}
+
+void Viewer::set_options(Option option) {
+
 }

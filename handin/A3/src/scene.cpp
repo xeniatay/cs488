@@ -85,7 +85,15 @@ JointNode::~JointNode()
 
 void JointNode::walk_gl(bool picking)
 {
-  // Fill me in
+  glPushMatrix();
+  gl_mult_trans();
+
+  for( std::list<SceneNode*>::const_iterator i = m_children.begin(); i != m_children.end(); ++i ) {
+    SceneNode *node = (*i);
+    node->walk_gl();
+  }
+
+  glPopMatrix();
 }
 
 bool JointNode::is_joint()

@@ -19,13 +19,49 @@ class Viewer : public Gtk::GL::DrawingArea {
     // directly. Instead call this, which will cause an on_expose_event
     // call when the time is right.
     void invalidate();
-    void reset();
 
-    void create_sphere();
-    void draw_sphere();
+    // app menu
+    void reset_position();
+    void reset_orientation();
+    void reset_joints();
+    void reset_all();
+
+    // mode menu
+    enum Mode {
+        POSITION_OR_ORIENTATION,
+        JOINTS
+    };
+
+    void set_mode(Mode mode) { m_mode = mode; }
+
+    // edit menu
+    void undo();
+    void redo();
+
+    // options menu
+    enum Option {
+        CIRCLE,
+        Z_BUFFER,
+        BACKFACE_CULL,
+        FRONTFACE_CULL
+    };
+
+    void set_options(Option option);
+
+    // nodes
 
     SceneNode *m_scenenode;
     GeometryNode *m_geonode;
+
+    // others
+    Mode m_mode;
+    Option m_circle;
+    Option m_zbuffer;
+    Option m_backface_cull;
+    Option m_frontface_cull;
+
+    int x_origin;
+    int y_origin;
 
   protected:
 

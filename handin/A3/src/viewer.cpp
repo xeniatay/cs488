@@ -4,8 +4,8 @@
 #include <math.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include "trackball.h"
-#include "events.h"
+#include "trackball.hpp"
+#include "events.hpp"
 
 using std::cerr;
 using std::endl;
@@ -15,6 +15,8 @@ extern SN all_scenenodes;
 
 typedef std::list<GeometryNode*> GN;
 extern GN all_geonodes;
+
+typedef GLdouble Matrix[4][4];
 
 Viewer::Viewer() {
   Glib::RefPtr<Gdk::GL::Config> glconfig;
@@ -106,11 +108,23 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
 
   // Set up lighting
 
+  // Trackball stuff
+  Matrix *mRot = getMRot();
+  Matrix *mTrans = getMTrans();
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glPushMatrix();
+  glLoadMatrixd((GLdouble *) mTrans);
+  glMultMatrixd((GLdouble *) mRot);
+
   // Draw stuff
   m_scenenode->walk_gl();
 
   // TODO make this optional
-  draw_trackball_circle();
+  //draw_trackball_circle();
+
+  glPopMatrix();
+
+  // end trackball stuff
 
   // Swap the contents of the front and back buffers so we see what we
   // just drew. This should only be done if double buffering is enabled.
@@ -154,11 +168,14 @@ bool Viewer::on_button_press_event(GdkEventButton* event)
   switch (event->button) {
     case 1:
       // B1
+      vToggleDir(DIR_X);
       break;
     case 2:
+      vToggleDir(DIR_Y);
       // B2
       break;
     case 3:
+      vToggleDir(DIR_Z);
       // B3
       break;
     default:
@@ -174,6 +191,7 @@ bool Viewer::on_button_press_event(GdkEventButton* event)
 bool Viewer::on_button_release_event(GdkEventButton* event)
 {
   std::cerr << "Stub: Button " << event->button << " released" << std::endl;
+  vToggleDir(DIR_NONE);
   return true;
 }
 
@@ -184,7 +202,7 @@ bool Viewer::on_motion_notify_event(GdkEventMotion* event)
   float x_current = event->x,
         y_current = event->y;
 
-  //vPerformTransfo((float)x_origin, x_current, (float)y_origin, y_current);
+  vPerformTransfo((float)x_origin, x_current, (float)y_origin, y_current);
 
   x_origin = x_current;
   y_origin = y_current;
@@ -251,6 +269,11 @@ void Viewer::reset_all() {
   m_scenenode = all_scenenodes.front();
   m_geonode = all_geonodes.front();
   cerr << "M_SCENENODE: " << m_scenenode->m_name << endl;
+
+  resetMRot();
+  resetMTrans();
+
+  invalidate();
 }
 
 void Viewer::undo() {

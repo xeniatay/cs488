@@ -1,5 +1,5 @@
 /*
- * Module : events.h
+ * Module : events.hpp
  *
  * Author : Greg Veres
  *
@@ -16,10 +16,10 @@
 /*
  * Constants
  */
-#define  DIR_NONE      0x00 
-#define  DIR_X         0x01     
-#define  DIR_Y         0x02    
-#define  DIR_Z         0x04   
+#define  DIR_NONE      0x00
+#define  DIR_X         0x01
+#define  DIR_Y         0x02
+#define  DIR_Z         0x04
 
 #define  OBJ_CUBE      1
 #define  OBJ_PLANE     2
@@ -44,5 +44,9 @@ void vDrawScene(void);
 void vToggleDir(int);
 void vPerformTransfo(float, float, float, float);
 void vEventLoop(void);
+Matrix* getMRot();
+Matrix* getMTrans();
+void resetMRot();
+void resetMTrans();
 
 #endif

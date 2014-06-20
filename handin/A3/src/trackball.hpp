@@ -1,7 +1,7 @@
 #ifndef TRACKBALL_H
 #define TRACKBALL_H
 
-#include "events.h"   /* For the definition of Matrix */
+#include "events.hpp"   /* For the definition of Matrix */
 
 /* Function prototypes */
 void vCalcRotVec(float fNewX, float fNewY,

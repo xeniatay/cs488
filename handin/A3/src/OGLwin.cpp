@@ -13,25 +13,25 @@
 #include <stdlib.h>
 #include <GL/glx.h>
 #include <GL/glu.h>
-#include <OGLwin.h>
+#include "OGLwin.hpp"
 
 /*
  * Variables exported to other modules. They are set in vGetNextEvent
  */
 int nWinHeight, nWinWidth;
 
-/* 
- * X window variables needed by a couple of routines 
+/*
+ * X window variables needed by a couple of routines
  */
 static Display *display; /* the display the window is on           */
 static Window win;       /* the window we are using                */
 static GLXContext gc;    /* the OpenGL context associated with win */
 
 
-/* 
- * These static routines are used by vOpenWindow() to open an Xwindow with 
+/*
+ * These static routines are used by vOpenWindow() to open an Xwindow with
  * an OpenGL context. They were extracted without modification from OGLMain
- * supplied with assignment #1. 
+ * supplied with assignment #1.
  */
 
 /*
@@ -44,9 +44,9 @@ static GLXContext gc;    /* the OpenGL context associated with win */
  * Returns   : XVisualInfo * - a pointer to an X visual info structure
  *                             containing the visual found.
  *
- * Purpose   :  Find an OpenGL visual that is at least componentsize bits 
- *              of colour per red, green and blue. The visual will also be 
- *              single buffer instead of double buffer. The visual is 
+ * Purpose   :  Find an OpenGL visual that is at least componentsize bits
+ *              of colour per red, green and blue. The visual will also be
+ *              single buffer instead of double buffer. The visual is
  *              returned as a pointer. If the pointer is NULL then there was
  *              an error and the correct visual could not be found.
  */
@@ -68,9 +68,9 @@ static XVisualInfo *findVisual( Display *display, int componentsize )
     visualAttribList[8] = componentsize;
     visualAttribList[9] = GLX_DOUBLEBUFFER;
     visualAttribList[10] = None;
-    
-    visual = glXChooseVisual( display, 
-                              DefaultScreen( display ), 
+
+    visual = glXChooseVisual( display,
+                              DefaultScreen( display ),
                               visualAttribList );
     if( visual == (XVisualInfo *) 0 ) {
         fprintf( stderr, "Main: Could not find a suitable visual\n" );
@@ -94,10 +94,10 @@ static XVisualInfo *findVisual( Display *display, int componentsize )
  *                                 -1 context creation failed
  *                                 -2 context/window association failed
  *
- * Purpose   : create an X window Graphics context and assocaite it with 
- *             the window. It returns 0 if everything was fine, -1 if the 
- *             context could not be created, -2 if the context could not 
- *             be associated with the window 
+ * Purpose   : create an X window Graphics context and assocaite it with
+ *             the window. It returns 0 if everything was fine, -1 if the
+ *             context could not be created, -2 if the context could not
+ *             be associated with the window
  */
 static int get_GC( Window win, XVisualInfo *visual, GLXContext *gc )
 {
@@ -110,7 +110,7 @@ static int get_GC( Window win, XVisualInfo *visual, GLXContext *gc )
     }
     /* associated the context with the X window */
     if( glXMakeCurrent( display, win, *gc ) == False) {
-        fprintf( stderr, 
+        fprintf( stderr,
                  "get_GC: Could not attach the OpenGL context to the X window\n");
         glXDestroyContext( display, *gc );
         return( -2 );
@@ -119,7 +119,7 @@ static int get_GC( Window win, XVisualInfo *visual, GLXContext *gc )
 }
 
 /*
- * Name      : Colormap allocateColourmap( Display *display, 
+ * Name      : Colormap allocateColourmap( Display *display,
  *                                         XVisualInfo *visual )
  *
  * Parameters: display - the X display to create the colormap on
@@ -128,12 +128,12 @@ static int get_GC( Window win, XVisualInfo *visual, GLXContext *gc )
  * Returns   : colormap - an xwindow colormap allocated for use with the
  *                        supplied visual and display
  *
- * Purpose   : create a colour map to use with the X window. Even though 
- *             the visual may be a 24 bit TrueColor visual, you still need 
- *             a colour map if the visual is not the default visual used by 
- *             the window manager. Most OpenGL visuals are not the default 
+ * Purpose   : create a colour map to use with the X window. Even though
+ *             the visual may be a 24 bit TrueColor visual, you still need
+ *             a colour map if the visual is not the default visual used by
+ *             the window manager. Most OpenGL visuals are not the default
  *             visual used by the window manager so just to be safe we
- *              always allocate a colour map. 
+ *              always allocate a colour map.
  */
 static Colormap allocateColourmap( Display *display, XVisualInfo *visual )
 {
@@ -157,7 +157,7 @@ static Colormap allocateColourmap( Display *display, XVisualInfo *visual )
  *
  * Purpose   : Creates the main viewing window.
  */
-void vOpenWindow() 
+void vOpenWindow()
 {
 
     unsigned int display_width, display_height;
@@ -211,10 +211,10 @@ void vOpenWindow()
     /* this is the more complicated way of opening an X window but we must
        use it because we want to specifiy the visual that the window is to
        use. This is necessary for OpenGL */
-    win = XCreateWindow( display, RootWindow( display, screen ), 
+    win = XCreateWindow( display, RootWindow( display, screen ),
                          window_x, window_y,
                          window_width, window_height,
-                         border_width, 
+                         border_width,
                          visual->depth,
                          InputOutput,
                          visual->visual,
@@ -229,9 +229,9 @@ void vOpenWindow()
        to the program for tis window. The events are specified in by the
        event masks being or'ed together as the last parameter. To get more
        or less events in this window, add or remove some of the masks. */
-    XSelectInput(display, 
-                 win, 
-                 ExposureMask | KeyPressMask | ButtonPressMask | 
+    XSelectInput(display,
+                 win,
+                 ExposureMask | KeyPressMask | ButtonPressMask |
                  ButtonReleaseMask | StructureNotifyMask | ButtonMotionMask);
 
     if (get_GC( win, visual, &gc ) != 0) {
@@ -256,7 +256,7 @@ void vOpenWindow()
  *
  * Purpose   : Initializes the components of GL
  */
-void vInitGL(int iXSize, int iYSize) 
+void vInitGL(int iXSize, int iYSize)
 {
 
     /*

@@ -1,9 +1,9 @@
 #include <math.h>
-#include "trackball.h"
+#include "trackball.hpp"
 
 /*******************************************************
- * 
- * void vCalcRotVec(float fNewX, float fNewY, 
+ *
+ * void vCalcRotVec(float fNewX, float fNewY,
  *                  float fOldX, float fOldY,
  *                  float fDiameter,
  *                  float *fVecX, float *fVecY, float *fVecZ);
@@ -66,7 +66,7 @@ void vCalcRotVec(float fNewX, float fNewY,
    fOldVecX    = fOldX * 2.0 / fDiameter;
    fOldVecY    = fOldY * 2.0 / fDiameter;
    fOldVecZ    = (1.0 - fOldVecX * fOldVecX - fOldVecY * fOldVecY);
- 
+
    /* If the Z component is less than 0, the mouse point
     * falls outside of the trackball which is interpreted
     * as rotation about the Z axis.
@@ -81,9 +81,9 @@ void vCalcRotVec(float fNewX, float fNewY,
    }
 
    /* Generate rotation vector by calculating cross product:
-    * 
+    *
     * fOldVec x fNewVec.
-    * 
+    *
     * The rotation vector is the axis of rotation
     * and is non-unit length since the length of a crossproduct
     * is related to the angle between fOldVec and fNewVec which we need
@@ -96,9 +96,9 @@ void vCalcRotVec(float fNewX, float fNewY,
 
 /*******************************************************
  * void vAxisRotMatrix(float fVecX, float fVecY, float fVecZ, Matrix mNewMat)
- *    
+ *
  *    Calculate the rotation matrix for rotation about an arbitrary axis.
- *    
+ *
  *    The axis of rotation is specified by (fVecX,fVecY,fVecZ). The length
  *    of the vector is the amount to rotate by.
  *
@@ -123,7 +123,7 @@ void vAxisRotMatrix(float fVecX, float fVecY, float fVecZ, Matrix mNewMat) {
     }
 
     /* Normalize the rotation vector now in preparation for making
-     * rotation matrix. 
+     * rotation matrix.
      */
     fInvLength = 1 / fRadians;
     fNewVecX   = fVecX * fInvLength;

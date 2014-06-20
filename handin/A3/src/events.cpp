@@ -9,12 +9,12 @@
  *
  */
 #include <stdlib.h>
-#include "events.h"
-#include "OGLwin.h"
-#include "trackball.h"
+#include "events.hpp"
+#include "OGLwin.hpp"
+#include "trackball.hpp"
 #include <X11/Xutil.h>
 
-/* 
+/*
  * Local Global Variables
  */
 static Matrix mRotations    = {{1.0, 0.0, 0.0, 0.0},
@@ -25,6 +25,15 @@ static Matrix mTranslations = {{1.0, 0.0, 0.0, 0.0},
                                {0.0, 1.0, 0.0, 0.0},
                                {0.0, 0.0, 1.0, 0.0},
                                {0.0, 0.0, -25.0, 1.0}};
+static Matrix mOrigRotations    = {{1.0, 0.0, 0.0, 0.0},
+                               {0.0, 0.91, 0.42, 0.0},
+                               {0.0, -0.42, 0.91, 0.0},
+                               {0.0, 0.0, 0.0, 1.0}};
+static Matrix mOrigTranslations = {{1.0, 0.0, 0.0, 0.0},
+                               {0.0, 1.0, 0.0, 0.0},
+                               {0.0, 0.0, 1.0, 0.0},
+                               {0.0, 0.0, -25.0, 1.0}};
+
 Matrix mIdentity     = {{1.0, 0.0, 0.0, 0.0},
                         {0.0, 1.0, 0.0, 0.0},
                         {0.0, 0.0, 1.0, 0.0},
@@ -51,7 +60,7 @@ int nCurrentDir = DIR_NONE;
  *
  * Purpose   : Creates the plane.
  */
-void vMakePlane() 
+void vMakePlane()
 {
     int nIndex;
 
@@ -133,7 +142,7 @@ void vMakePlane()
  *
  * Purpose   : Creates a cube object.
  */
-void vMakeCube() 
+void vMakeCube()
 {
     static float v0[3] = {-1.0, -1.0, -1.0};
     static float v1[3] = {-1.0, -1.0,  1.0};
@@ -212,7 +221,7 @@ void vTransposeMatrix(Matrix mSrcDst) {
  * Purpose   : Copies matrix mSource to matrix mDestination.
  *             the result in mDestination.
  */
-void vCopyMatrix(Matrix mSource, Matrix mDestination) 
+void vCopyMatrix(Matrix mSource, Matrix mDestination)
 {
     int i, j;
 
@@ -234,7 +243,7 @@ void vCopyMatrix(Matrix mSource, Matrix mDestination)
  * Purpose   : Right multiplies matrix mMat1 by matrix mMat2 and stores
  *             the result in mMat1.
  */
-void vRightMultiply(Matrix mMat1, Matrix mMat2) 
+void vRightMultiply(Matrix mMat1, Matrix mMat2)
 {
     int    i, j;
     Matrix mMat3;
@@ -291,13 +300,13 @@ void vTranslate(float fTrans, char cAxis, Matrix mMat)
  *
  * Purpose   : Draws the entire scene.
  */
-void vDrawScene() 
+void vDrawScene()
 {
     /*
      * Clear the scene.
      */
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   
+
     /*
      * Draw the polygons in the scene.
      */
@@ -310,7 +319,7 @@ void vDrawScene()
 
     vSwapBuffers();
 }
-  
+
 /*
  * Name      : void vToggleDir(int nDir)
  *
@@ -318,10 +327,10 @@ void vDrawScene()
  *
  * Returns   : void
  *
- * Purpose   : Toggles the direction in the direction vector on 
+ * Purpose   : Toggles the direction in the direction vector on
  *             and off.
  */
-void vToggleDir(int nDir) 
+void vToggleDir(int nDir)
 {
     nCurrentDir ^= nDir;
 }
@@ -339,11 +348,11 @@ void vToggleDir(int nDir)
  *
  * Purpose   : Updates the various transformation matrices.
  */
-void vPerformTransfo(float fOldX, float fNewX, float fOldY, float fNewY) 
+void vPerformTransfo(float fOldX, float fNewX, float fOldY, float fNewY)
 {
     float  fRotVecX, fRotVecY, fRotVecZ;
     Matrix mNewMat;
-  
+
     /*
      * Track ball rotations are being used.
      */
@@ -351,7 +360,7 @@ void vPerformTransfo(float fOldX, float fNewX, float fOldY, float fNewY)
         float fDiameter;
         int iCenterX, iCenterY;
         float fNewModX, fNewModY, fOldModX, fOldModY;
-	
+
         /* vCalcRotVec expects new and old positions in relation to the center of the
          * trackball circle which is centered in the middle of the window and
          * half the smaller of nWinWidth or nWinHeight.
@@ -390,7 +399,7 @@ void vPerformTransfo(float fOldX, float fNewX, float fOldY, float fNewY)
         vTranslate(-(fNewY - fOldY) / ((float)SENS_PANY), 'y', mNewMat);
         vRightMultiply(mTranslations, mNewMat);
     }
-   
+
     /*
      * Zoom translations are being used.
      */
@@ -409,7 +418,7 @@ void vPerformTransfo(float fOldX, float fNewX, float fOldY, float fNewY)
  *
  * Purpose   : The main event loop.
  */
-void vEventLoop() 
+void vEventLoop()
 {
 
     short     sXCurrent, sYCurrent;
@@ -428,12 +437,12 @@ void vEventLoop()
     vDrawScene();
 
     /*
-     * Process events forever.   
+     * Process events forever.
      */
     while (1) {
 
-        /* 
-         * Process the incoming event. 
+        /*
+         * Process the incoming event.
          */
         vGetNextEvent(&tEvent);
         /*
@@ -506,10 +515,27 @@ void vEventLoop()
                 vDrawScene();
             }
             /*
-             * Default case - ignore. 
+             * Default case - ignore.
              */
         default:
             break;
         }
     }
+}
+
+Matrix* getMRot() {
+    return &mRotations;
+}
+
+Matrix* getMTrans() {
+    return &mTranslations;
+}
+
+void resetMRot() {
+    vCopyMatrix(mOrigRotations, mRotations);
+}
+
+void resetMTrans() {
+    vCopyMatrix(mIdentity, mTranslations);
+    vRightMultiply(mTranslations, mOrigTranslations);
 }

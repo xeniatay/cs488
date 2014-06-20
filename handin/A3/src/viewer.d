@@ -1114,4 +1114,4 @@ viewer.o viewer.d : viewer.cpp viewer.hpp /usr/include/gtkmm-2.4/gtkmm.h \
  /usr/include/gtkglextmm-1.2/gtkmm/gl/widget.h \
  /usr/include/gtkglextmm-1.2/gtkmm/gl/drawingarea.h scene.hpp algebra.hpp \
  /usr/include/c++/4.6/iostream primitive.hpp material.hpp \
- /usr/include/GL/glu.h trackball.h events.h
+ /usr/include/GL/glu.h trackball.hpp events.hpp

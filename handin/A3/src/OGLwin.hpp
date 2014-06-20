@@ -1,5 +1,5 @@
 /*
- * Module : OGLwin.h
+ * Module : OGLwin.hpp
  *
  * Author : Greg Veres
  *

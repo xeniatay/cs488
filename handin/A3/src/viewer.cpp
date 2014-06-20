@@ -124,7 +124,9 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   m_scenenode->walk_gl();
 
   // TODO make this optional
-  draw_trackball_circle();
+  if (m_circle) {
+    draw_trackball_circle();
+  }
 
   // Swap the contents of the front and back buffers so we see what we
   // just drew. This should only be done if double buffering is enabled.
@@ -289,6 +291,7 @@ void Viewer::reset_joints() {
 }
 
 void Viewer::reset_all() {
+  m_circle = false;
   m_axis_dir = 1;
   x_origin = 0;
   y_origin = 0;
@@ -308,6 +311,9 @@ void Viewer::reset_all() {
 
   vToggleDir(DIR_NONE);
 
+  glDisable(GL_DEPTH_TEST);
+  glDisable(GL_CULL_FACE);
+
   invalidate();
 }
 
@@ -320,6 +326,20 @@ void Viewer::redo() {
 }
 
 void Viewer::set_options(Option option) {
+
+  if (option == Z_BUFFER) {
+    glEnable(GL_DEPTH_TEST);
+  } else if (option == FRONTFACE_CULL) {
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
+  } else if (option == BACKFACE_CULL) {
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+  } else if (option == CIRCLE) {
+    m_circle = true;
+  }
+
+  invalidate();
 
 }
 

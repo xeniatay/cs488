@@ -58,7 +58,7 @@ class Viewer : public Gtk::GL::DrawingArea {
 
     // others
     Mode m_mode;
-    Option m_circle;
+    bool m_circle;
     Option m_zbuffer;
     Option m_backface_cull;
     Option m_frontface_cull;

@@ -193,6 +193,12 @@ torso_node:add_child(torso_primt);
       head_primt:set_material(black);
       head_node:add_child(head_primt);
 
+      -- nose --
+      nose_primt = gr.sphere('nose_primt');
+      nose_primt:translate(0, 0, 1.0);
+      nose_primt:scale( 0.08, 0.0005, 1 );
+      nose_primt:set_material(green);
+      head_node:add_child(nose_primt);
 
   ---- hips_primt ----
   hips_node = gr.node('hips_node');

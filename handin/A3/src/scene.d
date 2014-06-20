@@ -97,4 +97,8 @@ scene.o scene.d : scene.cpp scene.hpp /usr/include/c++/4.6/list \
  material.hpp /usr/include/GL/gl.h /usr/include/GL/glext.h \
  /usr/include/inttypes.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdint.h /usr/include/stdint.h \
- /usr/include/GL/glu.h a2.hpp
+ /usr/include/GL/glu.h a2.hpp /usr/include/c++/4.6/vector \
+ /usr/include/c++/4.6/bits/stl_uninitialized.h \
+ /usr/include/c++/4.6/bits/stl_vector.h \
+ /usr/include/c++/4.6/bits/stl_bvector.h \
+ /usr/include/c++/4.6/bits/vector.tcc

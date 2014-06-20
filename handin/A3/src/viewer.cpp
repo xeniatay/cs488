@@ -13,6 +13,7 @@ using std::endl;
 
 typedef std::list<SceneNode*> SN;
 extern SN all_scenenodes;
+extern vector <SceneNode*> scenenodes_v;
 
 typedef std::list<GeometryNode*> GN;
 extern GN all_geonodes;
@@ -219,16 +220,14 @@ bool Viewer::on_motion_notify_event(GdkEventMotion* event)
   } else {
     // joint
 
-    int j = 0;
-
     for( std::list<GeometryNode*>::const_iterator i = all_geonodes.begin(); i != all_geonodes.end(); ++i ) {
 
       GeometryNode* node = (*i);
 
-      for (j = 0; j < numLimbs; j++) {
-        if (node->m_geo_id == j) {
-          node->rotate('x', 1 * m_axis_dir);
-        }
+      if (picked_list[node->m_geo_id]) {
+        // hacky
+        SceneNode* joint = scenenodes_v.at(node->m_id - 2);
+        joint->rotate('x', 1 * m_axis_dir);
       }
     }
 
@@ -278,11 +277,11 @@ void Viewer::draw_trackball_circle()
 }
 
 void Viewer::reset_position() {
-
+  resetMTrans();
 }
 
 void Viewer::reset_orientation() {
-
+  resetMRot();
 }
 
 void Viewer::reset_joints() {

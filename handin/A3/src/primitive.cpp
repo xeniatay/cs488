@@ -14,7 +14,7 @@ Sphere::~Sphere() {
 
 void Sphere::walk_gl(bool picking) const
 {
-  cerr << "Sphere Walk GL" << endl;
+  //cerr << "Sphere Walk GL" << endl;
 
   // display list
   GLuint listName = glGenLists(1);
@@ -32,6 +32,6 @@ void Sphere::walk_gl(bool picking) const
 
   glCallList (listName);
 
-  cerr << "Sphere End Walk GL" << endl;
+  //cerr << "Sphere End Walk GL" << endl;
 }
 

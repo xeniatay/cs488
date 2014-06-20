@@ -1,9 +1,13 @@
 #include "scene.hpp"
 #include <iostream>
 #include "a2.hpp"
+#include <vector>
 
+using std::vector;
 using std::cerr;
 using std::endl;
+
+vector<SceneNode*> scenenodes_v;
 
 typedef std::list<SceneNode*> SN;
 SN all_scenenodes;
@@ -17,6 +21,7 @@ SceneNode::SceneNode(const std::string& name) : m_name(name) {
   m_trans = Matrix4x4();
 
   all_scenenodes.push_back(this);
+  scenenodes_v.push_back(this);
 
   //cerr << "Init sceneNode: " << name << " " << this->m_id << endl;
 }
@@ -25,7 +30,7 @@ SceneNode::~SceneNode() { }
 
 void SceneNode::walk_gl(bool picking)
 {
-  cerr << "SceneNode " << m_name << " Walk GL" << endl;
+  //cerr << "SceneNode " << m_name << " Walk GL" << endl;
 
   glPushMatrix();
 
@@ -41,7 +46,7 @@ void SceneNode::walk_gl(bool picking)
 
   glPopMatrix();
 
-  cerr << "SceneNode " << m_name << " End Walk GL" << endl;
+  //cerr << "SceneNode " << m_name << " End Walk GL" << endl;
 }
 
 void SceneNode::rotate(char axis, double angle)
@@ -134,13 +139,13 @@ GeometryNode::~GeometryNode() {
 void GeometryNode::walk_gl(bool picking)
 {
 
-  cerr << "GeometryNode " << m_name << " Walk GL" << endl;
+  //cerr << "GeometryNode " << m_name << " Walk GL" << endl;
 
   if (m_material) {
     m_material->apply_gl();
   }
 
-  cerr << "GeometryNode " << m_name << " End Walk GL" << endl;
+  //cerr << "GeometryNode " << m_name << " End Walk GL" << endl;
 
 
   glPushMatrix();

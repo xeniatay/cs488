@@ -143,7 +143,7 @@ void GeometryNode::walk_gl(bool picking)
   gl_mult_trans();
 
   this->m_primitive->walk_gl(false);
-  cerr << m_name << "'s sphere was drawn" << endl;
+  //cerr << m_name << "'s sphere was drawn" << endl;
 
   for( std::list<SceneNode*>::const_iterator i = m_children.begin(); i != m_children.end(); ++i ) {
     SceneNode *node = (*i);
@@ -170,7 +170,7 @@ void SceneNode::gl_mult_trans() {
 
   glMultTransposeMatrixf(m_gl_trans);
 
-  cerr << m_name << "'s GL transform matrix has been set:" << endl << tr << endl;
+  //cerr << m_name << "'s GL transform matrix has been set:" << endl << tr << endl;
 }
 
 // apply transformations

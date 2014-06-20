@@ -106,25 +106,20 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   // Clear framebuffer
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  // Set up lighting
-
   // Trackball stuff
   Matrix *mRot = getMRot();
   Matrix *mTrans = getMTrans();
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glPushMatrix();
+  //glPushMatrix();
   glLoadMatrixd((GLdouble *) mTrans);
   glMultMatrixd((GLdouble *) mRot);
+
+  // Set up lighting
 
   // Draw stuff
   m_scenenode->walk_gl();
 
   // TODO make this optional
-  //draw_trackball_circle();
-
-  glPopMatrix();
-
-  // end trackball stuff
+  draw_trackball_circle();
 
   // Swap the contents of the front and back buffers so we see what we
   // just drew. This should only be done if double buffering is enabled.
@@ -191,7 +186,6 @@ bool Viewer::on_button_press_event(GdkEventButton* event)
 bool Viewer::on_button_release_event(GdkEventButton* event)
 {
   std::cerr << "Stub: Button " << event->button << " released" << std::endl;
-  vToggleDir(DIR_NONE);
   return true;
 }
 

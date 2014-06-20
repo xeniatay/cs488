@@ -13,6 +13,7 @@
 #include "OGLwin.hpp"
 #include "trackball.hpp"
 #include <X11/Xutil.h>
+#include <iostream>
 
 /*
  * Local Global Variables
@@ -352,6 +353,7 @@ void vPerformTransfo(float fOldX, float fNewX, float fOldY, float fNewY)
 {
     float  fRotVecX, fRotVecY, fRotVecZ;
     Matrix mNewMat;
+
 
     /*
      * Track ball rotations are being used.

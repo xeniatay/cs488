@@ -6,6 +6,7 @@
 #include <GL/glu.h>
 #include "trackball.hpp"
 #include "events.hpp"
+#include "material.hpp"
 
 using std::cerr;
 using std::endl;
@@ -81,6 +82,9 @@ void Viewer::on_realize()
 
   cerr << "On realize!" << endl;
   reset_all();
+
+  // default mode
+  m_mode = POSITION_OR_ORIENTATION;
 }
 
 bool Viewer::on_expose_event(GdkEventExpose* event)
@@ -160,25 +164,30 @@ bool Viewer::on_button_press_event(GdkEventButton* event)
 {
   std::cerr << "Stub: Button " << event->button << " pressed" << std::endl;
 
-  switch (event->button) {
-    case 1:
-      // B1
-      vToggleDir(DIR_X);
-      break;
-    case 2:
-      vToggleDir(DIR_Y);
-      // B2
-      break;
-    case 3:
-      vToggleDir(DIR_Z);
-      // B3
-      break;
-    default:
-      break;
-  }
-
   x_origin = event->x;
   y_origin = event->y;
+
+  if (m_mode == POSITION_OR_ORIENTATION) {
+    switch (event->button) {
+      case 1:
+        // B1
+        vToggleDir(DIR_X);
+        break;
+      case 2:
+        vToggleDir(DIR_Y);
+        // B2
+        break;
+      case 3:
+        vToggleDir(DIR_Z);
+        // B3
+        break;
+      default:
+        break;
+    }
+  } else {
+    // picking doesn't work
+    // picking();
+  }
 
   return true;
 }
@@ -186,6 +195,7 @@ bool Viewer::on_button_press_event(GdkEventButton* event)
 bool Viewer::on_button_release_event(GdkEventButton* event)
 {
   std::cerr << "Stub: Button " << event->button << " released" << std::endl;
+
   return true;
 }
 
@@ -193,13 +203,36 @@ bool Viewer::on_motion_notify_event(GdkEventMotion* event)
 {
   std::cerr << "Stub: Motion at " << event->x << ", " << event->y << std::endl;
 
-  float x_current = event->x,
-        y_current = event->y;
+  m_axis_dir = ( (event->x - x_origin) < 0) ? -1 : 1;
 
-  vPerformTransfo((float)x_origin, x_current, (float)y_origin, y_current);
+  if (m_mode == POSITION_OR_ORIENTATION) {
 
-  x_origin = x_current;
-  y_origin = y_current;
+    float x_current = event->x,
+          y_current = event->y;
+
+    vPerformTransfo((float)x_origin, x_current, (float)y_origin, y_current);
+
+    x_origin = x_current;
+    y_origin = y_current;
+
+
+  } else {
+    // joint
+
+    int j = 0;
+
+    for( std::list<GeometryNode*>::const_iterator i = all_geonodes.begin(); i != all_geonodes.end(); ++i ) {
+
+      GeometryNode* node = (*i);
+
+      for (j = 0; j < numLimbs; j++) {
+        if (node->m_geo_id == j) {
+          node->rotate('x', 1 * m_axis_dir);
+        }
+      }
+    }
+
+  }
 
   invalidate();
 
@@ -257,15 +290,24 @@ void Viewer::reset_joints() {
 }
 
 void Viewer::reset_all() {
+  m_axis_dir = 1;
   x_origin = 0;
   y_origin = 0;
+  m_width = get_width();
+  m_height = get_height();
+  numLimbs = 18;
+  picked_list.resize(numLimbs);
+  std::fill(picked_list.begin(), picked_list.end(), false);
 
   m_scenenode = all_scenenodes.front();
   m_geonode = all_geonodes.front();
   cerr << "M_SCENENODE: " << m_scenenode->m_name << endl;
 
+
   resetMRot();
   resetMTrans();
+
+  vToggleDir(DIR_NONE);
 
   invalidate();
 }
@@ -280,4 +322,60 @@ void Viewer::redo() {
 
 void Viewer::set_options(Option option) {
 
+}
+
+void Viewer::picking_in_select_mode() {
+  int size = 100, hits;
+
+  GLuint buffer[size];
+  GLint viewport[4];
+
+  glSelectBuffer(size, buffer);
+
+  glRenderMode(GL_SELECT);
+  glInitNames();
+  glPushName(-1);
+
+  glGetIntegerv(GL_VIEWPORT, viewport);
+  glMatrixMode(GL_PROJECTION);
+  glPushMatrix();
+  glLoadIdentity();
+  gluPickMatrix(x_origin, y_origin, 10, 10, viewport);
+
+  glMatrixMode(GL_MODELVIEW);
+
+  for( std::list<SceneNode*>::const_iterator i = all_scenenodes.begin(); i != all_scenenodes.end(); ++i ) {
+    SceneNode *node = (*i);
+
+    glLoadName(node->m_id);
+    node->walk_gl();
+  }
+
+  glMatrixMode(GL_PROJECTION);
+  glPopMatrix();
+  glMatrixMode(GL_MODELVIEW);
+  hits = glRenderMode(GL_RENDER);
+  cerr << "HITS: " << hits << endl;
+}
+
+void Viewer::set_pickings(Picking picked) {
+
+  if (picked_list.at(picked) == true) {
+    picked_list.at(picked) = false;
+  } else {
+
+    for( std::list<GeometryNode*>::const_iterator i = all_geonodes.begin(); i != all_geonodes.end(); ++i ) {
+      GeometryNode* node = (*i);
+      if (node->m_geo_id == picked) {
+        PhongMaterial *material = new PhongMaterial(Colour(1.0, 1.0, 0.0),
+                                             Colour(0.1, 0.1, 0.1),
+                                             10);
+        node->set_material(material);
+      }
+    }
+
+    picked_list.at(picked) = true;
+  }
+
+  invalidate();
 }

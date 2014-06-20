@@ -35,11 +35,29 @@ AppWindow::AppWindow()
   m_menu_options.items().push_back(CheckMenuElem("_Backface Cull (B)", sigc::bind(option_slot, Viewer::BACKFACE_CULL)));
   m_menu_options.items().push_back(CheckMenuElem("_Frontface Cull (F)", sigc::bind(option_slot, Viewer::FRONTFACE_CULL)));
 
+  // Set up the options checklist menu group
+  sigc::slot1<void, Viewer::Picking> picking_slot = sigc::mem_fun(m_viewer, &Viewer::set_pickings);
+  m_menu_pickings.items().push_back(CheckMenuElem("_Left Upper Arm", sigc::bind(picking_slot, Viewer::LEFT_UPPER_ARM)));
+  m_menu_pickings.items().push_back(CheckMenuElem("_Left Forearm", sigc::bind(picking_slot, Viewer::LEFT_FOREARM)));
+  m_menu_pickings.items().push_back(CheckMenuElem("_Left Hand", sigc::bind(picking_slot, Viewer::LEFT_HAND)));
+  m_menu_pickings.items().push_back(CheckMenuElem("_Right Upper Arm", sigc::bind(picking_slot, Viewer::RIGHT_UPPER_ARM)));
+  m_menu_pickings.items().push_back(CheckMenuElem("_Right Forearm", sigc::bind(picking_slot, Viewer::RIGHT_FOREARM)));
+  m_menu_pickings.items().push_back(CheckMenuElem("_Right Hand", sigc::bind(picking_slot, Viewer::RIGHT_HAND)));
+  m_menu_pickings.items().push_back(CheckMenuElem("_Neck", sigc::bind(picking_slot, Viewer::NECK)));
+  m_menu_pickings.items().push_back(CheckMenuElem("_Head", sigc::bind(picking_slot, Viewer::HEAD)));
+  m_menu_pickings.items().push_back(CheckMenuElem("_Left Thigh", sigc::bind(picking_slot, Viewer::LEFT_THIGH)));
+  m_menu_pickings.items().push_back(CheckMenuElem("_Left Calf", sigc::bind(picking_slot, Viewer::LEFT_CALF)));
+  m_menu_pickings.items().push_back(CheckMenuElem("_Left Foot", sigc::bind(picking_slot, Viewer::LEFT_FOOT)));
+  m_menu_pickings.items().push_back(CheckMenuElem("_Right Thigh", sigc::bind(picking_slot, Viewer::RIGHT_THIGH)));
+  m_menu_pickings.items().push_back(CheckMenuElem("_Right Calf", sigc::bind(picking_slot, Viewer::RIGHT_CALF)));
+  m_menu_pickings.items().push_back(CheckMenuElem("_Right Foot", sigc::bind(picking_slot, Viewer::RIGHT_FOOT)));
+
   // Set up the menu bar
   m_menubar.items().push_back(Gtk::Menu_Helpers::MenuElem("_Application", m_menu_app));
   m_menubar.items().push_back(Gtk::Menu_Helpers::MenuElem("_Mode", m_menu_mode));
   m_menubar.items().push_back(Gtk::Menu_Helpers::MenuElem("_Edit", m_menu_edit));
   m_menubar.items().push_back(Gtk::Menu_Helpers::MenuElem("_Options", m_menu_options));
+  m_menubar.items().push_back(Gtk::Menu_Helpers::MenuElem("_Picking", m_menu_pickings));
 
   // Pack in our widgets
 

@@ -5,6 +5,9 @@
 #include <gtkglmm.h>
 #include "scene.hpp"
 #include "primitive.hpp"
+#include <vector>
+
+using std::vector;
 
 // The "main" OpenGL widget
 class Viewer : public Gtk::GL::DrawingArea {
@@ -60,8 +63,42 @@ class Viewer : public Gtk::GL::DrawingArea {
     Option m_backface_cull;
     Option m_frontface_cull;
 
+
     int x_origin;
     int y_origin;
+    int m_width;
+    int m_height;
+
+    // picking
+    enum Picking {
+        ROOT,
+        TORSO,
+        SHOULDER,
+        LEFT_UPPER_ARM,
+        LEFT_FOREARM,
+        LEFT_HAND,
+        RIGHT_UPPER_ARM,
+        RIGHT_FOREARM,
+        RIGHT_HAND,
+        NECK,
+        HEAD,
+        HIPS,
+        LEFT_THIGH,
+        LEFT_CALF,
+        LEFT_FOOT,
+        RIGHT_THIGH,
+        RIGHT_CALF,
+        RIGHT_FOOT
+    };
+
+    int numLimbs;
+
+    void picking_in_select_mode();
+    void set_pickings(Picking picked);
+
+    vector <bool> picked_list;
+
+    int m_axis_dir;
 
   protected:
 

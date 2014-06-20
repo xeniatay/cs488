@@ -53,6 +53,7 @@ class SceneNode {
 
     // Useful for picking
     int m_id;
+    int m_geo_id;
     std::string m_name;
 
     void printTM();

@@ -14,7 +14,7 @@ Sphere::~Sphere() {
 
 void Sphere::walk_gl(bool picking) const
 {
-  //cerr << "Sphere Walk GL" << endl;
+  cerr << "Sphere Walk GL" << endl;
 
   // display list
   GLuint listName = glGenLists(1);
@@ -24,7 +24,6 @@ void Sphere::walk_gl(bool picking) const
   GLUquadric *quadric = gluNewQuadric();
   gluQuadricOrientation(quadric, GLU_OUTSIDE);
 
-
   gluSphere(quadric, 1, 32, 32);
 
   glEndList();
@@ -32,5 +31,7 @@ void Sphere::walk_gl(bool picking) const
   glShadeModel(GL_FLAT);
 
   glCallList (listName);
+
+  cerr << "Sphere End Walk GL" << endl;
 }
 

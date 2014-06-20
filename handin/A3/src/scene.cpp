@@ -25,7 +25,7 @@ SceneNode::~SceneNode() { }
 
 void SceneNode::walk_gl(bool picking)
 {
-  //cerr << "SceneNode " << m_name << " Walk GL" << endl;
+  cerr << "SceneNode " << m_name << " Walk GL" << endl;
 
   glPushMatrix();
 
@@ -41,6 +41,7 @@ void SceneNode::walk_gl(bool picking)
 
   glPopMatrix();
 
+  cerr << "SceneNode " << m_name << " End Walk GL" << endl;
 }
 
 void SceneNode::rotate(char axis, double angle)
@@ -122,6 +123,7 @@ GeometryNode::GeometryNode(const std::string& name, Primitive* primitive) : Scen
   this->m_primitive = primitive;
   this->m_name = name;
 
+  this->m_geo_id = all_geonodes.size();
   all_geonodes.push_back(this);
 
 }
@@ -132,11 +134,13 @@ GeometryNode::~GeometryNode() {
 void GeometryNode::walk_gl(bool picking)
 {
 
-  //cerr << "GeometryNode " << m_name << " Walk GL" << endl;
+  cerr << "GeometryNode " << m_name << " Walk GL" << endl;
 
   if (m_material) {
     m_material->apply_gl();
   }
+
+  cerr << "GeometryNode " << m_name << " End Walk GL" << endl;
 
 
   glPushMatrix();

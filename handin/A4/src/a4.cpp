@@ -27,11 +27,12 @@ void a4_render(// What to render
     std::cerr << **I;
   }
   std::cerr << "});" << std::endl;
-  
+
   // For now, just make a sample image.
 
   Image img(width, height, 3);
 
+/*
   for (int y = 0; y < height; y++) {
     for (int x = 0; x < height; x++) {
       // Red: increasing from top to bottom
@@ -43,6 +44,8 @@ void a4_render(// What to render
                       || (y >= height/2 && x >= height/2)) ? 1.0 : 0.0;
     }
   }
+*/
+
   img.savePng(filename);
-  
+
 }

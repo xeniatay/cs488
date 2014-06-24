@@ -81,7 +81,7 @@ void Viewer::on_realize()
 
   gldrawable->gl_end();
 
-  cerr << "On realize!" << endl;
+  //cerr << "On realize!" << endl;
   reset_all();
 
   // default mode
@@ -90,7 +90,7 @@ void Viewer::on_realize()
 
 bool Viewer::on_expose_event(GdkEventExpose* event)
 {
-  cerr << "On expose event!" << endl;
+  //cerr << "On expose event!" << endl;
   Glib::RefPtr<Gdk::GL::Drawable> gldrawable = get_gl_drawable();
 
   if (!gldrawable) return false;
@@ -111,14 +111,30 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   // Clear framebuffer
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+  float light[4] = {0.7, 0.7, 0.5, 1};
+  float light1[4] = {0.1, 0.1, 0.1, 1};
+  float light2[4] = {10, 10, 10, 30};
+
+  // Set up lighting
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
+  glEnable(GL_COLOR_MATERIAL);
+  glEnable(GL_NORMALIZE);
+  glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0f);         // sets shininess
+  glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);      // tell opengl glColor3f effects the ambient and diffuse properties of material
+  glMaterialf(GL_FRONT_AND_BACK, GL_SPECULAR, 0.5f);
+
+  glLightfv(GL_LIGHT0, GL_POSITION, light2);
+  glLightfv(GL_LIGHT0, GL_SPECULAR, light2);
+  glLightfv(GL_LIGHT0, GL_DIFFUSE, light1);
+  glLightfv(GL_LIGHT0, GL_AMBIENT, light);
+
   // Trackball stuff
   Matrix *mRot = getMRot();
   Matrix *mTrans = getMTrans();
   //glPushMatrix();
   glLoadMatrixd((GLdouble *) mTrans);
   glMultMatrixd((GLdouble *) mRot);
-
-  // Set up lighting
 
   // Draw stuff
   m_scenenode->walk_gl();
@@ -165,7 +181,7 @@ bool Viewer::on_configure_event(GdkEventConfigure* event)
 
 bool Viewer::on_button_press_event(GdkEventButton* event)
 {
-  std::cerr << "Stub: Button " << event->button << " pressed" << std::endl;
+  //std::cerr << "Stub: Button " << event->button << " pressed" << std::endl;
 
   x_origin = event->x;
   y_origin = event->y;
@@ -189,7 +205,7 @@ bool Viewer::on_button_press_event(GdkEventButton* event)
     }
   } else {
     // picking doesn't work
-    // picking();
+    picking_in_select_mode();
   }
 
   return true;
@@ -197,14 +213,24 @@ bool Viewer::on_button_press_event(GdkEventButton* event)
 
 bool Viewer::on_button_release_event(GdkEventButton* event)
 {
-  std::cerr << "Stub: Button " << event->button << " released" << std::endl;
+  //std::cerr << "Stub: Button " << event->button << " released" << std::endl;
+
+  if (m_mode == JOINTS) {
+    float curMatrix[16];
+    glGetFloatv(GL_MODELVIEW_MATRIX, curMatrix);
+
+    undo_stack.resize(undo_steps);
+    undo_stack.push_back(curMatrix);
+    undo_steps++;
+
+  }
 
   return true;
 }
 
 bool Viewer::on_motion_notify_event(GdkEventMotion* event)
 {
-  std::cerr << "Stub: Motion at " << event->x << ", " << event->y << std::endl;
+  //std::cerr << "Stub: Motion at " << event->x << ", " << event->y << std::endl;
 
   m_axis_dir = ( (event->x - x_origin) < 0) ? -1 : 1;
 
@@ -303,8 +329,16 @@ void Viewer::reset_all() {
 
   m_scenenode = all_scenenodes.front();
   m_geonode = all_geonodes.front();
-  cerr << "M_SCENENODE: " << m_scenenode->m_name << endl;
+  //cerr << "M_SCENENODE: " << m_scenenode->m_name << endl;
 
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+
+  float curMatrix[16];
+  glGetFloatv(GL_MODELVIEW_MATRIX, curMatrix);
+  undo_stack.resize(0);
+  undo_stack.push_back(curMatrix);
+  undo_steps = 0;
 
   resetMRot();
   resetMTrans();
@@ -319,9 +353,27 @@ void Viewer::reset_all() {
 
 void Viewer::undo() {
 
+  if (undo_steps > 0) {
+    undo_steps--;
+  }
+
+  float* curMatrix = undo_stack.at(undo_steps);
+  glLoadMatrixd((GLdouble *)curMatrix);
+
+  invalidate();
+
 }
 
 void Viewer::redo() {
+
+  if (undo_steps < (undo_stack.size() - 1)) {
+    undo_steps++;
+  }
+
+  float* curMatrix = undo_stack.at(undo_steps);
+  glLoadMatrixd((GLdouble *)curMatrix);
+
+  invalidate();
 
 }
 
@@ -381,6 +433,12 @@ void Viewer::set_pickings(Picking picked) {
 
   if (picked_list.at(picked) == true) {
     picked_list.at(picked) = false;
+    for( std::list<GeometryNode*>::const_iterator i = all_geonodes.begin(); i != all_geonodes.end(); ++i ) {
+      GeometryNode* node = (*i);
+      if (node->m_geo_id == picked) {
+        node->set_material(node->m_material);
+      }
+    }
   } else {
 
     for( std::list<GeometryNode*>::const_iterator i = all_geonodes.begin(); i != all_geonodes.end(); ++i ) {

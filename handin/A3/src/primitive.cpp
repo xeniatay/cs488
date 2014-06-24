@@ -1,7 +1,5 @@
 #include "primitive.hpp"
 #include <iostream>
-#include <GL/gl.h>
-#include <GL/glu.h>
 
 using std::cerr;
 using std::endl;
@@ -12,14 +10,18 @@ Primitive::~Primitive() {
 Sphere::~Sphere() {
 }
 
+Sphere::Sphere() {
+
+  // display list
+  dl = glGenLists(1);
+
+}
+
 void Sphere::walk_gl(bool picking) const
 {
   //cerr << "Sphere Walk GL" << endl;
 
-  // display list
-  GLuint listName = glGenLists(1);
-
-  glNewList(listName, GL_COMPILE);
+  glNewList(dl, GL_COMPILE);
 
   GLUquadric *quadric = gluNewQuadric();
   gluQuadricOrientation(quadric, GLU_OUTSIDE);
@@ -28,9 +30,9 @@ void Sphere::walk_gl(bool picking) const
 
   glEndList();
 
-  glShadeModel(GL_FLAT);
+  glShadeModel(GL_SMOOTH);
 
-  glCallList (listName);
+  glCallList (dl);
 
   //cerr << "Sphere End Walk GL" << endl;
 }

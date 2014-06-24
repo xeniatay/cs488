@@ -1,5 +1,5 @@
-primitive.o primitive.d : primitive.cpp primitive.hpp algebra.hpp \
- /usr/include/c++/4.6/iostream \
+scene.o scene.d : scene.cpp scene.hpp /usr/include/c++/4.6/list \
+ /usr/include/c++/4.6/bits/stl_algobase.h \
  /usr/include/c++/4.6/x86_64-linux-gnu/./bits/c++config.h \
  /usr/include/c++/4.6/x86_64-linux-gnu/./bits/os_defines.h \
  /usr/include/features.h /usr/include/x86_64-linux-gnu/bits/predefs.h \
@@ -8,16 +8,6 @@ primitive.o primitive.d : primitive.cpp primitive.hpp algebra.hpp \
  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
  /usr/include/c++/4.6/x86_64-linux-gnu/./bits/cpu_defines.h \
- /usr/include/c++/4.6/ostream /usr/include/c++/4.6/ios \
- /usr/include/c++/4.6/iosfwd /usr/include/c++/4.6/bits/stringfwd.h \
- /usr/include/c++/4.6/bits/postypes.h /usr/include/c++/4.6/cwchar \
- /usr/include/wchar.h /usr/include/stdio.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdarg.h \
- /usr/include/x86_64-linux-gnu/bits/wchar.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stddef.h \
- /usr/include/xlocale.h /usr/include/c++/4.6/exception \
- /usr/include/c++/4.6/bits/char_traits.h \
- /usr/include/c++/4.6/bits/stl_algobase.h \
  /usr/include/c++/4.6/bits/functexcept.h \
  /usr/include/c++/4.6/bits/exception_defines.h \
  /usr/include/c++/4.6/bits/cpp_type_traits.h \
@@ -28,7 +18,22 @@ primitive.o primitive.d : primitive.cpp primitive.hpp algebra.hpp \
  /usr/include/c++/4.6/bits/stl_iterator_base_types.h \
  /usr/include/c++/4.6/bits/stl_iterator_base_funcs.h \
  /usr/include/c++/4.6/bits/stl_iterator.h \
- /usr/include/c++/4.6/debug/debug.h /usr/include/c++/4.6/bits/localefwd.h \
+ /usr/include/c++/4.6/debug/debug.h /usr/include/c++/4.6/bits/allocator.h \
+ /usr/include/c++/4.6/x86_64-linux-gnu/./bits/c++allocator.h \
+ /usr/include/c++/4.6/ext/new_allocator.h /usr/include/c++/4.6/new \
+ /usr/include/c++/4.6/exception /usr/include/c++/4.6/bits/range_access.h \
+ /usr/include/c++/4.6/bits/stl_list.h \
+ /usr/include/c++/4.6/initializer_list /usr/include/c++/4.6/bits/list.tcc \
+ algebra.hpp /usr/include/c++/4.6/iostream /usr/include/c++/4.6/ostream \
+ /usr/include/c++/4.6/ios /usr/include/c++/4.6/iosfwd \
+ /usr/include/c++/4.6/bits/stringfwd.h \
+ /usr/include/c++/4.6/bits/postypes.h /usr/include/c++/4.6/cwchar \
+ /usr/include/wchar.h /usr/include/stdio.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdarg.h \
+ /usr/include/x86_64-linux-gnu/bits/wchar.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stddef.h \
+ /usr/include/xlocale.h /usr/include/c++/4.6/bits/char_traits.h \
+ /usr/include/c++/4.6/bits/localefwd.h \
  /usr/include/c++/4.6/x86_64-linux-gnu/./bits/c++locale.h \
  /usr/include/c++/4.6/clocale /usr/include/locale.h \
  /usr/include/x86_64-linux-gnu/bits/locale.h /usr/include/c++/4.6/cctype \
@@ -51,16 +56,11 @@ primitive.o primitive.d : primitive.cpp primitive.hpp algebra.hpp \
  /usr/include/x86_64-linux-gnu/bits/confname.h /usr/include/getopt.h \
  /usr/include/c++/4.6/x86_64-linux-gnu/./bits/atomic_word.h \
  /usr/include/c++/4.6/bits/locale_classes.h /usr/include/c++/4.6/string \
- /usr/include/c++/4.6/bits/allocator.h \
- /usr/include/c++/4.6/x86_64-linux-gnu/./bits/c++allocator.h \
- /usr/include/c++/4.6/ext/new_allocator.h /usr/include/c++/4.6/new \
  /usr/include/c++/4.6/bits/ostream_insert.h \
  /usr/include/c++/4.6/bits/cxxabi_forced.h \
  /usr/include/c++/4.6/bits/stl_function.h \
  /usr/include/c++/4.6/backward/binders.h \
- /usr/include/c++/4.6/bits/range_access.h \
  /usr/include/c++/4.6/bits/basic_string.h \
- /usr/include/c++/4.6/initializer_list \
  /usr/include/c++/4.6/bits/basic_string.tcc \
  /usr/include/c++/4.6/bits/locale_classes.tcc \
  /usr/include/c++/4.6/streambuf /usr/include/c++/4.6/bits/streambuf.tcc \
@@ -93,7 +93,5 @@ primitive.o primitive.d : primitive.cpp primitive.hpp algebra.hpp \
  /usr/include/x86_64-linux-gnu/bits/inf.h \
  /usr/include/x86_64-linux-gnu/bits/nan.h \
  /usr/include/x86_64-linux-gnu/bits/mathdef.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls.h /usr/include/GL/gl.h \
- /usr/include/GL/glext.h /usr/include/inttypes.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdint.h /usr/include/stdint.h \
- /usr/include/GL/glu.h
+ /usr/include/x86_64-linux-gnu/bits/mathcalls.h primitive.hpp \
+ material.hpp

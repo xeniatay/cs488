@@ -1,4 +1,4 @@
-a2.o a2.d : a2.cpp a2.hpp algebra.hpp /usr/include/c++/4.6/iostream \
+scene_lua.o scene_lua.d : scene_lua.cpp scene_lua.hpp /usr/include/c++/4.6/string \
  /usr/include/c++/4.6/x86_64-linux-gnu/./bits/c++config.h \
  /usr/include/c++/4.6/x86_64-linux-gnu/./bits/os_defines.h \
  /usr/include/features.h /usr/include/x86_64-linux-gnu/bits/predefs.h \
@@ -7,14 +7,7 @@ a2.o a2.d : a2.cpp a2.hpp algebra.hpp /usr/include/c++/4.6/iostream \
  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
  /usr/include/c++/4.6/x86_64-linux-gnu/./bits/cpu_defines.h \
- /usr/include/c++/4.6/ostream /usr/include/c++/4.6/ios \
- /usr/include/c++/4.6/iosfwd /usr/include/c++/4.6/bits/stringfwd.h \
- /usr/include/c++/4.6/bits/postypes.h /usr/include/c++/4.6/cwchar \
- /usr/include/wchar.h /usr/include/stdio.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdarg.h \
- /usr/include/x86_64-linux-gnu/bits/wchar.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stddef.h \
- /usr/include/xlocale.h /usr/include/c++/4.6/exception \
+ /usr/include/c++/4.6/bits/stringfwd.h \
  /usr/include/c++/4.6/bits/char_traits.h \
  /usr/include/c++/4.6/bits/stl_algobase.h \
  /usr/include/c++/4.6/bits/functexcept.h \
@@ -27,15 +20,29 @@ a2.o a2.d : a2.cpp a2.hpp algebra.hpp /usr/include/c++/4.6/iostream \
  /usr/include/c++/4.6/bits/stl_iterator_base_types.h \
  /usr/include/c++/4.6/bits/stl_iterator_base_funcs.h \
  /usr/include/c++/4.6/bits/stl_iterator.h \
- /usr/include/c++/4.6/debug/debug.h /usr/include/c++/4.6/bits/localefwd.h \
+ /usr/include/c++/4.6/debug/debug.h /usr/include/c++/4.6/bits/postypes.h \
+ /usr/include/c++/4.6/cwchar /usr/include/wchar.h /usr/include/stdio.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdarg.h \
+ /usr/include/x86_64-linux-gnu/bits/wchar.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stddef.h \
+ /usr/include/xlocale.h /usr/include/c++/4.6/bits/allocator.h \
+ /usr/include/c++/4.6/x86_64-linux-gnu/./bits/c++allocator.h \
+ /usr/include/c++/4.6/ext/new_allocator.h /usr/include/c++/4.6/new \
+ /usr/include/c++/4.6/exception /usr/include/c++/4.6/bits/localefwd.h \
  /usr/include/c++/4.6/x86_64-linux-gnu/./bits/c++locale.h \
  /usr/include/c++/4.6/clocale /usr/include/locale.h \
- /usr/include/x86_64-linux-gnu/bits/locale.h /usr/include/c++/4.6/cctype \
- /usr/include/ctype.h /usr/include/x86_64-linux-gnu/bits/types.h \
+ /usr/include/x86_64-linux-gnu/bits/locale.h /usr/include/c++/4.6/iosfwd \
+ /usr/include/c++/4.6/cctype /usr/include/ctype.h \
+ /usr/include/x86_64-linux-gnu/bits/types.h \
  /usr/include/x86_64-linux-gnu/bits/typesizes.h /usr/include/endian.h \
  /usr/include/x86_64-linux-gnu/bits/endian.h \
  /usr/include/x86_64-linux-gnu/bits/byteswap.h \
- /usr/include/c++/4.6/bits/ios_base.h \
+ /usr/include/c++/4.6/bits/ostream_insert.h \
+ /usr/include/c++/4.6/bits/cxxabi_forced.h \
+ /usr/include/c++/4.6/bits/stl_function.h \
+ /usr/include/c++/4.6/backward/binders.h \
+ /usr/include/c++/4.6/bits/range_access.h \
+ /usr/include/c++/4.6/bits/basic_string.h \
  /usr/include/c++/4.6/ext/atomicity.h \
  /usr/include/c++/4.6/x86_64-linux-gnu/./bits/gthr.h \
  /usr/include/c++/4.6/x86_64-linux-gnu/./bits/gthr-default.h \
@@ -49,18 +56,13 @@ a2.o a2.d : a2.cpp a2.hpp algebra.hpp /usr/include/c++/4.6/iostream \
  /usr/include/x86_64-linux-gnu/bits/environments.h \
  /usr/include/x86_64-linux-gnu/bits/confname.h /usr/include/getopt.h \
  /usr/include/c++/4.6/x86_64-linux-gnu/./bits/atomic_word.h \
- /usr/include/c++/4.6/bits/locale_classes.h /usr/include/c++/4.6/string \
- /usr/include/c++/4.6/bits/allocator.h \
- /usr/include/c++/4.6/x86_64-linux-gnu/./bits/c++allocator.h \
- /usr/include/c++/4.6/ext/new_allocator.h /usr/include/c++/4.6/new \
- /usr/include/c++/4.6/bits/ostream_insert.h \
- /usr/include/c++/4.6/bits/cxxabi_forced.h \
- /usr/include/c++/4.6/bits/stl_function.h \
- /usr/include/c++/4.6/backward/binders.h \
- /usr/include/c++/4.6/bits/range_access.h \
- /usr/include/c++/4.6/bits/basic_string.h \
  /usr/include/c++/4.6/initializer_list \
- /usr/include/c++/4.6/bits/basic_string.tcc \
+ /usr/include/c++/4.6/bits/basic_string.tcc scene.hpp \
+ /usr/include/c++/4.6/list /usr/include/c++/4.6/bits/stl_list.h \
+ /usr/include/c++/4.6/bits/list.tcc algebra.hpp \
+ /usr/include/c++/4.6/iostream /usr/include/c++/4.6/ostream \
+ /usr/include/c++/4.6/ios /usr/include/c++/4.6/bits/ios_base.h \
+ /usr/include/c++/4.6/bits/locale_classes.h \
  /usr/include/c++/4.6/bits/locale_classes.tcc \
  /usr/include/c++/4.6/streambuf /usr/include/c++/4.6/bits/streambuf.tcc \
  /usr/include/c++/4.6/bits/basic_ios.h \
@@ -92,4 +94,23 @@ a2.o a2.d : a2.cpp a2.hpp algebra.hpp /usr/include/c++/4.6/iostream \
  /usr/include/x86_64-linux-gnu/bits/inf.h \
  /usr/include/x86_64-linux-gnu/bits/nan.h \
  /usr/include/x86_64-linux-gnu/bits/mathdef.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls.h
+ /usr/include/x86_64-linux-gnu/bits/mathcalls.h primitive.hpp \
+ material.hpp /usr/include/c++/4.6/cstring /usr/include/string.h \
+ /usr/include/c++/4.6/cstdio /usr/include/libio.h \
+ /usr/include/_G_config.h /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/sys_errlist.h \
+ /usr/include/c++/4.6/vector \
+ /usr/include/c++/4.6/bits/stl_uninitialized.h \
+ /usr/include/c++/4.6/bits/stl_vector.h \
+ /usr/include/c++/4.6/bits/stl_bvector.h \
+ /usr/include/c++/4.6/bits/vector.tcc lua488.hpp \
+ /usr/include/lua5.1/lua.h /usr/include/lua5.1/luaconf.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.6/include-fixed/limits.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.6/include-fixed/syslimits.h \
+ /usr/include/limits.h /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/local_lim.h \
+ /usr/include/linux/limits.h \
+ /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
+ /usr/include/lua5.1/lualib.h /usr/include/lua5.1/lua.h \
+ /usr/include/lua5.1/lauxlib.h light.hpp a4.hpp mesh.hpp

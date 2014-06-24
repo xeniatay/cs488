@@ -1,4 +1,4 @@
-scene_lua.o scene_lua.d : scene_lua.cpp scene_lua.hpp /usr/include/c++/4.6/string \
+a4.o a4.d : a4.cpp a4.hpp /usr/include/c++/4.6/string \
  /usr/include/c++/4.6/x86_64-linux-gnu/./bits/c++config.h \
  /usr/include/c++/4.6/x86_64-linux-gnu/./bits/os_defines.h \
  /usr/include/features.h /usr/include/x86_64-linux-gnu/bits/predefs.h \
@@ -57,9 +57,7 @@ scene_lua.o scene_lua.d : scene_lua.cpp scene_lua.hpp /usr/include/c++/4.6/strin
  /usr/include/x86_64-linux-gnu/bits/confname.h /usr/include/getopt.h \
  /usr/include/c++/4.6/x86_64-linux-gnu/./bits/atomic_word.h \
  /usr/include/c++/4.6/initializer_list \
- /usr/include/c++/4.6/bits/basic_string.tcc scene.hpp \
- /usr/include/c++/4.6/list /usr/include/c++/4.6/bits/stl_list.h \
- /usr/include/c++/4.6/bits/list.tcc algebra.hpp \
+ /usr/include/c++/4.6/bits/basic_string.tcc algebra.hpp \
  /usr/include/c++/4.6/iostream /usr/include/c++/4.6/ostream \
  /usr/include/c++/4.6/ios /usr/include/c++/4.6/bits/ios_base.h \
  /usr/include/c++/4.6/bits/locale_classes.h \
@@ -94,21 +92,7 @@ scene_lua.o scene_lua.d : scene_lua.cpp scene_lua.hpp /usr/include/c++/4.6/strin
  /usr/include/x86_64-linux-gnu/bits/inf.h \
  /usr/include/x86_64-linux-gnu/bits/nan.h \
  /usr/include/x86_64-linux-gnu/bits/mathdef.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls.h primitive.hpp \
- material.hpp /usr/include/GL/gl.h /usr/include/GL/glext.h \
- /usr/include/inttypes.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdint.h /usr/include/stdint.h \
- /usr/include/GL/glu.h /usr/include/c++/4.6/cstring /usr/include/string.h \
- /usr/include/c++/4.6/cstdio /usr/include/libio.h \
- /usr/include/_G_config.h /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
- /usr/include/x86_64-linux-gnu/bits/sys_errlist.h lua488.hpp \
- /usr/include/lua5.1/lua.h /usr/include/lua5.1/luaconf.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.6/include-fixed/limits.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.6/include-fixed/syslimits.h \
- /usr/include/limits.h /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
- /usr/include/x86_64-linux-gnu/bits/local_lim.h \
- /usr/include/linux/limits.h \
- /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
- /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
- /usr/include/lua5.1/lualib.h /usr/include/lua5.1/lua.h \
- /usr/include/lua5.1/lauxlib.h
+ /usr/include/x86_64-linux-gnu/bits/mathcalls.h scene.hpp \
+ /usr/include/c++/4.6/list /usr/include/c++/4.6/bits/stl_list.h \
+ /usr/include/c++/4.6/bits/list.tcc primitive.hpp material.hpp light.hpp \
+ image.hpp

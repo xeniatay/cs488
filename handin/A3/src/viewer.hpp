@@ -41,6 +41,10 @@ class Viewer : public Gtk::GL::DrawingArea {
     void undo();
     void redo();
 
+    vector <float*> undo_stack;
+    vector <float*> redo_stack;
+    int undo_steps;
+
     // options menu
     enum Option {
         CIRCLE,

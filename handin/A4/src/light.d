@@ -1,5 +1,4 @@
-material.o material.d : material.cpp material.hpp algebra.hpp \
- /usr/include/c++/4.6/iostream \
+light.o light.d : light.cpp light.hpp algebra.hpp /usr/include/c++/4.6/iostream \
  /usr/include/c++/4.6/x86_64-linux-gnu/./bits/c++config.h \
  /usr/include/c++/4.6/x86_64-linux-gnu/./bits/os_defines.h \
  /usr/include/features.h /usr/include/x86_64-linux-gnu/bits/predefs.h \
@@ -93,7 +92,4 @@ material.o material.d : material.cpp material.hpp algebra.hpp \
  /usr/include/x86_64-linux-gnu/bits/inf.h \
  /usr/include/x86_64-linux-gnu/bits/nan.h \
  /usr/include/x86_64-linux-gnu/bits/mathdef.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls.h /usr/include/GL/gl.h \
- /usr/include/GL/glext.h /usr/include/inttypes.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdint.h /usr/include/stdint.h \
- /usr/include/GL/glu.h
+ /usr/include/x86_64-linux-gnu/bits/mathcalls.h

@@ -94,5 +94,7 @@ a4.o a4.d : a4.cpp a4.hpp /usr/include/c++/4.6/string \
  /usr/include/x86_64-linux-gnu/bits/mathdef.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h scene.hpp \
  /usr/include/c++/4.6/list /usr/include/c++/4.6/bits/stl_list.h \
- /usr/include/c++/4.6/bits/list.tcc primitive.hpp material.hpp light.hpp \
- image.hpp
+ /usr/include/c++/4.6/bits/list.tcc primitive.hpp material.hpp \
+ /usr/include/GL/gl.h /usr/include/GL/glext.h /usr/include/inttypes.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdint.h /usr/include/stdint.h \
+ /usr/include/GL/glu.h light.hpp image.hpp a2.hpp

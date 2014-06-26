@@ -1,5 +1,6 @@
 #include "primitive.hpp"
 #include <cmath>
+#include "polyroots.hpp"
 
 using std::cerr;
 using std::endl;
@@ -36,10 +37,19 @@ Ray NonhierSphere::hit(Ray& r) {
   double B = 2 * (orig_minus_pos).dot(r.m_dir);
   double C = (orig_minus_pos).dot(orig_minus_pos) - (m_radius * m_radius);
 
-  double t1 = (-2 * C) / (B + sqrt( ( B * B) - (4 * A * C) ) );
-  double t2 = (-2 * C) / (B - sqrt( ( B * B) - (4 * A * C) ) );
+  double roots[2];
 
-  cerr << "t1: " << t1 << ", t2: " << t2 << endl;
+  size_t hits = quadraticRoots(A, B, C, roots);
+
+  if (hits) {
+    r.hit = true;
+    cerr << "HIT!" << endl;
+  }
+
+  for (int i = 0; i < hits; i++) {
+    r.roots.push_back(roots[i]);
+    cerr << "rootindex: " << i << ", rootval: " << roots[i] << endl;
+  }
 
   return r;
 }

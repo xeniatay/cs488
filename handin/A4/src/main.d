@@ -96,4 +96,8 @@ main.o main.d : main.cpp /usr/include/c++/4.6/iostream \
  /usr/include/x86_64-linux-gnu/bits/nan.h \
  /usr/include/x86_64-linux-gnu/bits/mathdef.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h primitive.hpp ray.hpp \
- material.hpp
+ /usr/include/c++/4.6/vector \
+ /usr/include/c++/4.6/bits/stl_uninitialized.h \
+ /usr/include/c++/4.6/bits/stl_vector.h \
+ /usr/include/c++/4.6/bits/stl_bvector.h \
+ /usr/include/c++/4.6/bits/vector.tcc material.hpp

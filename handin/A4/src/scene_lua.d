@@ -95,15 +95,15 @@ scene_lua.o scene_lua.d : scene_lua.cpp scene_lua.hpp /usr/include/c++/4.6/strin
  /usr/include/x86_64-linux-gnu/bits/nan.h \
  /usr/include/x86_64-linux-gnu/bits/mathdef.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h primitive.hpp ray.hpp \
- material.hpp /usr/include/c++/4.6/cstring /usr/include/string.h \
- /usr/include/c++/4.6/cstdio /usr/include/libio.h \
- /usr/include/_G_config.h /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
- /usr/include/x86_64-linux-gnu/bits/sys_errlist.h \
  /usr/include/c++/4.6/vector \
  /usr/include/c++/4.6/bits/stl_uninitialized.h \
  /usr/include/c++/4.6/bits/stl_vector.h \
  /usr/include/c++/4.6/bits/stl_bvector.h \
- /usr/include/c++/4.6/bits/vector.tcc lua488.hpp \
+ /usr/include/c++/4.6/bits/vector.tcc material.hpp \
+ /usr/include/c++/4.6/cstring /usr/include/string.h \
+ /usr/include/c++/4.6/cstdio /usr/include/libio.h \
+ /usr/include/_G_config.h /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/sys_errlist.h lua488.hpp \
  /usr/include/lua5.1/lua.h /usr/include/lua5.1/luaconf.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include-fixed/limits.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include-fixed/syslimits.h \

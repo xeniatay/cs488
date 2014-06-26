@@ -14,10 +14,15 @@ void a4_render(// What to render
                int width, int height,
                // Viewing parameters
                const Point3D& eye, const Vector3D& view,
-               const Vector3D& up, double fov,
+               Vector3D& up, double fov,
                // Lighting parameters
                const Colour& ambient,
                const std::list<Light*>& lights
                );
+
+Ray ggReflection(Ray& r, Vector3D& N);
+Colour ray_colour(Ray &r, Point3D& uv, Colour& bg, Vector3D& up);
+
+bool colourIsZero(Colour& c);
 
 #endif

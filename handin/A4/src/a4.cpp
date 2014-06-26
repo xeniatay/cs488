@@ -13,7 +13,7 @@ void a4_render(// What to render
                int width, int height,
                // Viewing parameters
                const Point3D& eye, const Vector3D& view,
-               const Vector3D& up, double fov,
+               Vector3D& up, double fov,
                // Lighting parameters
                const Colour& ambient,
                const std::list<Light*>& lights
@@ -34,13 +34,22 @@ void a4_render(// What to render
 
   Image img(width, height, 3);
 
+  // bg colour calculations
+  double bg_r = 0.2;
+  double bg_g = 1.0;
+  double bg_b = 0.63;
+
+  double bg_r_diff = (bg_r - 0.1) / width;
+  double bg_g_diff = (bg_g - 0.45) / width;
+  double bg_b_diff = (bg_b - 0.33) / width;
+
   // iterate through image pixel by pixel and cast a ray
 
   Vector3D ray_dir;
   Vector3D pworld;
   Vector3D pk;
   Point3D lookfrom = eye;
-  double d = 2500;
+  double d = 1500;
 
   Matrix4x4 t1 = translation( Vector3D( -1 * (width / 2), -1 * (height / 2), d ) );
 
@@ -61,13 +70,16 @@ void a4_render(// What to render
 
   Vector3D lookfrom_vec(lookfrom[0], lookfrom[1], lookfrom[2]);
   Matrix4x4 t4 = translation(lookfrom_vec);
-  Ray r;
 
+  int x = 1;
+  int y = 1;
   for (int x = 0; x < width; x++) {
+    bg_r += bg_r_diff;
+    bg_g += bg_g_diff;
+    bg_b += bg_b_diff;
+
     for (int y = 0; y < height; y++) {
       // use this ray to calculate the colour of the pixel
-      Colour c(1, 0, 0);
-
       pk[0] = x;
       pk[1] = y;
       pk[2] = 0;
@@ -77,14 +89,27 @@ void a4_render(// What to render
       // STEP 3: rotate to superimpose WCS to VCS
       // STEP 4: translate by lookfrom vector
       // pworld = t4 * r3 * s2 * t1 * pk
-      Vector3D pworld = t4 * r3 * s2 * t1 * pk;
+      pworld = t4 * r3 * s2 * t1 * pk;
       ray_dir = pworld - lookfrom_vec;
-      //cerr << "Ray dir: " << endl << ray_dir << endl;
+      ray_dir.normalize();
 
+      Ray r;
       r.m_dir = ray_dir;
       r.m_origin = lookfrom;
-      root->hit(r);
+      r.m_origin_vec = lookfrom_vec;
+      r = root->hit(r);
 
+      // set background gradient (fuschia to black from bottom to top)
+      bg_r = fmod( bg_r, 1.0 );
+      bg_g = fmod( bg_g, 1.0 );
+      bg_b = fmod( bg_b, 1.0 );
+      Colour px_colour( bg_r, bg_g, bg_b );
+
+      px_colour = ray_colour(r, lookfrom, px_colour, up);
+
+      img(x, y, 0) = px_colour.R();
+      img(x, y, 1) = px_colour.G();
+      img(x, y, 2) = px_colour.B();
     }
   }
 
@@ -105,3 +130,42 @@ void a4_render(// What to render
   img.savePng(filename);
 
 }
+
+Ray ggReflection(Ray& r, Vector3D& N) {
+  Vector3D v = r.m_origin_vec;
+  double v_dot_N = v.dot(N);
+  r.m_dir = v + (2 * v_dot_N) * N;
+
+  return r;
+}
+
+bool colourIsZero(Colour& c) {
+  return ( (c.R() != 0) && (c.G() != 0) && (c.B() != 0));
+}
+
+Colour ray_colour(Ray& r, Point3D& uv, Colour& bg, Vector3D &up) {
+  Colour kd(1, 0, 0);
+  Colour ks(0.5, 0.5, 0.5);
+  Colour ke(0, 1, 0);
+  Colour zero(0, 0, 0);
+
+  Colour px_colour(0, 0, 0);
+
+  if (r.hit) {
+    px_colour = ke; // plus ambient
+
+    if (!colourIsZero(kd)) {
+      // check for other intersections
+    }
+
+    if (!colourIsZero(ks)) {
+      r = ggReflection(r, up);
+      px_colour = px_colour + (ks * ray_colour(r, uv, bg, up));
+    }
+
+    return px_colour;
+  }
+
+  return bg;
+}
+

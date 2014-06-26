@@ -4,8 +4,6 @@
 #include "algebra.hpp"
 #include "ray.hpp"
 
-class Ray;
-
 class Primitive {
   public:
     virtual ~Primitive();
@@ -15,7 +13,6 @@ class Primitive {
 class Sphere : public Primitive {
   public:
     virtual ~Sphere();
-    Ray hit(Ray& r);
 };
 
 class Cube : public Primitive {
@@ -34,6 +31,7 @@ class NonhierSphere : public Primitive {
   private:
     Point3D m_pos;
     double m_radius;
+
 };
 
 class NonhierBox : public Primitive {

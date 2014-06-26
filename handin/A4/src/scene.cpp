@@ -39,16 +39,10 @@ bool SceneNode::is_joint() const {
 
 Ray SceneNode::hit(Ray& r) {
 
-  bool intersect = false;
-
   for( std::list<SceneNode*>::const_iterator i = m_children.begin(); i != m_children.end(); ++i ) {
     SceneNode *node = (*i);
     r = node->hit(r);
-
-    if (intersect) {
-      return r;
-    }
-
+    cerr << "childnode " << node->m_name << " hit" << endl;
   };
 
   return r;
@@ -90,7 +84,9 @@ GeometryNode::~GeometryNode() {
 }
 
 Ray GeometryNode::hit(Ray& r) {
+  cerr << "geonode hit" << endl;
   this->m_primitive->hit(r);
+
   return r;
 
   /*

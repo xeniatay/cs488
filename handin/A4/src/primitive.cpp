@@ -1,6 +1,8 @@
 #include "primitive.hpp"
+#include <cmath>
 
-class Ray;
+using std::cerr;
+using std::endl;
 
 Primitive::~Primitive()
 {
@@ -12,20 +14,6 @@ Ray Primitive::hit(Ray& r) {
 
 Sphere::~Sphere()
 {
-}
-
-Ray Sphere::hit(Ray& r) {
-
-/*
-  double A = (b - a) * (b - a);
-  double B = (b - a) * (a - c);
-  double C = (a - c) * (a - c) - (m_radius * m_radius);
-*/
-
-  //A = r->dir->dot(r->dir) rayDirection dot rayDirection.  B = 2 * (rayOrigin - sphere pos) dot rayDirection. C = (rayOrigin - sphere pos) dot (rayOrigin - sphere pos) - r^2
-
-
-  return r;
 }
 
 Cube::~Cube()
@@ -41,6 +29,18 @@ NonhierSphere::~NonhierSphere()
 }
 
 Ray NonhierSphere::hit(Ray& r) {
+
+  Vector3D orig_minus_pos = r.m_origin - m_pos;
+
+  double A = r.m_dir.dot(r.m_dir);
+  double B = 2 * (orig_minus_pos).dot(r.m_dir);
+  double C = (orig_minus_pos).dot(orig_minus_pos) - (m_radius * m_radius);
+
+  double t1 = (-2 * C) / (B + sqrt( ( B * B) - (4 * A * C) ) );
+  double t2 = (-2 * C) / (B - sqrt( ( B * B) - (4 * A * C) ) );
+
+  cerr << "t1: " << t1 << ", t2: " << t2 << endl;
+
   return r;
 }
 

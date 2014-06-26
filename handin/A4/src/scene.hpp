@@ -5,6 +5,7 @@
 #include "algebra.hpp"
 #include "primitive.hpp"
 #include "material.hpp"
+#include "ray.hpp"
 
 class SceneNode {
 public:
@@ -13,7 +14,7 @@ public:
 
   const Matrix4x4& get_transform() const { return m_trans; }
   const Matrix4x4& get_inverse() const { return m_invtrans; }
-  
+
   void set_transform(const Matrix4x4& m)
   {
     m_trans = m;
@@ -44,15 +45,17 @@ public:
 
   // Returns true if and only if this node is a JointNode
   virtual bool is_joint() const;
-  
+  Ray hit(Ray& r);
+
 protected:
-  
+
   // Useful for picking
   int m_id;
   std::string m_name;
 
   // Transformations
   Matrix4x4 m_trans;
+  Matrix4x4 m_rot;
   Matrix4x4 m_invtrans;
 
   // Hierarchy
@@ -74,7 +77,7 @@ public:
     double min, init, max;
   };
 
-  
+
 protected:
 
   JointRange m_joint_x, m_joint_y;
@@ -93,6 +96,8 @@ public:
   {
     m_material = material;
   }
+
+  Ray hit(Ray& r);
 
 protected:
   Material* m_material;

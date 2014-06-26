@@ -68,8 +68,7 @@ void SceneNode::translate(const Vector3D& amount)
   m_trans = m_trans * translation(amount);
 }
 
-bool SceneNode::is_joint()
-{
+bool SceneNode::is_joint() {
   return false;
 }
 

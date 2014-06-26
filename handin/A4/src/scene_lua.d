@@ -94,7 +94,7 @@ scene_lua.o scene_lua.d : scene_lua.cpp scene_lua.hpp /usr/include/c++/4.6/strin
  /usr/include/x86_64-linux-gnu/bits/inf.h \
  /usr/include/x86_64-linux-gnu/bits/nan.h \
  /usr/include/x86_64-linux-gnu/bits/mathdef.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls.h primitive.hpp \
+ /usr/include/x86_64-linux-gnu/bits/mathcalls.h primitive.hpp ray.hpp \
  material.hpp /usr/include/c++/4.6/cstring /usr/include/string.h \
  /usr/include/c++/4.6/cstdio /usr/include/libio.h \
  /usr/include/_G_config.h /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
@@ -113,4 +113,4 @@ scene_lua.o scene_lua.d : scene_lua.cpp scene_lua.hpp /usr/include/c++/4.6/strin
  /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
  /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
  /usr/include/lua5.1/lualib.h /usr/include/lua5.1/lua.h \
- /usr/include/lua5.1/lauxlib.h light.hpp a4.hpp mesh.hpp
+ /usr/include/lua5.1/lauxlib.h light.hpp mesh.hpp a4.hpp

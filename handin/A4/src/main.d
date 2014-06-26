@@ -95,5 +95,5 @@ main.o main.d : main.cpp /usr/include/c++/4.6/iostream \
  /usr/include/x86_64-linux-gnu/bits/inf.h \
  /usr/include/x86_64-linux-gnu/bits/nan.h \
  /usr/include/x86_64-linux-gnu/bits/mathdef.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls.h primitive.hpp \
+ /usr/include/x86_64-linux-gnu/bits/mathcalls.h primitive.hpp ray.hpp \
  material.hpp

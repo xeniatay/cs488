@@ -96,4 +96,4 @@ mesh.o mesh.d : mesh.cpp mesh.hpp /usr/include/c++/4.6/vector \
  /usr/include/x86_64-linux-gnu/bits/inf.h \
  /usr/include/x86_64-linux-gnu/bits/nan.h \
  /usr/include/x86_64-linux-gnu/bits/mathdef.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls.h
+ /usr/include/x86_64-linux-gnu/bits/mathcalls.h ray.hpp

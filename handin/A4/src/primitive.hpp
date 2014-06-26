@@ -2,47 +2,53 @@
 #define CS488_PRIMITIVE_HPP
 
 #include "algebra.hpp"
+#include "ray.hpp"
+
+class Ray;
 
 class Primitive {
-public:
-  virtual ~Primitive();
+  public:
+    virtual ~Primitive();
+    Ray hit(Ray& r);
 };
 
 class Sphere : public Primitive {
-public:
-  virtual ~Sphere();
+  public:
+    virtual ~Sphere();
+    Ray hit(Ray& r);
 };
 
 class Cube : public Primitive {
-public:
-  virtual ~Cube();
+  public:
+    virtual ~Cube();
+    Ray hit(Ray& r);
 };
 
 class NonhierSphere : public Primitive {
-public:
-  NonhierSphere(const Point3D& pos, double radius)
-    : m_pos(pos), m_radius(radius)
-  {
-  }
-  virtual ~NonhierSphere();
+  public:
+    NonhierSphere(const Point3D& pos, double radius): m_pos(pos), m_radius(radius) {}
+    virtual ~NonhierSphere();
 
-private:
-  Point3D m_pos;
-  double m_radius;
+    Ray hit(Ray& r);
+
+  private:
+    Point3D m_pos;
+    double m_radius;
 };
 
 class NonhierBox : public Primitive {
-public:
-  NonhierBox(const Point3D& pos, double size)
-    : m_pos(pos), m_size(size)
-  {
-  }
-  
-  virtual ~NonhierBox();
+  public:
+    NonhierBox(const Point3D& pos, double size)
+      : m_pos(pos), m_size(size)
+    {
+    }
 
-private:
-  Point3D m_pos;
-  double m_size;
+    virtual ~NonhierBox();
+    Ray hit(Ray& r);
+
+  private:
+    Point3D m_pos;
+    double m_size;
 };
 
 #endif

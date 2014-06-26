@@ -1,6 +1,10 @@
 #include "a4.hpp"
 #include "image.hpp"
 #include "a2.hpp"
+#include "ray.hpp"
+
+using std::cerr;
+using std::endl;
 
 void a4_render(// What to render
                SceneNode* root,
@@ -37,12 +41,12 @@ void a4_render(// What to render
   Vector3D pworld;
   Vector3D pk;
   Point3D lookfrom = eye;
-  double d = 50;
+  double d = 2500;
 
   Matrix4x4 t1 = translation( Vector3D( -1 * (width / 2), -1 * (height / 2), d ) );
 
   double h = (2 * d) * tan(fov / 2);
-  double w = (width / height) * h;
+  //double w = (width / height) * h;
   Matrix4x4 s2 = scaling( Vector3D( -1 * (h/height), (h/height), 1 ) );
 
   Vector3D w_r = view;
@@ -75,7 +79,10 @@ void a4_render(// What to render
       // pworld = t4 * r3 * s2 * t1 * pk
       Vector3D pworld = t4 * r3 * s2 * t1 * pk;
       ray_dir = pworld - lookfrom_vec;
+      cerr << "Ray dir: " << endl << ray_dir << endl;
 
+      Ray r();
+      //root->hit(r);
 
     }
   }

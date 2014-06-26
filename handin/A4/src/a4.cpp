@@ -6,6 +6,8 @@
 using std::cerr;
 using std::endl;
 
+class Ray;
+
 void a4_render(// What to render
                SceneNode* root,
                // Where to output the image

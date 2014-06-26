@@ -7,6 +7,8 @@
 #include "material.hpp"
 #include "ray.hpp"
 
+class Ray;
+
 class SceneNode {
 public:
   SceneNode(const std::string& name);

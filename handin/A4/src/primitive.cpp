@@ -1,5 +1,7 @@
 #include "primitive.hpp"
 
+class Ray;
+
 Primitive::~Primitive()
 {
 }

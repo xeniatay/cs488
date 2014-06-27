@@ -22,10 +22,12 @@ void a4_render(// What to render
 {
   // Fill in raytracing code here.
 
+/*
   std::cerr << "Stub: a4_render(" << root << ",\n     "
             << filename << ", " << width << ", " << height << ",\n     "
             << eye << ", " << view << ", " << up << ", " << fov << ",\n     "
             << ambient << ",\n     {";
+            */
 
   for (std::list<Light*>::const_iterator I = lights.begin(); I != lights.end(); ++I) {
     if (I != lights.begin()) std::cerr << ", ";
@@ -212,7 +214,6 @@ Colour ray_colour(Ray& r, Intersect& intersect, Colour& bg, const std::list<Ligh
       double attenuation = 1 / ( light->falloff[0] + ( light->falloff[1] * r_light ) + ( light->falloff[2] * r_light * r_light ) );
       Colour light_colour = attenuation * light->colour;
 
-
       if (!colourIsZero(mat->m_kd)) {
         // shadow ray intersects with another object
         if (direct_light(intersect, l, root)) {
@@ -226,6 +227,7 @@ Colour ray_colour(Ray& r, Intersect& intersect, Colour& bg, const std::list<Ligh
       // blinn phong again
       px_colour = px_colour + ( mat->m_ks * light_colour * phong_exp);
 
+      // reflections
       if (!colourIsZero(mat->m_ks) && r.num_bounces < 2) {
         //r = ggReflection(r, intersect.m_normal);
         //px_colour = px_colour + (mat->m_ks * ray_colour(r, intersect, px_colour, lights, root));

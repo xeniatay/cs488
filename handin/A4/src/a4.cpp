@@ -76,7 +76,7 @@ void a4_render(// What to render
   Vector3D lookfrom_vec(lookfrom[0], lookfrom[1], lookfrom[2]);
   Matrix4x4 t4 = translation(lookfrom_vec);
 
-  Matrix4x4 m_pworld = t4 * r3 * s2 * t1;
+  Matrix4x4 m_pworld = t4 * r3 * s2 * t1 * root->m_trans;
 
 /*
   cerr << "width, height: " << width << " " << height << endl;
@@ -159,7 +159,7 @@ Ray ggReflection(Ray& r, Vector3D& N) {
   return r;
 }
 
-Colour direct_light(Intersect& intersect, Vector3D& l, SceneNode* root) {
+bool direct_light(Intersect& intersect, Vector3D& l, SceneNode* root) {
 
   // fix dots by shifting ray a little bit
   Point3D new_intersect_point = intersect.m_ipoint + (0.001 * l);
@@ -172,10 +172,10 @@ Colour direct_light(Intersect& intersect, Vector3D& l, SceneNode* root) {
 
   root->hit(sr, s_intersect);
   if (sr.hit && (s_intersect.t > 0.001)) {
-    return s_intersect.m_material->m_kd;
+    return true;
   }
 
-  return intersect.m_material->m_kd;
+  return false;
 }
 
 bool colourIsZero(Colour& c) {
@@ -210,14 +210,19 @@ Colour ray_colour(Ray& r, Intersect& intersect, Colour& bg, const std::list<Ligh
       double attenuation = 1 / ( light->falloff[0] + ( light->falloff[1] * r_light ) + ( light->falloff[2] * r_light * r_light ) );
       Colour light_colour = attenuation * light->colour;
 
-      // blinn phong again
-      px_colour = px_colour + ( mat->m_kd * light_colour * max(0.0, l.dot(n) ) );
-      px_colour = px_colour + ( mat->m_ks * light_colour * phong_exp);
 
       if (!colourIsZero(mat->m_kd)) {
-        // check if shadow ray intersects with any other object in the scene
-        //px_colour = px_colour + ( mat->m_kd * direct_light(intersect, l, root) );
+        // shadow ray intersects with another object
+        if (direct_light(intersect, l, root)) {
+          break;
+        } else {
+          // blinn phong again
+          px_colour = px_colour + ( mat->m_kd * light_colour * max(0.0, l.dot(n) ) );
+        }
       }
+
+      // blinn phong again
+      px_colour = px_colour + ( mat->m_ks * light_colour * phong_exp);
 
       if (!colourIsZero(mat->m_ks) && r.num_bounces < 2) {
         //r = ggReflection(r, intersect.m_normal);

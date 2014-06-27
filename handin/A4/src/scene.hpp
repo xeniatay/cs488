@@ -47,7 +47,6 @@ public:
   virtual bool is_joint() const;
   virtual Ray hit(Ray& r, Intersect& intersect);
 
-protected:
 
   // Useful for picking
   int m_id;
@@ -61,6 +60,7 @@ protected:
   // Hierarchy
   typedef std::list<SceneNode*> ChildList;
   ChildList m_children;
+protected:
 };
 
 class JointNode : public SceneNode {

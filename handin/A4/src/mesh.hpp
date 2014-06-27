@@ -13,7 +13,9 @@ public:
        const std::vector< std::vector<int> >& faces);
 
   typedef std::vector<int> Face;
-  
+
+  bool hit(Ray& r, Intersect& i);
+
 private:
   std::vector<Point3D> m_verts;
   std::vector<Face> m_faces;

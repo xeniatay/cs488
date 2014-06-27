@@ -22,7 +22,7 @@ void a4_render(// What to render
 
 Ray ggReflection(Ray& r, Vector3D& N);
 Colour ray_colour(Ray &r, Intersect& intersect, Colour& bg, const std::list<Light*>& lights, SceneNode* root);
-Colour direct_light(Intersect& intersect, Vector3D& l, SceneNode* root);
+bool direct_light(Intersect& intersect, Vector3D& l, SceneNode* root);
 
 bool colourIsZero(Colour& c);
 

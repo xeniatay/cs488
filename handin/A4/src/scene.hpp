@@ -45,7 +45,7 @@ public:
 
   // Returns true if and only if this node is a JointNode
   virtual bool is_joint() const;
-  virtual Ray hit(Ray& r, Intersect& intersect);
+  virtual bool hit(Ray& r, Intersect& intersect);
 
 
   // Useful for picking
@@ -97,7 +97,7 @@ public:
     m_material = material;
   }
 
-  virtual Ray hit(Ray& r, Intersect& intersect);
+  virtual bool hit(Ray& r, Intersect& intersect);
 
   Material* m_material;
   Primitive* m_primitive;

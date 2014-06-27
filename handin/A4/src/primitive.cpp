@@ -38,22 +38,26 @@ bool NonhierSphere::hit(Ray& r, Intersect& intersect) {
   double C = (orig_minus_pos).dot(orig_minus_pos) - (m_radius * m_radius);
 
   double roots[2];
+  double smallest_root = 0.0;
 
   size_t hits = quadraticRoots(A, B, C, roots);
 
-  for (int i = 0; i < hits; i++) {
+  for (size_t i = 0; i < hits; i++) {
     // get the smallest (nearest) root
     if ( (roots[i] > 0) && (roots[i] < intersect.t) ) {
-      r.hit = true;
-
-      // get intersection point
-      intersect.t = roots[i];
-      intersect.m_ipoint = r.m_origin + (roots[i] * r.m_dir);
-
-      // get normal
-      intersect.m_normal = ( 1 / m_radius ) * ( intersect.m_ipoint - m_pos );
-
+      smallest_root = roots[i];
     }
+  }
+
+  if (smallest_root > 0) {
+    r.hit = true;
+
+    // get intersection point
+    intersect.t = smallest_root;
+    intersect.m_ipoint = r.m_origin + (smallest_root * r.m_dir);
+
+    // get normal
+    intersect.m_normal = ( 1 / m_radius ) * ( intersect.m_ipoint - m_pos );
   }
 
   return r.hit;
@@ -117,7 +121,7 @@ bool NonhierBox::hit(Ray& r, Intersect& intersect) {
   }
 
   // set dist and hit
-  intersect.dist = intersect_near - epsilon;
+  intersect.t = intersect_near - epsilon;
   r.hit = true;
 
   return r.hit;

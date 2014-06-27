@@ -91,7 +91,7 @@ bool Mesh::hit(Ray& r, Intersect& intersect) {
       intersect_min = intersect_dotprod;
       intersect.m_normal = m_normal;
       intersect.m_ipoint = m_ipoint;
-      intersect.dist = intersect_dotprod;
+      intersect.t = intersect_dotprod;
     }
   }
 

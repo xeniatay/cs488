@@ -37,15 +37,19 @@ bool SceneNode::is_joint() const {
   return false;
 }
 
-Ray SceneNode::hit(Ray& r, Intersect& intersect) {
+bool SceneNode::hit(Ray& r, Intersect& intersect) {
 
+  Intersect geo_intersect = intersect;
   for( std::list<SceneNode*>::const_iterator i = m_children.begin(); i != m_children.end(); ++i ) {
     SceneNode *node = (*i);
-    r = node->hit(r, intersect);
+    if (node->hit(r, geo_intersect)) {
+      if (geo_intersect.t < intersect.t) {
+        intersect = geo_intersect;
+      }
+    }
   };
 
-  return r;
-
+  return r.hit;
 }
 
 JointNode::JointNode(const std::string& name) : SceneNode(name) {
@@ -82,12 +86,13 @@ GeometryNode::GeometryNode(const std::string& name, Primitive* primitive) : Scen
 GeometryNode::~GeometryNode() {
 }
 
-Ray GeometryNode::hit(Ray& r, Intersect& intersect) {
+bool GeometryNode::hit(Ray& r, Intersect& intersect) {
   if (this->m_primitive->hit(r, intersect)) {
     PhongMaterial* p_material = (PhongMaterial*) m_material;
     intersect.m_material = p_material;
+    intersect.geonode = this;
   }
 
-  return r;
+  return r.hit;
 }
 

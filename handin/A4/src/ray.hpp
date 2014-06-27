@@ -7,6 +7,8 @@
 
 using std::vector;
 
+class GeometryNode;
+
 class Ray {
   public:
     Ray() : m_dir( Vector3D(0, 0, 0) ), m_origin( Point3D(0, 0, 0) ), hit(false),
@@ -31,12 +33,15 @@ class Intersect {
     public:
         Intersect() {
             t = 50000;
+            hit = false;
         };
 
         Vector3D m_normal;
         Point3D m_ipoint;
         PhongMaterial* m_material;
-        double t, dist;
+        GeometryNode *geonode;
+        double t;
+        bool hit;
 };
 
 #endif

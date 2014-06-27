@@ -108,6 +108,13 @@ void a4_render(// What to render
       ray_dir = pworld_vec - lookfrom_vec;
       ray_dir.normalize();
 
+      // set background gradient (fuschia to black from bottom to top)
+      bg_r = fmod( bg_r, 1.0 );
+      bg_g = fmod( bg_g, 1.0 );
+      bg_b = fmod( bg_b, 1.0 );
+      Colour px_colour( bg_r, bg_g, bg_b );
+
+      // init ray and intersect
       Ray r;
       r.num_bounces = 0;
       r.m_dir = ray_dir;
@@ -117,14 +124,9 @@ void a4_render(// What to render
 
       Intersect intersect;
       root->hit(r, intersect);
-
-      // set background gradient (fuschia to black from bottom to top)
-      bg_r = fmod( bg_r, 1.0 );
-      bg_g = fmod( bg_g, 1.0 );
-      bg_b = fmod( bg_b, 1.0 );
-      Colour px_colour( bg_r, bg_g, bg_b );
-
-      px_colour = ray_colour(r, intersect, px_colour, lights, root);
+      if (r.hit) {
+        px_colour = ray_colour(r, intersect, px_colour, lights, root);
+      }
 
       img(x, y, 0) = px_colour.R();
       img(x, y, 1) = px_colour.G();
@@ -188,10 +190,10 @@ Colour ray_colour(Ray& r, Intersect& intersect, Colour& bg, const std::list<Ligh
   Vector3D v = -1 * r.m_dir;
   v.normalize();
   Vector3D n = intersect.m_normal;
-  PhongMaterial *mat = intersect.m_material;
   Colour px_colour = bg;
 
   if (r.hit) {
+    PhongMaterial *mat = intersect.m_material;
     px_colour = mat->m_kd * r.m_ambient; // multiply by ambient
 
     for (std::list <Light*>::const_iterator i = lights.begin(); i != lights.end(); ++i) {
@@ -228,7 +230,6 @@ Colour ray_colour(Ray& r, Intersect& intersect, Colour& bg, const std::list<Ligh
         //r = ggReflection(r, intersect.m_normal);
         //px_colour = px_colour + (mat->m_ks * ray_colour(r, intersect, px_colour, lights, root));
       }
-
     }
 
     return px_colour;

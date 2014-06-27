@@ -7,7 +7,7 @@
 class Primitive {
   public:
     virtual ~Primitive();
-    virtual Ray hit(Ray& r);
+    virtual bool hit(Ray& r, Intersect& intersect);
 };
 
 class Sphere : public Primitive {
@@ -18,7 +18,7 @@ class Sphere : public Primitive {
 class Cube : public Primitive {
   public:
     virtual ~Cube();
-    virtual Ray hit(Ray& r);
+    virtual bool hit(Ray& r, Intersect& intersect);
 };
 
 class NonhierSphere : public Primitive {
@@ -26,7 +26,7 @@ class NonhierSphere : public Primitive {
     NonhierSphere(const Point3D& pos, double radius): m_pos(pos), m_radius(radius) {}
     virtual ~NonhierSphere();
 
-    virtual Ray hit(Ray& r);
+    virtual bool hit(Ray& r, Intersect& intersect);
 
   private:
     Point3D m_pos;
@@ -42,7 +42,7 @@ class NonhierBox : public Primitive {
     }
 
     virtual ~NonhierBox();
-    virtual Ray hit(Ray& r);
+    virtual bool hit(Ray& r, Intersect& intersect);
 
   private:
     Point3D m_pos;

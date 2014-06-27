@@ -45,7 +45,7 @@ public:
 
   // Returns true if and only if this node is a JointNode
   virtual bool is_joint() const;
-  virtual Ray hit(Ray& r);
+  virtual Ray hit(Ray& r, Intersect& intersect);
 
 protected:
 
@@ -97,11 +97,11 @@ public:
     m_material = material;
   }
 
-  virtual Ray hit(Ray& r);
+  virtual Ray hit(Ray& r, Intersect& intersect);
 
-protected:
   Material* m_material;
   Primitive* m_primitive;
+protected:
 };
 
 #endif

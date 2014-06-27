@@ -9,8 +9,8 @@ Primitive::~Primitive()
 {
 }
 
-Ray Primitive::hit(Ray& r) {
-  return r;
+bool Primitive::hit(Ray& r, Intersect& intersect) {
+  return r.hit;
 }
 
 Sphere::~Sphere()
@@ -21,15 +21,15 @@ Cube::~Cube()
 {
 }
 
-Ray Cube::hit(Ray& r) {
-  return r;
+bool Cube::hit(Ray& r, Intersect& intersect) {
+  return r.hit;
 }
 
 NonhierSphere::~NonhierSphere()
 {
 }
 
-Ray NonhierSphere::hit(Ray& r) {
+bool NonhierSphere::hit(Ray& r, Intersect& intersect) {
 
   Vector3D orig_minus_pos = r.m_origin - m_pos;
 
@@ -41,24 +41,29 @@ Ray NonhierSphere::hit(Ray& r) {
 
   size_t hits = quadraticRoots(A, B, C, roots);
 
-  if (hits) {
-    r.hit = true;
-    cerr << "HIT!" << endl;
-  }
-
   for (int i = 0; i < hits; i++) {
-    r.roots.push_back(roots[i]);
-    cerr << "rootindex: " << i << ", rootval: " << roots[i] << endl;
+    // get the smallest (nearest) root
+    if ( (roots[i] > 0) && (roots[i] < intersect.t) ) {
+      r.hit = true;
+
+      // get intersection point
+      intersect.t = roots[i];
+      intersect.m_ipoint = r.m_origin + (roots[i] * r.m_dir);
+
+      // get normal
+      intersect.m_normal = intersect.m_ipoint - m_pos;
+
+    }
   }
 
-  return r;
+  return r.hit;
 }
 
 NonhierBox::~NonhierBox()
 {
 }
 
-Ray NonhierBox::hit(Ray& r) {
-  return r;
+bool NonhierBox::hit(Ray& r, Intersect& intersect) {
+  return r.hit;
 }
 

@@ -21,7 +21,8 @@ void a4_render(// What to render
                );
 
 Ray ggReflection(Ray& r, Vector3D& N);
-Colour ray_colour(Ray &r, Point3D& uv, Colour& bg, Vector3D& up);
+Colour ray_colour(Ray &r, Intersect& intersect, Colour& bg, Light* light, SceneNode* root);
+Colour direct_light(Intersect& intersect, Vector3D& l, SceneNode* root);
 
 bool colourIsZero(Colour& c);
 

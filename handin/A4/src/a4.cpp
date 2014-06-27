@@ -49,30 +49,42 @@ void a4_render(// What to render
   Vector3D pworld;
   Vector3D pk;
   Point3D lookfrom = eye;
-  double d = 1500;
+  double d = eye[2];
 
-  Matrix4x4 t1 = translation( Vector3D( -1 * (width / 2), -1 * (height / 2), d ) );
+  Matrix4x4 t1 = translation( Vector3D( -1 * (double)(width / 2), -1 * (double)(height / 2), (double)d ) );
 
-  double h = (2 * d) * tan(fov / 2);
-  //double w = (width / height) * h;
+  double h = 2 * d * tan(fov * M_PI / 360);
+  double w = (width / height) * h;
   Matrix4x4 s2 = scaling( Vector3D( -1 * (h/height), (h/height), 1 ) );
 
-  Vector3D w_r = view;
-  w_r.normalize();
-  Vector3D u_r = w_r.cross(up);
-  u_r.normalize();
-  Vector3D v_r = w_r.cross(u_r);
-  Vector4D w_r4(w_r[0], w_r[1], w_r[2], 0);
-  Vector4D u_r4(u_r[0], u_r[1], u_r[2], 0);
-  Vector4D v_r4(v_r[0], v_r[1], v_r[2], 0);
-  Vector4D zero_vec(0, 0, 0, 0);
-  Matrix4x4 r3(u_r4, v_r4, w_r4, zero_vec);
+  Vector3D w_rot = -1 * view;
+  w_rot.normalize();
+  Vector3D u_rot = w_rot.cross(up);
+  u_rot.normalize();
+  Vector3D v_rot = (w_rot).cross(u_rot);
+  v_rot.normalize();
+  Matrix4x4 r3(
+    Vector4D(u_rot[0], v_rot[0], w_rot[0], 0),
+    Vector4D(u_rot[1], v_rot[1], w_rot[1], 0),
+    Vector4D(u_rot[2], v_rot[2], w_rot[2], 0),
+    Vector4D(0, 0, 0, 0)
+  );
 
   Vector3D lookfrom_vec(lookfrom[0], lookfrom[1], lookfrom[2]);
   Matrix4x4 t4 = translation(lookfrom_vec);
 
-  int x = 1;
-  int y = 1;
+  Matrix4x4 m_pworld = t4 * r3 * s2 * t1;
+
+/*
+  cerr << "width, height: " << width << " " << height << endl;
+  cerr << "h: " << h << ", w: " << w << endl;
+  cerr << "t1: " << endl << t1 << endl;
+  cerr << "s2: " << endl << s2 << endl;
+  cerr << "r3: " << endl << r3 << endl;
+  cerr << "t4: " << endl << t4 << endl;
+  cerr << "m_pworld: " << endl << m_pworld << endl;
+  */
+
   for (int x = 0; x < width; x++) {
     bg_r += bg_r_diff;
     bg_g += bg_g_diff;
@@ -88,8 +100,7 @@ void a4_render(// What to render
       // STEP 2: scale to preserve aspect ratio and correct sign
       // STEP 3: rotate to superimpose WCS to VCS
       // STEP 4: translate by lookfrom vector
-      // pworld = t4 * r3 * s2 * t1 * pk
-      pworld = t4 * r3 * s2 * t1 * pk;
+      pworld = m_pworld * pk;
       ray_dir = pworld - lookfrom_vec;
       ray_dir.normalize();
 
@@ -97,7 +108,10 @@ void a4_render(// What to render
       r.m_dir = ray_dir;
       r.m_origin = lookfrom;
       r.m_origin_vec = lookfrom_vec;
-      r = root->hit(r);
+      r.m_ambient = ambient;
+
+      Intersect intersect;
+      root->hit(r, intersect);
 
       // set background gradient (fuschia to black from bottom to top)
       bg_r = fmod( bg_r, 1.0 );
@@ -105,7 +119,10 @@ void a4_render(// What to render
       bg_b = fmod( bg_b, 1.0 );
       Colour px_colour( bg_r, bg_g, bg_b );
 
-      px_colour = ray_colour(r, lookfrom, px_colour, up);
+      for (std::list <Light*>::const_iterator i = lights.begin(); i != lights.end(); ++i) {
+        Light* light = (*i);
+        px_colour = ray_colour(r, intersect, px_colour, light, root);
+      }
 
       img(x, y, 0) = px_colour.R();
       img(x, y, 1) = px_colour.G();
@@ -132,6 +149,7 @@ void a4_render(// What to render
 }
 
 Ray ggReflection(Ray& r, Vector3D& N) {
+  cerr << "ggreflection" << endl;
   Vector3D v = r.m_origin_vec;
   double v_dot_N = v.dot(N);
   r.m_dir = v + (2 * v_dot_N) * N;
@@ -139,33 +157,62 @@ Ray ggReflection(Ray& r, Vector3D& N) {
   return r;
 }
 
-bool colourIsZero(Colour& c) {
-  return ( (c.R() != 0) && (c.G() != 0) && (c.B() != 0));
+Colour direct_light(Intersect& intersect, Vector3D& l, SceneNode* root) {
+
+  // fix dots by shifting ray a little bit
+  Point3D new_intersect_point = intersect.m_ipoint + (0.001 * l);
+
+  Ray sr(l, new_intersect_point);
+  Intersect s_intersect;
+
+  Colour darken(0.0, 0.0, 0.0);
+  Colour no_change(1.0, 1.0, 1.0);
+
+  root->hit(sr, s_intersect);
+  if (sr.hit && (s_intersect.t > 0.001)) {
+    return darken;
+  }
+
+  return no_change;
 }
 
-Colour ray_colour(Ray& r, Point3D& uv, Colour& bg, Vector3D &up) {
-  Colour kd(1, 0, 0);
-  Colour ks(0.5, 0.5, 0.5);
-  Colour ke(0, 1, 0);
-  Colour zero(0, 0, 0);
+bool colourIsZero(Colour& c) {
+  return ( (c.R() == 0) && (c.G() == 0) && (c.B() == 0));
+}
 
-  Colour px_colour(0, 0, 0);
+Colour ray_colour(Ray& r, Intersect& intersect, Colour& bg, Light* light, SceneNode* root) {
+
+  // dir vector needs to be normalized and backwards
+  Vector3D v = -1 * r.m_dir; // IS THIS REALLY BACKWARDS SUPPOSED???
+  v.normalize();
+
+  Vector3D l = light->position - intersect.m_ipoint;
+  l.normalize();
+
+  Vector3D n = intersect.m_normal;
+
+  PhongMaterial *mat = intersect.m_material;
+
+  Colour px_colour(mat->m_kd);
 
   if (r.hit) {
-    px_colour = ke; // plus ambient
+    px_colour = px_colour * r.m_ambient; // plus ambient
 
-    if (!colourIsZero(kd)) {
-      // check for other intersections
+    if (!colourIsZero(mat->m_kd)) {
+      // check if shadow ray intersects with any other object in the scene
+      px_colour = px_colour + ( mat->m_kd * direct_light(intersect, l, root) );
     }
 
-    if (!colourIsZero(ks)) {
-      r = ggReflection(r, up);
-      px_colour = px_colour + (ks * ray_colour(r, uv, bg, up));
+    if (!colourIsZero(mat->m_ks)) {
+      //r = ggReflection(r, intersect.m_normal);
+      //px_colour = px_colour + (r.m_ks * ray_colour(r, intersect, px_colour, light));
+      //cerr << "doing m_ks, pxcolour: " << px_colour << endl;
     }
+
+    //cerr << "hit and px_colour: " << px_colour << endl;
 
     return px_colour;
   }
 
   return bg;
 }
-

@@ -94,10 +94,9 @@ a4.o a4.d : a4.cpp a4.hpp /usr/include/c++/4.6/string \
  /usr/include/x86_64-linux-gnu/bits/mathdef.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h scene.hpp \
  /usr/include/c++/4.6/list /usr/include/c++/4.6/bits/stl_list.h \
- /usr/include/c++/4.6/bits/list.tcc primitive.hpp ray.hpp \
+ /usr/include/c++/4.6/bits/list.tcc primitive.hpp ray.hpp material.hpp \
  /usr/include/c++/4.6/vector \
  /usr/include/c++/4.6/bits/stl_uninitialized.h \
  /usr/include/c++/4.6/bits/stl_vector.h \
  /usr/include/c++/4.6/bits/stl_bvector.h \
- /usr/include/c++/4.6/bits/vector.tcc material.hpp light.hpp image.hpp \
- a2.hpp
+ /usr/include/c++/4.6/bits/vector.tcc light.hpp image.hpp a2.hpp

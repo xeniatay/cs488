@@ -94,8 +94,8 @@ scene.o scene.d : scene.cpp scene.hpp /usr/include/c++/4.6/list \
  /usr/include/x86_64-linux-gnu/bits/nan.h \
  /usr/include/x86_64-linux-gnu/bits/mathdef.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h primitive.hpp ray.hpp \
- /usr/include/c++/4.6/vector \
+ material.hpp /usr/include/c++/4.6/vector \
  /usr/include/c++/4.6/bits/stl_uninitialized.h \
  /usr/include/c++/4.6/bits/stl_vector.h \
  /usr/include/c++/4.6/bits/stl_bvector.h \
- /usr/include/c++/4.6/bits/vector.tcc material.hpp a2.hpp
+ /usr/include/c++/4.6/bits/vector.tcc a2.hpp

@@ -8,10 +8,9 @@ public:
   virtual ~Material();
   virtual void apply_gl() const = 0;
 
-protected:
-  Material()
-  {
-  }
+  Material() { }
+  protected:
+
 };
 
 class PhongMaterial : public Material {
@@ -21,11 +20,24 @@ public:
 
   virtual void apply_gl() const;
 
-private:
+  Colour get_kd() {
+    return m_kd;
+  }
+
+  Colour get_ks() {
+    return m_ks;
+  }
+
+  double get_shininess() {
+    return m_shininess;
+  }
+
   Colour m_kd;
   Colour m_ks;
 
   double m_shininess;
+
+private:
 };
 
 

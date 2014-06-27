@@ -46,10 +46,12 @@ void a4_render(// What to render
   // iterate through image pixel by pixel and cast a ray
 
   Vector3D ray_dir;
-  Vector3D pworld;
-  Vector3D pk;
+  Vector3D pworld_vec;
+  Vector3D pk_vec;
+  Point3D pworld;
+  Point3D pk;
   Point3D lookfrom = eye;
-  double d = eye[2];
+  double d = eye[2] / 2;
 
   Matrix4x4 t1 = translation( Vector3D( -1 * (double)(width / 2), -1 * (double)(height / 2), (double)d ) );
 
@@ -101,7 +103,9 @@ void a4_render(// What to render
       // STEP 3: rotate to superimpose WCS to VCS
       // STEP 4: translate by lookfrom vector
       pworld = m_pworld * pk;
-      ray_dir = pworld - lookfrom_vec;
+      pworld_vec = Vector3D(pworld[0], pworld[1], pworld[2]);
+      ray_dir = pworld_vec - lookfrom_vec;
+      cerr << "pworld: " << pworld_vec << endl;
       ray_dir.normalize();
 
       Ray r;

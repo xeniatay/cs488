@@ -34,6 +34,7 @@ public:
 
   Colour m_kd;
   Colour m_ks;
+  Colour m_ke;
 
   double m_shininess;
 

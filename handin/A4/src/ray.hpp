@@ -19,6 +19,7 @@ class Ray {
     Point3D m_origin;
     bool hit;
     vector <double> roots;
+    int num_bounces;
 
     Colour m_kd;
     Colour m_ks;

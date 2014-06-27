@@ -51,7 +51,7 @@ bool NonhierSphere::hit(Ray& r, Intersect& intersect) {
       intersect.m_ipoint = r.m_origin + (roots[i] * r.m_dir);
 
       // get normal
-      intersect.m_normal = intersect.m_ipoint - m_pos;
+      intersect.m_normal = ( 1 / m_radius ) * ( intersect.m_ipoint - m_pos );
 
     }
   }

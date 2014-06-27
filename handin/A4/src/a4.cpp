@@ -4,6 +4,7 @@
 
 using std::cerr;
 using std::endl;
+using std::max;
 
 void a4_render(// What to render
                SceneNode* root,
@@ -105,10 +106,10 @@ void a4_render(// What to render
       pworld = m_pworld * pk;
       pworld_vec = Vector3D(pworld[0], pworld[1], pworld[2]);
       ray_dir = pworld_vec - lookfrom_vec;
-      cerr << "pworld: " << pworld_vec << endl;
       ray_dir.normalize();
 
       Ray r;
+      r.num_bounces = 0;
       r.m_dir = ray_dir;
       r.m_origin = lookfrom;
       r.m_origin_vec = lookfrom_vec;
@@ -123,10 +124,8 @@ void a4_render(// What to render
       bg_b = fmod( bg_b, 1.0 );
       Colour px_colour( bg_r, bg_g, bg_b );
 
-      for (std::list <Light*>::const_iterator i = lights.begin(); i != lights.end(); ++i) {
-        Light* light = (*i);
-        px_colour = ray_colour(r, intersect, px_colour, light, root);
-      }
+      px_colour = ray_colour(r, intersect, px_colour, lights, root);
+      cerr << "pxcolour: " << px_colour << endl;
 
       img(x, y, 0) = px_colour.R();
       img(x, y, 1) = px_colour.G();
@@ -153,10 +152,10 @@ void a4_render(// What to render
 }
 
 Ray ggReflection(Ray& r, Vector3D& N) {
-  cerr << "ggreflection" << endl;
   Vector3D v = r.m_origin_vec;
   double v_dot_N = v.dot(N);
   r.m_dir = v + (2 * v_dot_N) * N;
+  r.num_bounces++;
 
   return r;
 }
@@ -174,46 +173,59 @@ Colour direct_light(Intersect& intersect, Vector3D& l, SceneNode* root) {
 
   root->hit(sr, s_intersect);
   if (sr.hit && (s_intersect.t > 0.001)) {
-    return darken;
+    return s_intersect.m_material->m_kd;
   }
 
-  return no_change;
+  return intersect.m_material->m_kd;
 }
 
 bool colourIsZero(Colour& c) {
   return ( (c.R() == 0) && (c.G() == 0) && (c.B() == 0));
 }
 
-Colour ray_colour(Ray& r, Intersect& intersect, Colour& bg, Light* light, SceneNode* root) {
+Colour ray_colour(Ray& r, Intersect& intersect, Colour& bg, const std::list<Light*>& lights, SceneNode* root) {
 
   // dir vector needs to be normalized and backwards
-  Vector3D v = -1 * r.m_dir; // IS THIS REALLY BACKWARDS SUPPOSED???
+  Vector3D v = -1 * r.m_dir;
   v.normalize();
-
-  Vector3D l = light->position - intersect.m_ipoint;
-  l.normalize();
-
   Vector3D n = intersect.m_normal;
-
   PhongMaterial *mat = intersect.m_material;
-
-  Colour px_colour(mat->m_kd);
+  Colour px_colour = bg;
 
   if (r.hit) {
-    px_colour = px_colour * r.m_ambient; // plus ambient
+    px_colour = mat->m_kd * r.m_ambient; // multiply by ambient
 
-    if (!colourIsZero(mat->m_kd)) {
-      // check if shadow ray intersects with any other object in the scene
-      px_colour = px_colour + ( mat->m_kd * direct_light(intersect, l, root) );
+    for (std::list <Light*>::const_iterator i = lights.begin(); i != lights.end(); ++i) {
+      Light* light = (*i);
+
+      Vector3D l = light->position - intersect.m_ipoint;
+      double r_light = l.length();
+      l.normalize();
+
+      // blinn-phong lighting
+      Vector3D h = v + l;
+      h.normalize();
+      double phong_exp = pow( max(0.0, n.dot(h)), mat->m_shininess );
+
+      // attenuation
+      double attenuation = 1 / ( light->falloff[0] + ( light->falloff[1] * r_light ) + ( light->falloff[2] * r_light * r_light ) );
+      Colour light_colour = attenuation * light->colour;
+
+      // blinn phong again
+      px_colour = px_colour + ( mat->m_kd * light_colour * max(0.0, l.dot(n) ) );
+      px_colour = px_colour + ( mat->m_ks * light_colour * phong_exp);
+
+      if (!colourIsZero(mat->m_kd)) {
+        // check if shadow ray intersects with any other object in the scene
+        //px_colour = px_colour + ( mat->m_kd * direct_light(intersect, l, root) );
+      }
+
+      if (!colourIsZero(mat->m_ks) && r.num_bounces < 2) {
+        //r = ggReflection(r, intersect.m_normal);
+        //px_colour = px_colour + (mat->m_ks * ray_colour(r, intersect, px_colour, lights, root));
+      }
+
     }
-
-    if (!colourIsZero(mat->m_ks)) {
-      //r = ggReflection(r, intersect.m_normal);
-      //px_colour = px_colour + (r.m_ks * ray_colour(r, intersect, px_colour, light));
-      //cerr << "doing m_ks, pxcolour: " << px_colour << endl;
-    }
-
-    //cerr << "hit and px_colour: " << px_colour << endl;
 
     return px_colour;
   }

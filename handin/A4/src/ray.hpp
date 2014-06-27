@@ -36,7 +36,7 @@ class Intersect {
         Vector3D m_normal;
         Point3D m_ipoint;
         PhongMaterial* m_material;
-        double t;
+        double t, dist;
 };
 
 #endif

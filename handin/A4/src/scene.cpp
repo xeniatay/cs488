@@ -83,17 +83,10 @@ GeometryNode::~GeometryNode() {
 }
 
 Ray GeometryNode::hit(Ray& r, Intersect& intersect) {
-  this->m_primitive->hit(r, intersect);
-
-  PhongMaterial* p_material = (PhongMaterial*) m_material;
-  intersect.m_material = p_material;
-
-/*
-  for( std::list<SceneNode*>::const_iterator i = m_children.begin(); i != m_children.end(); ++i ) {
-    SceneNode *node = (*i);
-    r = node->hit(r);
+  if (this->m_primitive->hit(r, intersect)) {
+    PhongMaterial* p_material = (PhongMaterial*) m_material;
+    intersect.m_material = p_material;
   }
-*/
 
   return r;
 }

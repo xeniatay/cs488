@@ -125,7 +125,6 @@ void a4_render(// What to render
       Colour px_colour( bg_r, bg_g, bg_b );
 
       px_colour = ray_colour(r, intersect, px_colour, lights, root);
-      cerr << "pxcolour: " << px_colour << endl;
 
       img(x, y, 0) = px_colour.R();
       img(x, y, 1) = px_colour.G();

@@ -9,82 +9,145 @@
 
 A5 Project Proposal
 
-Title:
+Title: Interactive Castle Scene with Animation
 
-Name: 
+Name: Xenia Tay
 
-Student ID:
+Student ID: 20396769
 
-User ID:
+User ID: xzytay
 \end{center}
 \vfill ~\vfill~
 \newpage
 \noindent{\Large \bf Final Project:}
 \begin{description}
 \item[Purpose]:\\
-	To tie together three totally unrelated rendering issues.
+    The purpose of this OpenGL project is to create an interactive, animated scene with synchronized sounds and elaborate graphic effects using a variety of graphical implementation techniques.
+
+\item[Topics]:
+\begin{itemize}
+    \item Texture Mapping -- Perspective-Correct, Bilinear Filtering
+    \item Perlin Noise
+    \item Lens Flare
+    \item Cel Shading (shadows)
+    \item Transparency -- Alpha Blending
+    \item Simple Particle Systems
+    \item Animation
+\end{itemize}
 
 \item[Statement]:\\
-	For Ray Tracers: Paragraph describing interesting scene to be
-		rendered and what features are needed to achieve
-		this scene.
+    This project aims to create an elaborately crafted castle scene with interactive and animated components. The interactive scene will allow a user to fly the camera around using keyboard shortcuts. The scene exploration will result in interactive animations within the scene, such as synchronized sound, doors opening and more.
 
-	Paragraph: What it's about.
+    This creative and original castle scene will be created using a number of different graphical implementation techniques. Specifically, the following techniques will be focused on: texture mapping, Perlin Noise, cel shading, particle systems, alpha blending, lens flare and keyframe animation. These techniques will be combined to create textured wall surfaces, beautiful scenery, varying materials like glass windows, fire and smoke, lens flare and animated components like waving flags atop the castle towers.
 
-	Paragraph: What to do.
+    This project is interesting because it allows exploration of graphical realism as well as UI effects related to the camera’s field of view. The concept of flying “indoors” using the camera in a first-person perspective is a technique commonly used in movies and games, and being able to recreate this effect is an exciting challenge. In addition, the multiple techniques used to generate realistic effects like lens flares, textures, noise, shadows and transparency will build upon each other to enable a truly elaborate and magnificent scene.
 
-	Paragraph: Why it is interesting and challenging.
-
-	Paragraph: What I will learn
+    The process of implementing this project will enrich my knowledge about camera manipulation and detailed, elaborate scene modeling. I will be exploring techniques mentioned in class but not taught in detail such as Perlin Noise, particle systems, cel shading and animation.
 
 \item[Technical Outline]:\\
-    Basically, your objectives in your objective list should be fairly
-    short statements of the objective; you should provide additional
-    details about your objectives in this section to clarify what you
-    plan to do.
+    The first step in this project implementation is scene modeling. This will be done using Lua, which allows the creation of a complex scene using a lightweight scripting language.
 
-     Further, survey the important data structures and algorithms that
-     will be necessary to achieve the goals, and (for ray tracing
-     projects) lists the new commands
-     that will need to be added to the input language.
+    Next, an interactive UI will be implemented, enabling the user to fly the camera through the scene using keyboard shortcuts. The following camera interactions derived from Hill and Kelly[1] are required:
 
-     To  get  bold face: {\bf bold face words}.  To get italics: {\it italic
-     face words}.  To  get typewriter font: {\tt typed words}.  To get
-     larger  words:  {\large large  words}.   To  get smaller words: 
-     {\small small words}.  
+\begin{itemize}
+    \item Slide: Translate the camera along the x, y and z axes
+    \item Roll: Rotate the camera’s FOV about the z-axis of the WCS
+    \item Yaw: Rotate the camera’s FOV about the y-axis of the WCS
+    \item Pitch: Rotate the camera’s FOV about the z-axis of the WCS
+\end{itemize}
 
+    This interaction can be done using purely OpenGL, or implemented with the help of the SDL API. Additional enhancements can be made to improve the UI by increasing the speed of translation or rotation when a keyboard shortcut is held down for a longer period of time.
+
+    Perspective-correct texture mapping will be implemented through the following steps, derived from Meiri [2]:
+
+\begin{itemize}
+    \item Load a texture file into OpenGL
+    \item Map texture coordinates to the vertices of a primitive
+    \item Perform a sampling operation on the texture using these coordinates to get a texel (a pixel in a texture)
+\end{itemize}
+
+    The texture sampling operation involves interpolation of the texture coordinates across the primitive face, and then mapping these coordinates to the texture.
+
+    To ensure smooth texture mapping, bilinear filtering will be used to map a texture coordinate to a texel. Bilinear filtering will apply linear interpolation of colours to each 2x2 quad of pixels, ensuring a smoother pixel colour based on the texel coordinates.
+
+    Another texturing technique is Perlin Noise, which will be used to generate scene features like the ground and the clouds in the sky. Perlin noise involves the generation of a Perlin Noise Function. According to Elias [3]: a 2D noise function is first created using a random number generator. Interpolation is used to smooth the function, and this 2D noise function is combined with other generated noise functions, resulting in the final Perlin Noise Function. These generated functions can be tweaked to achieve a specific noise texture effect.
+
+    Transparency will be implemented using alpha blending. According to Bubnar [4], alpha blending combines the current material’s colour with the background’s pixel colour, resulting in a new blended pixel colour. The degree of transparency will be customizable depending on the material, and at least two different degrees of transparency should be displayed in the scene.
+
+    Lens flare is a photographic artifact caused by light scattering and internal reflection in a lens system. In this scene, lens flare will be implemented using a pseudo technique from Chapman [5]:
+
+\begin{itemize}
+    \item Apply downsampling to the scene to obtain a subset of the brightest pixels that the lens flare will be applied on
+    \item Generate lens flare features: ghosting, halos, chromatic distortion
+    \item Applying a blur to the lens flare for increased realism
+\end{itemize}
+
+    For shadows in this scene, Cel Shading will be implemented using the following algorithm from Dykhta [6]:
+
+\begin{itemize}
+    \item Calculate lighting values for each pixel
+    \item Quantize lighting values into discrete values, which will create blocks of shadows and highlights for each primitive
+    \item The shade intensities will be varied based on the material as well as the initial shade of the pixel
+\end{itemize}
+
+    For smoke and fire effects, a simple particle system from as described in van Oosten’s tutorial [7] will be implemented. The particle systems will utilize OpenGL display lists for optimal performance due to the quantity of primitives being rendered. Particles will have variable property effects like texture, velocity and colour to provide realism and enable separate use cases.
+
+    Finally, animation and sound will be incorporated into the scene as well. Animations will be implemented using the keyframe/tweening technique, which uses linear interpolation to digitize the transition between keyframes to create a smooth animation effect [9].
+    Animation can also be combined with sound to create a more dramatic scene effect. Synchronized sound effects will be implemented using an OpenGL framework (SDL/glut/OpenAL).
+\newpage
 \item[Bibliography]:\\
-     Articles  and/or  books  with  important  information on the
-     topics of the project.
+
+\begin{enumerate}
+    \item[1.] Hill, Francis S., and Stephen M. Kelly. ``Chapter 7: Three-Dimensional Viewing.'' Computer Graphics: Using OpenGL. Upper Saddle River, NJ: Prentice Hall, 2001. 327-43. Print.
+
+    \item[2.] Meiri, Etay. ``Tutorial 16 - Basic Texture Mapping.'' Modern OpenGL Tutorials. N.p., n.d. Web. 04 July 2014. http://ogldev.atspace.co.uk/www/tutorial16/tutorial16.html.
+
+    \item[3.] Elias, Hugo. ``Perlin Noise.'' Perlin Noise. N.p., 22 Nov. 2003. Web. 04 July 2014.
+    \\ http://freespace.virgin.net/hugo.elias/models/m\_perlin.htm.
+
+    \item[4.] Bubnár, Michal. ``7.) Blending Basics - OpenGL 3.3 - Tutorials - Megabyte Softworks.'' Megabyte Softworks. N.p., n.d. Web. 04 July 2014.
+    \\ http://www.mbsoftworks.sk/index.php?page=tutorials\&series=1\&tutorial=10.
+
+    \item[5.] Chapman, John. ``Pseudo Lens Flare.'' John-chapman-graphics. N.p., 22 Feb. 2013. Web. 04 July 2014. http://john-chapman-graphics.blogspot.ca/2013/02/pseudo-lens-flare.html.
+
+    \item[6.] Dykhta, Igor. ``Non-photorealistic Rendering (Cel Shading).'' Sun and Black Cat. N.p., 2 Apr. 2013. Web. 04 July 2014. http://www.sunandblackcat.com/tipFullView.php?l=eng\&topicid=15.
+
+    \item[7.] Van Oosten, Jeremiah. ``Simulating Particle Effects Using OpenGL.'' 3D Game Engine Programming. N.p., 18 Mar. 2011. Web. 04 July 2014. http://3dgep.com/?p=1057.
+
+    \item[8.] Hill, Francis S., and Stephen M. Kelly. ``Chapter 4: Vector Tools for Graphics - Representations of Key Geometric Objects.'' Computer Graphics: Using OpenGL. Upper Saddle River, NJ: Prentice Hall, 2001. 162-63. Print.
+\end{enumerate}
 
 \end{description}
 \newpage
 
 
 \noindent{\Large\bf Objectives:}
+\\
+\\
 
-{\hfill{\bf Full UserID:\rule{2in}{.1mm}}\hfill{\bf Student ID:\rule{2in}{.1mm}}\hfill}
+{\hfill{\bf Full UserID: xzytay\hfill}{\bf Student ID: 20396769 \hfill}
+\\
 
 \begin{enumerate}
-     \item[\_\_\_ 1:]  Objective one.
+     \item[\_\_\_ 1:]  User can fly the camera around the scene using keyboard bindings
 
-     \item[\_\_\_ 2:]  Objective two.
+     \item[\_\_\_ 2:]  Perspective-correct texture mapping is implemented with bilinear filtering
 
-     \item[\_\_\_ 3:]  Objective three.
+     \item[\_\_\_ 3:]  Perlin noise is implemented and utilized for at least one surface
 
-     \item[\_\_\_ 4:]  Objective four.
+     \item[\_\_\_ 4:]  Material transparency is implemented using alpha blending
 
-     \item[\_\_\_ 5:]  Objective five.
+     \item[\_\_\_ 5:]  Lens flare is displayed when a bright light source in the scene shines into the camera FOV
 
-     \item[\_\_\_ 6:]  Objective six.
+     \item[\_\_\_ 6:]  Cel Shading is used to display shadows in the scene
 
-     \item[\_\_\_ 7:]  Objective seven.
+     \item[\_\_\_ 7:]  A simple particle system is implemented that incorporates texture, velocity and colour
 
-     \item[\_\_\_ 8:]  Objective eight.
+     \item[\_\_\_ 8:]  Animation is implemented using the keyframe tweening technique
 
-     \item[\_\_\_ 9:]  Objective nine.
+     \item[\_\_\_ 9:]  Sound is triggered in the scene based on user interaction
 
-     \item[\_\_\_ 10:]  Objective ten.
+     \item[\_\_\_ 10:] Modelling the scene: a final scene is modelled
 \end{enumerate}
 
 % Delete % at start of next line if this is a ray tracing project

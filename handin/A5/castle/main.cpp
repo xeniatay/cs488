@@ -12,7 +12,7 @@ int main(int argc, char** argv)
   // Initialize OpenGL
   Gtk::GL::init(argc, argv);
 
-  std::string filename = "puppet.lua";
+  std::string filename = "castle.lua";
   if (argc >= 2) {
     filename = argv[1];
   }

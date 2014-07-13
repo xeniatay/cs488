@@ -5,7 +5,7 @@ LDFLAGS = $(shell pkg-config --libs gtkmm-2.4 gtkglextmm-1.2 lua5.1) -llua5.1
 CPPFLAGS = $(shell pkg-config --cflags gtkmm-2.4 gtkglextmm-1.2 lua5.1)
 CXXFLAGS = $(CPPFLAGS) -W -Wall -g
 CXX = g++
-MAIN = puppeteer
+MAIN = castle
 
 all: $(MAIN)
 

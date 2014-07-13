@@ -29,31 +29,98 @@ black = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10);
 ---- rootnode ----
 rootnode = gr.node('rootnode');
 
--- main_hall_node --
+-- main hall --
+-- centered on screen, cube that makes up body of castle --
 mh_w = 40
 mh_h = 30
 mh_b = 20
+mh_thickness = 1;
 
-main_hall_node = gr.cube('main_hall_node');
-main_hall_node:translate(-mh_w/2, -mh_h/2, 0);
-main_hall_node:set_material(red);
-rootnode:add_child(main_hall_node);
+  -- back wall --
+  mh_b_node = gr.node('mh_b_node');
+  mh_b_node:translate(-mh_w/2, -mh_h/2, 1);
+  rootnode:add_child(mh_b_node);
 
-main_hall_primt = gr.cube('main_hall_primt');
-main_hall_primt:scale(mh_w, mh_h, mh_b);
-main_hall_primt:set_material(red);
-main_hall_node:add_child(main_hall_primt);
+  mh_b_primt = gr.cube('mh_b_primt');
+  mh_b_primt:scale(mh_w, mh_h, mh_thickness);
+  mh_b_primt:set_material(red);
+  mh_b_node:add_child(mh_b_primt);
+
+  -- left wall --
+  mh_l_node = gr.node('mh_l_node');
+  mh_l_node:translate(-mh_w/2, -mh_h/2, 1);
+  rootnode:add_child(mh_l_node);
+
+  mh_l_primt = gr.cube('mh_l_primt');
+  mh_l_primt:scale(1, mh_h, mh_b);
+  mh_l_primt:set_material(green);
+  mh_l_node:add_child(mh_l_primt);
+
+  -- right wall --
+  mh_r_node = gr.node('mh_r_node');
+  mh_r_node:translate(mh_w/2 - mh_thickness, -mh_h/2, 1);
+  rootnode:add_child(mh_r_node);
+
+  mh_r_primt = gr.cube('mh_r_primt');
+  mh_r_primt:scale(1, mh_h, mh_b);
+  mh_r_primt:set_material(green);
+  mh_r_node:add_child(mh_r_primt);
+
+  -- front wall --
+  mh_f_node = gr.node('mh_f_node');
+  mh_f_node:translate(-mh_w/2, -mh_h/2, mh_b);
+  rootnode:add_child(mh_f_node);
+
+  mh_f_primt = gr.cube('mh_f_primt');
+  mh_f_primt:scale(mh_w, mh_h, mh_thickness);
+  mh_f_primt:set_material(blue);
+  mh_f_node:add_child(mh_f_primt);
+
+-- end main hall --
+
+-- start castle battlements --
+
+battlement_w = mh_w / 11;
+battlement_h = 2;
+battlement_thickness = mh_thickness;
+
+  -- front and back battlements --
+  num_battlements = math.ceil(mh_w / battlement_w / 2);
+  for i = 0, (num_battlements - 1 ) do
+
+    -- generate battlements
+    battlement_node = gr.node("battlement_node_" .. i );
+    battlement_node:translate(i * battlement_w * 2, mh_h, 0);
+    mh_f_node:add_child(battlement_node)
+    mh_b_node:add_child(battlement_node)
+
+    battlement_primt = gr.cube("battlement_primt_" .. i);
+    battlement_primt:scale(battlement_w, battlement_h, battlement_thickness);
+    battlement_primt:set_material(black)
+    battlement_node:add_child(battlement_primt)
+
+  end
+
+  -- left and right battlements --
+  num_battlements = math.ceil(mh_b / battlement_w / 2);
+  for i = 0, (num_battlements - 1 ) do
+
+    -- generate battlements
+    battlement_node = gr.node("battlement_node_" .. i );
+    battlement_node:translate(0, mh_h, i * battlement_w * 2);
+    mh_l_node:add_child(battlement_node)
+    mh_r_node:add_child(battlement_node)
+
+    battlement_primt = gr.cube("battlement_primt_" .. i);
+    battlement_primt:scale(battlement_thickness, battlement_h, battlement_w);
+    battlement_primt:set_material(black)
+    battlement_node:add_child(battlement_primt)
+
+  end
+
+-- end castle battlements --
 
 --[[
-  ---- shoulder_primt ----
-  shoulder_node = gr.node('shoulder_node');
-  shoulder_node:translate(0, 2.0, 0);
-  main_hall_node:add_child(shoulder_node);
-
-  shoulder_primt = gr.cube('shoulder_primt');
-  shoulder_primt:scale(1.5, 0.2, 1);
-  shoulder_primt:set_material(red);
-  shoulder_node:add_child(shoulder_primt);
 
     ---- left arm ----
 
@@ -209,7 +276,7 @@ main_hall_node:add_child(main_hall_primt);
   ---- hips_primt ----
   hips_node = gr.node('hips_node');
   hips_node:translate(0, -2.0, 0);
-  main_hall_node:add_child(hips_node);
+  mh_f_node:add_child(hips_node);
 
   hips_primt = gr.cube('hips_primt');
   hips_primt:scale(1.8, 0.3, 1);

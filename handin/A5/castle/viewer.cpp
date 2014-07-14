@@ -136,12 +136,9 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   glLoadMatrixd((GLdouble *) mTrans);
   glMultMatrixd((GLdouble *) mRot);
 
-  glScaled(0.2, 0.2, 0.2);
-
   // Draw stuff
   m_scenenode->walk_gl();
 
-  // TODO make this optional
   if (m_circle) {
     draw_trackball_circle();
   }

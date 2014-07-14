@@ -2,6 +2,11 @@ SOURCES = $(wildcard *.cpp)
 OBJECTS = $(SOURCES:.cpp=.o)
 DEPENDS = $(SOURCES:.cpp=.d)
 LDFLAGS = $(shell pkg-config --libs gtkmm-2.4 gtkglextmm-1.2 lua5.1) -llua5.1
+
+LDLIBS = -lSOIL
+SOILPATH = -L/u1/xzytay/cs488/handin/A5/castle/soil/lib
+SOILLIB = /u1/xzytay/cs488/handin/A5/castle/soil/lib/libSOIL.a
+
 CPPFLAGS = $(shell pkg-config --cflags gtkmm-2.4 gtkglextmm-1.2 lua5.1)
 CXXFLAGS = $(CPPFLAGS) -W -Wall -g
 CXX = g++

@@ -3,6 +3,7 @@
 #include <gtkglmm.h>
 #include "appwindow.hpp"
 #include "scene_lua.hpp"
+#include "image.hpp"
 
 int main(int argc, char** argv)
 {
@@ -28,5 +29,6 @@ int main(int argc, char** argv)
 
   // And run the application!
   Gtk::Main::run(window);
+
 }
 

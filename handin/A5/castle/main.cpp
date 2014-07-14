@@ -3,7 +3,6 @@
 #include <gtkglmm.h>
 #include "appwindow.hpp"
 #include "scene_lua.hpp"
-#include "image.hpp"
 
 int main(int argc, char** argv)
 {
@@ -29,10 +28,6 @@ int main(int argc, char** argv)
 
   // And run the application!
   Gtk::Main::run(window);
-
-  Image img(300, 300, 3);
-  img.loadPng("assets/castle_wall_texture.png");
-  img.savePng("test.png");
 
 }
 

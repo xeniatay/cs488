@@ -7,9 +7,12 @@
 #include "trackball.hpp"
 #include "events.hpp"
 #include "material.hpp"
+#include "image.hpp"
+#include <string>
 
 using std::cerr;
 using std::endl;
+using std::string;
 
 typedef std::list<SceneNode*> SN;
 extern SN all_scenenodes;
@@ -142,6 +145,8 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   if (m_circle) {
     draw_trackball_circle();
   }
+
+  map_texture();
 
   // Swap the contents of the front and back buffers so we see what we
   // just drew. This should only be done if double buffering is enabled.
@@ -454,4 +459,53 @@ void Viewer::set_pickings(Picking picked) {
   }
 
   invalidate();
+}
+
+/*
+void Viewer::load_image(Image img, string filename, int width, int height, int depth) {
+  img.loadPng(filename);
+}
+*/
+
+void Viewer::map_texture() {
+  GLuint texture;
+
+  // allocate a texture name
+  glGenTextures( 1, &texture );
+
+  // select our current texture
+  glBindTexture( GL_TEXTURE_2D, texture );
+
+  // select modulate to mix texture with color for shading
+  glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+
+  // when texture area is small, bilinear filter the closest mipmap
+glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                 GL_LINEAR_MIPMAP_NEAREST );
+// when texture area is large, bilinear filter the original
+glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+
+// the texture wraps over at the edges (repeat)
+glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+
+  int width = 300, height = 300;
+  Image img(width, height, 3);
+  string filename = "assets/castle_wall_texture.png";
+  img.loadPng(filename);
+
+// build our texture mipmaps
+gluBuild2DMipmaps( GL_TEXTURE_2D, 3, width, height,
+                   GL_RGB, GL_UNSIGNED_BYTE, img.data() );
+
+//
+glEnable( GL_TEXTURE_2D );
+glBindTexture( GL_TEXTURE_2D, texture );
+glBegin( GL_QUADS );
+glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
+glTexCoord2d(10.0,0.0); glVertex2d(10.0,0.0);
+glTexCoord2d(10.0,10.0); glVertex2d(1.0,10.0);
+glTexCoord2d(0.0,10.0); glVertex2d(0.0,10.0);
+glEnd();
+
 }

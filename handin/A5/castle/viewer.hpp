@@ -17,6 +17,11 @@ class Viewer : public Gtk::GL::DrawingArea {
     Viewer();
     virtual ~Viewer();
 
+    // texture mapping
+    void map_texture();
+    //void load_image(Image img, string filename, int width, int height, int depth);
+
+
     // A useful function that forces this widget to rerender. If you
     // want to render a new frame, do not call on_expose_event
     // directly. Instead call this, which will cause an on_expose_event

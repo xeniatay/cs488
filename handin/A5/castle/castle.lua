@@ -29,6 +29,7 @@ black = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10);
 ---- rootnode ----
 rootnode = gr.node('rootnode');
 
+--[[
 -- main hall --
 -- centered on screen, cube that makes up body of castle --
 mh_w = 40
@@ -119,7 +120,7 @@ battlement_thickness = mh_thickness;
   end
 
 -- end castle battlements --
-
+]]
 --rootnode:translate(0, 0, 5.0)
 rootnode:scale(0.2, 0.2, 0.2);
 --rootnode:rotate('y', -20.0)

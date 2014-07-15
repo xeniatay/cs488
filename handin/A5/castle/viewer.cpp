@@ -292,18 +292,6 @@ void Viewer::draw_trackball_circle()
   glDisable(GL_LINE_SMOOTH);
 }
 
-void Viewer::reset_position() {
-  resetMTrans();
-}
-
-void Viewer::reset_orientation() {
-  resetMRot();
-}
-
-void Viewer::reset_joints() {
-
-}
-
 void Viewer::reset_all() {
   m_camera_scale = Vector3D(1, 1, 1);
   m_camera_translate = Vector3D();
@@ -315,9 +303,6 @@ void Viewer::reset_all() {
   y_origin = 0;
   m_width = get_width();
   m_height = get_height();
-  numLimbs = 18;
-  picked_list.resize(numLimbs);
-  std::fill(picked_list.begin(), picked_list.end(), false);
 
   m_scenenode = all_scenenodes.front();
   m_geonode = all_geonodes.front();
@@ -328,9 +313,6 @@ void Viewer::reset_all() {
 
   float curMatrix[16];
   glGetFloatv(GL_MODELVIEW_MATRIX, curMatrix);
-  undo_stack.resize(0);
-  undo_stack.push_back(curMatrix);
-  undo_steps = 0;
 
   resetMRot();
   resetMTrans();
@@ -343,32 +325,6 @@ void Viewer::reset_all() {
 */
 
   invalidate();
-}
-
-void Viewer::undo() {
-
-  if (undo_steps > 0) {
-    undo_steps--;
-  }
-
-  float* curMatrix = undo_stack.at(undo_steps);
-  glLoadMatrixd((GLdouble *)curMatrix);
-
-  invalidate();
-
-}
-
-void Viewer::redo() {
-
-  if (undo_steps < (undo_stack.size() - 1)) {
-    undo_steps++;
-  }
-
-  float* curMatrix = undo_stack.at(undo_steps);
-  glLoadMatrixd((GLdouble *)curMatrix);
-
-  invalidate();
-
 }
 
 void Viewer::set_options(Option option) {
@@ -387,66 +343,6 @@ void Viewer::set_options(Option option) {
 
   invalidate();
 
-}
-
-void Viewer::picking_in_select_mode() {
-  int size = 100, hits;
-
-  GLuint buffer[size];
-  GLint viewport[4];
-
-  glSelectBuffer(size, buffer);
-
-  glRenderMode(GL_SELECT);
-  glInitNames();
-  glPushName(-1);
-
-  glGetIntegerv(GL_VIEWPORT, viewport);
-  glMatrixMode(GL_PROJECTION);
-  glPushMatrix();
-  glLoadIdentity();
-  gluPickMatrix(x_origin, y_origin, 10, 10, viewport);
-
-  glMatrixMode(GL_MODELVIEW);
-
-  for( std::list<SceneNode*>::const_iterator i = all_scenenodes.begin(); i != all_scenenodes.end(); ++i ) {
-    SceneNode *node = (*i);
-
-    glLoadName(node->m_id);
-    node->walk_gl();
-  }
-
-  glMatrixMode(GL_PROJECTION);
-  glPopMatrix();
-  glMatrixMode(GL_MODELVIEW);
-  hits = glRenderMode(GL_RENDER);
-  cerr << "HITS: " << hits << endl;
-}
-
-void Viewer::set_pickings(Picking picked) {
-
-  if (picked_list.at(picked) == true) {
-    picked_list.at(picked) = false;
-    for( std::list<GeometryNode*>::const_iterator i = all_geonodes.begin(); i != all_geonodes.end(); ++i ) {
-      GeometryNode* node = (*i);
-      if (node->m_geo_id == picked) {
-        node->set_material(node->m_material);
-      }
-    }
-  } else {
-
-    for( std::list<GeometryNode*>::const_iterator i = all_geonodes.begin(); i != all_geonodes.end(); ++i ) {
-      GeometryNode* node = (*i);
-      if (node->m_geo_id == picked) {
-        PhongMaterial *material = new PhongMaterial(Colour(1.0, 1.0, 0.0), Colour(0.1, 0.1, 0.1), 10, -1);
-        node->set_material(material);
-      }
-    }
-
-    picked_list.at(picked) = true;
-  }
-
-  invalidate();
 }
 
 /*

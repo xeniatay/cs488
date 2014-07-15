@@ -59,8 +59,6 @@ class Viewer : public Gtk::GL::DrawingArea {
     void map_texture(GLuint texture);
     GLuint t_castle_wall;
     GLuint texture_count;
-    //void load_image(Image img, string filename, int width, int height, int depth);
-
 
     // A useful function that forces this widget to rerender. If you
     // want to render a new frame, do not call on_expose_event
@@ -73,14 +71,6 @@ class Viewer : public Gtk::GL::DrawingArea {
     void reset_orientation();
     void reset_joints();
     void reset_all();
-
-    // edit menu
-    void undo();
-    void redo();
-
-    vector <float*> undo_stack;
-    vector <float*> redo_stack;
-    int undo_steps;
 
     // options menu
     enum Option {
@@ -108,35 +98,6 @@ class Viewer : public Gtk::GL::DrawingArea {
     int y_origin;
     int m_width;
     int m_height;
-
-    // picking
-    enum Picking {
-        ROOT,
-        TORSO,
-        SHOULDER,
-        LEFT_UPPER_ARM,
-        LEFT_FOREARM,
-        LEFT_HAND,
-        RIGHT_UPPER_ARM,
-        RIGHT_FOREARM,
-        RIGHT_HAND,
-        NECK,
-        HEAD,
-        HIPS,
-        LEFT_THIGH,
-        LEFT_CALF,
-        LEFT_FOOT,
-        RIGHT_THIGH,
-        RIGHT_CALF,
-        RIGHT_FOOT
-    };
-
-    int numLimbs;
-
-    void picking_in_select_mode();
-    void set_pickings(Picking picked);
-
-    vector <bool> picked_list;
 
     int m_axis_dir;
 

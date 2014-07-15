@@ -13,20 +13,17 @@ AppWindow::AppWindow()
   // Set up the application menu
   // The slot we use here just causes AppWindow::hide() on this,
   // which shuts down the application.
-  m_menu_app.items().push_back(MenuElem("_Reset Position (I)", sigc::mem_fun(m_viewer, &Viewer::reset_position)));
-  m_menu_app.items().push_back(MenuElem("_Reset Orientation (O)", sigc::mem_fun(m_viewer, &Viewer::reset_orientation)));
-  m_menu_app.items().push_back(MenuElem("_Reset Joints (N)", sigc::mem_fun(m_viewer, &Viewer::reset_joints)));
+  //m_menu_app.items().push_back(MenuElem("_Reset Position (I)", sigc::mem_fun(m_viewer, &Viewer::reset_position)));
+  //m_menu_app.items().push_back(MenuElem("_Reset Orientation (O)", sigc::mem_fun(m_viewer, &Viewer::reset_orientation)));
+  //m_menu_app.items().push_back(MenuElem("_Reset Joints (N)", sigc::mem_fun(m_viewer, &Viewer::reset_joints)));
   m_menu_app.items().push_back(MenuElem("_Reset All (A)", sigc::mem_fun(m_viewer, &Viewer::reset_all)));
   m_menu_app.items().push_back(MenuElem("_Quit (Q)", sigc::mem_fun(*this, &AppWindow::hide)));
 
   // Set up the mode radio menu group
   sigc::slot1<void, Viewer::Mode> mode_slot = sigc::mem_fun(m_viewer, &Viewer::set_mode);
-  m_menu_mode.items().push_back(RadioMenuElem(m_menu_mode_group, "_Position/Orientation (P)", sigc::bind(mode_slot, Viewer::POSITION_OR_ORIENTATION)));
-  m_menu_mode.items().push_back(RadioMenuElem(m_menu_mode_group, "_Joints (J)", sigc::bind(mode_slot, Viewer::JOINTS)));
-
-  // Set up the edit menu
-  m_menu_edit.items().push_back(MenuElem("_Undo (U)", sigc::mem_fun(m_viewer, &Viewer::undo)));
-  m_menu_edit.items().push_back(MenuElem("_Redo (R)", sigc::mem_fun(m_viewer, &Viewer::redo)));
+  m_menu_mode.items().push_back(RadioMenuElem(m_menu_mode_group, "_SCALE (S)", sigc::bind(mode_slot, Viewer::SCALE)));
+  m_menu_mode.items().push_back(RadioMenuElem(m_menu_mode_group, "_TRANSLATE (T)", sigc::bind(mode_slot, Viewer::TRANSLATE)));
+  m_menu_mode.items().push_back(RadioMenuElem(m_menu_mode_group, "_ROTATE (R)", sigc::bind(mode_slot, Viewer::ROTATE)));
 
   // Set up the options checklist menu group
   sigc::slot1<void, Viewer::Option> option_slot = sigc::mem_fun(m_viewer, &Viewer::set_options);
@@ -35,29 +32,10 @@ AppWindow::AppWindow()
   m_menu_options.items().push_back(CheckMenuElem("_Backface Cull (B)", sigc::bind(option_slot, Viewer::BACKFACE_CULL)));
   m_menu_options.items().push_back(CheckMenuElem("_Frontface Cull (F)", sigc::bind(option_slot, Viewer::FRONTFACE_CULL)));
 
-  // Set up the options checklist menu group
-  sigc::slot1<void, Viewer::Picking> picking_slot = sigc::mem_fun(m_viewer, &Viewer::set_pickings);
-  m_menu_pickings.items().push_back(CheckMenuElem("_Left Upper Arm", sigc::bind(picking_slot, Viewer::LEFT_UPPER_ARM)));
-  m_menu_pickings.items().push_back(CheckMenuElem("_Left Forearm", sigc::bind(picking_slot, Viewer::LEFT_FOREARM)));
-  m_menu_pickings.items().push_back(CheckMenuElem("_Left Hand", sigc::bind(picking_slot, Viewer::LEFT_HAND)));
-  m_menu_pickings.items().push_back(CheckMenuElem("_Right Upper Arm", sigc::bind(picking_slot, Viewer::RIGHT_UPPER_ARM)));
-  m_menu_pickings.items().push_back(CheckMenuElem("_Right Forearm", sigc::bind(picking_slot, Viewer::RIGHT_FOREARM)));
-  m_menu_pickings.items().push_back(CheckMenuElem("_Right Hand", sigc::bind(picking_slot, Viewer::RIGHT_HAND)));
-  m_menu_pickings.items().push_back(CheckMenuElem("_Neck", sigc::bind(picking_slot, Viewer::NECK)));
-  m_menu_pickings.items().push_back(CheckMenuElem("_Head", sigc::bind(picking_slot, Viewer::HEAD)));
-  m_menu_pickings.items().push_back(CheckMenuElem("_Left Thigh", sigc::bind(picking_slot, Viewer::LEFT_THIGH)));
-  m_menu_pickings.items().push_back(CheckMenuElem("_Left Calf", sigc::bind(picking_slot, Viewer::LEFT_CALF)));
-  m_menu_pickings.items().push_back(CheckMenuElem("_Left Foot", sigc::bind(picking_slot, Viewer::LEFT_FOOT)));
-  m_menu_pickings.items().push_back(CheckMenuElem("_Right Thigh", sigc::bind(picking_slot, Viewer::RIGHT_THIGH)));
-  m_menu_pickings.items().push_back(CheckMenuElem("_Right Calf", sigc::bind(picking_slot, Viewer::RIGHT_CALF)));
-  m_menu_pickings.items().push_back(CheckMenuElem("_Right Foot", sigc::bind(picking_slot, Viewer::RIGHT_FOOT)));
-
   // Set up the menu bar
   m_menubar.items().push_back(Gtk::Menu_Helpers::MenuElem("_Application", m_menu_app));
   m_menubar.items().push_back(Gtk::Menu_Helpers::MenuElem("_Mode", m_menu_mode));
-  m_menubar.items().push_back(Gtk::Menu_Helpers::MenuElem("_Edit", m_menu_edit));
   m_menubar.items().push_back(Gtk::Menu_Helpers::MenuElem("_Options", m_menu_options));
-  m_menubar.items().push_back(Gtk::Menu_Helpers::MenuElem("_Picking", m_menu_pickings));
 
   // Pack in our widgets
 
@@ -86,42 +64,32 @@ bool AppWindow::on_key_press_event( GdkEventKey *ev ) {
 
   if (ev->keyval == 'q' || ev->keyval == 'Q') {
     hide();
-  } else if (ev->keyval == 'i' || ev->keyval == 'I') {
-    m_viewer.reset_position();
-  } else if (ev->keyval == 'o' || ev->keyval == 'O') {
-    m_viewer.reset_orientation();
-  } else if (ev->keyval == 'n' || ev->keyval == 'N') {
-    m_viewer.reset_joints();
   } else if (ev->keyval == 'a' || ev->keyval == 'A') {
     m_viewer.reset_all();
-  } else if (ev->keyval == 'p' || ev->keyval == 'P') {
-    m_viewer.set_mode(m_viewer.POSITION_OR_ORIENTATION);
-  } else if (ev->keyval == 'j' || ev->keyval == 'J') {
-    m_viewer.set_mode(m_viewer.JOINTS);
-  } else if (ev->keyval == 'u' || ev->keyval == 'U') {
-    m_viewer.undo();
-  } else if (ev->keyval == 'r' || ev->keyval == 'R') {
-    m_viewer.redo();
-  } else if (ev->keyval == 'c' || ev->keyval == 'C') {
-    m_viewer.set_options(m_viewer.CIRCLE);
   } else if (ev->keyval == 'z' || ev->keyval == 'Z') {
-    m_viewer.set_options(m_viewer.Z_BUFFER);
+    //m_viewer.set_options(m_viewer.Z_BUFFER);
   } else if (ev->keyval == 'b' || ev->keyval == 'B') {
     m_viewer.set_options(m_viewer.BACKFACE_CULL);
   } else if (ev->keyval == 'f' || ev->keyval == 'F') {
     m_viewer.set_options(m_viewer.FRONTFACE_CULL);
+  } else if (ev->keyval == 'r' || ev->keyval == 'R') {
+    m_viewer.set_mode(m_viewer.ROTATE);
+  } else if (ev->keyval == 't' || ev->keyval == 'T') {
+    m_viewer.set_mode(m_viewer.TRANSLATE);
+  } else if (ev->keyval == 's' || ev->keyval == 'S') {
+    m_viewer.set_mode(m_viewer.SCALE);
   } else if (ev->keyval == 65362) {
-    // up
-    m_viewer.keypress_up();
+    m_viewer.set_keypress(m_viewer.UP);
+    m_viewer.keypress();
   } else if (ev->keyval == 65364) {
-    // down
-    m_viewer.keypress_down();
+    m_viewer.set_keypress(m_viewer.DOWN);
+    m_viewer.keypress();
   } else if (ev->keyval == 65361) {
-    // left
-    m_viewer.keypress_left();
+    m_viewer.set_keypress(m_viewer.LEFT);
+    m_viewer.keypress();
   } else if (ev->keyval == 65363) {
-    // right
-    m_viewer.keypress_right();
+    m_viewer.set_keypress(m_viewer.RIGHT);
+    m_viewer.keypress();
   }
 
   //return true;

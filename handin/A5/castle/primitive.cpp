@@ -83,9 +83,9 @@ void Cube::draw_cube(double x = 0, double y = 0, double z = 2, double r = 0, dou
   glBindTexture( GL_TEXTURE_2D, 1);
 
   Vector4D tbl(0, 0, 0, 0);
-  Vector4D ttl(0, 10, 0, 0);
-  Vector4D ttr(10, 10, 0, 0);
-  Vector4D tbr(10, 0, 0, 0);
+  Vector4D ttl(0, 5, 0, 0);
+  Vector4D ttr(5, 5, 0, 0);
+  Vector4D tbr(5, 0, 0, 0);
   texcoords = Matrix4x4(tbl, ttl, ttr, tbr);
 
   glBegin(GL_QUADS);

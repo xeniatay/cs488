@@ -31,11 +31,29 @@ class Viewer : public Gtk::GL::DrawingArea {
     virtual ~Viewer();
 
     // camera view
-    void keypress_up();
-    void keypress_down();
-    void keypress_left();
-    void keypress_right();
+    void keypress();
     Vector3D m_camera_scale;
+    Vector3D m_camera_rotate;
+    Vector3D m_camera_translate;
+
+    enum Mode {
+        ROTATE,
+        TRANSLATE,
+        SCALE
+    };
+
+    Mode m_mode;
+    void set_mode(Mode mode) { m_mode = mode; }
+
+    enum Keypress {
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT
+    };
+
+    Keypress m_keypress;
+    void set_keypress(Keypress kp) { m_keypress = kp; }
 
     // texture mapping
     void map_texture(GLuint texture);
@@ -55,14 +73,6 @@ class Viewer : public Gtk::GL::DrawingArea {
     void reset_orientation();
     void reset_joints();
     void reset_all();
-
-    // mode menu
-    enum Mode {
-        POSITION_OR_ORIENTATION,
-        JOINTS
-    };
-
-    void set_mode(Mode mode) { m_mode = mode; }
 
     // edit menu
     void undo();
@@ -88,7 +98,6 @@ class Viewer : public Gtk::GL::DrawingArea {
     GeometryNode *m_geonode;
 
     // others
-    Mode m_mode;
     bool m_circle;
     Option m_zbuffer;
     Option m_backface_cull;

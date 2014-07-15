@@ -69,7 +69,7 @@ void Viewer::on_realize()
     return;
 
   glShadeModel(GL_SMOOTH);
-  glClearColor( 0.4, 0.4, 0.4, 0.0 );
+  glClearColor( 1.0, 1.0, 1.0, 0.0 );
   glEnable(GL_DEPTH_TEST);
 
   gldrawable->gl_end();
@@ -78,7 +78,7 @@ void Viewer::on_realize()
   reset_all();
 
   // default mode
-  m_mode = POSITION_OR_ORIENTATION;
+  m_mode = SCALE;
   texture_count = 0;
   map_texture(t_castle_wall);
 }
@@ -133,12 +133,19 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   glLoadMatrixd((GLdouble *) mTrans);
   glMultMatrixd((GLdouble *) mRot);
 
-  cerr << "camera sclae: " << m_camera_scale << endl;
+  cerr << "camera scale: " << m_camera_scale << endl;
   glScaled(m_camera_scale[0], m_camera_scale[1], m_camera_scale[2]);
+  cerr << "camera rotate: " << m_camera_rotate << endl;
+  glRotated(m_camera_rotate[0], 1, 0, 0);
+  glRotated(m_camera_rotate[1], 0, 1, 0);
+  glRotated(m_camera_rotate[2], 0, 0, 1);
+  cerr << "camera translate: " << m_camera_translate << endl;
+  glTranslated(m_camera_translate[0], m_camera_translate[1], m_camera_translate[2]);
 
   // Draw stuff
   m_scenenode->walk_gl();
 
+/* texture test
   // map texture to shape
   glEnable( GL_TEXTURE_2D );
   glBindTexture( GL_TEXTURE_2D, 1);
@@ -148,6 +155,7 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   glTexCoord2d(10.0,10.0); glVertex2d(10.0,10.0);
   glTexCoord2d(0.0,10.0); glVertex2d(0.0,10.0);
   glEnd();
+*/
 
   if (m_circle) {
     draw_trackball_circle();
@@ -196,26 +204,21 @@ bool Viewer::on_button_press_event(GdkEventButton* event)
   x_origin = event->x;
   y_origin = event->y;
 
-  if (m_mode == POSITION_OR_ORIENTATION) {
-    switch (event->button) {
-      case 1:
-        // B1
-        vToggleDir(DIR_X);
-        break;
-      case 2:
-        vToggleDir(DIR_Y);
-        // B2
-        break;
-      case 3:
-        vToggleDir(DIR_Z);
-        // B3
-        break;
-      default:
-        break;
-    }
-  } else {
-    // picking doesn't work
-    picking_in_select_mode();
+  switch (event->button) {
+    case 1:
+      // B1
+      vToggleDir(DIR_X);
+      break;
+    case 2:
+     vToggleDir(DIR_Y);
+      // B2
+      break;
+    case 3:
+     vToggleDir(DIR_Z);
+      // B3
+      break;
+    default:
+      break;
   }
 
   return true;
@@ -224,16 +227,6 @@ bool Viewer::on_button_press_event(GdkEventButton* event)
 bool Viewer::on_button_release_event(GdkEventButton* event)
 {
   //std::cerr << "Stub: Button " << event->button << " released" << std::endl;
-
-  if (m_mode == JOINTS) {
-    float curMatrix[16];
-    glGetFloatv(GL_MODELVIEW_MATRIX, curMatrix);
-
-    undo_stack.resize(undo_steps);
-    undo_stack.push_back(curMatrix);
-    undo_steps++;
-
-  }
 
   return true;
 }
@@ -244,32 +237,14 @@ bool Viewer::on_motion_notify_event(GdkEventMotion* event)
 
   m_axis_dir = ( (event->x - x_origin) < 0) ? -1 : 1;
 
-  if (m_mode == POSITION_OR_ORIENTATION) {
+  float x_current = event->x,
+        y_current = event->y;
 
-    float x_current = event->x,
-          y_current = event->y;
+  // trackball stuff
+  vPerformTransfo((float)x_origin, x_current, (float)y_origin, y_current);
 
-    vPerformTransfo((float)x_origin, x_current, (float)y_origin, y_current);
-
-    x_origin = x_current;
-    y_origin = y_current;
-
-
-  } else {
-    // joint
-
-    for( std::list<GeometryNode*>::const_iterator i = all_geonodes.begin(); i != all_geonodes.end(); ++i ) {
-
-      GeometryNode* node = (*i);
-
-      if (picked_list[node->m_geo_id]) {
-        // hacky
-        SceneNode* joint = scenenodes_v.at(node->m_id - 2);
-        joint->rotate('x', 1 * m_axis_dir);
-      }
-    }
-
-  }
+  x_origin = x_current;
+  y_origin = y_current;
 
   invalidate();
 
@@ -328,6 +303,9 @@ void Viewer::reset_joints() {
 
 void Viewer::reset_all() {
   m_camera_scale = Vector3D(1, 1, 1);
+  m_camera_translate = Vector3D();
+  m_camera_rotate = Vector3D();
+
   m_circle = false;
   m_axis_dir = 1;
   x_origin = 0;
@@ -497,7 +475,7 @@ void Viewer::map_texture(GLuint texture) {
 
   int width = 300, height = 300;
   Image img(width, height, 3);
-  string filename = "assets/castle_wall_texture_3.png";
+  string filename = "assets/castle_wall_texture_1.png";
   img.loadPng(filename);
 
   // build our texture mipmaps
@@ -505,26 +483,37 @@ void Viewer::map_texture(GLuint texture) {
 
 }
 
-void Viewer::keypress_up() {
-  // zoom in
-  double zoom = 0.15;
-  Vector3D scale = m_camera_scale;
-  m_camera_scale = Vector3D(scale[0] + zoom, scale[1] + zoom, scale[2] + zoom);
-  on_expose_event( NULL );
-}
+void Viewer::keypress() {
 
-void Viewer::keypress_down() {
-  // zoom out
-  double zoom = 0.15;
-  Vector3D scale = m_camera_scale;
-  m_camera_scale = Vector3D(scale[0] - zoom, scale[1] - zoom, scale[2] - zoom);
-  //m_camera_scale = Vector3D(scale[0] * zoom, scale[1] * zoom, scale[2] * zoom);
-  on_expose_event( NULL );
-}
+  // determine direction of transformation
+  int transform_dir = (m_keypress == DOWN || m_keypress == LEFT) ? -1 : 1;
 
-void Viewer::keypress_left() {
-}
+  if (m_mode == SCALE) {
+    double s = 0.15 * transform_dir;
+    Vector3D m_s = m_camera_scale;
+    m_camera_scale = Vector3D(m_s[0] + s, m_s[1] + s, m_s[2] + s);
 
-void Viewer::keypress_right() {
+  } else if (m_mode == TRANSLATE) {
+    double t = 0.5 * transform_dir;
+    Vector3D m_t = m_camera_translate;
+
+    if (m_keypress == UP || m_keypress == DOWN) {
+      m_camera_translate = Vector3D(m_t[0], m_t[1], m_t[2] + t);
+    } else {
+      m_camera_translate = Vector3D(m_t[0] + t, m_t[1], m_t[2]);
+    }
+
+  } else if (m_mode == ROTATE) {
+    double r = 0.8 * transform_dir;
+    Vector3D m_r = m_camera_rotate;
+
+    if (m_keypress == UP || m_keypress == DOWN) {
+      m_camera_rotate = Vector3D(m_r[0] + r, m_r[1], m_r[2]);
+    } else {
+      m_camera_rotate = Vector3D(m_r[0], m_r[1] + r, m_r[2]);
+    }
+  }
+
+  invalidate();
 }
 

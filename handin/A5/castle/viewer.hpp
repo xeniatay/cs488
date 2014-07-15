@@ -18,6 +18,7 @@
 #include "material.hpp"
 #include "image.hpp"
 #include "a2.hpp"
+#include "perlinnoise.hpp"
 
 
 using std::vector;

@@ -25,13 +25,14 @@ blue = gr.material({0.0, 0.0, 1.0}, {0.1, 0.1, 0.1}, 10, -1 );
 green = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 10, -1);
 white = gr.material({1.0, 1.0, 1.0}, {0.1, 0.1, 0.1}, 10, -1);
 black = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10, 1);
+castle_wall = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10, 1); -- texture hardcoded as 1
 
 ---- rootnode ----
 rootnode = gr.node('rootnode');
 
 --[[]]
 -- main hall --
--- centeblack on screen, cube that makes up body of castle --
+-- centecastle_wall on screen, cube that makes up body of castle --
 mh_w = 40
 mh_h = 30
 mh_b = 20
@@ -44,7 +45,7 @@ mh_thickness = 1;
 
   mh_b_primt = gr.cube('mh_b_primt');
   mh_b_primt:scale(mh_w, mh_h, mh_thickness);
-  mh_b_primt:set_material(black);
+  mh_b_primt:set_material(castle_wall);
   mh_b_node:add_child(mh_b_primt);
 
   -- left wall --
@@ -54,7 +55,7 @@ mh_thickness = 1;
 
   mh_l_primt = gr.cube('mh_l_primt');
   mh_l_primt:scale(1, mh_h, mh_b);
-  mh_l_primt:set_material(black);
+  mh_l_primt:set_material(castle_wall);
   mh_l_node:add_child(mh_l_primt);
 
   -- right wall --
@@ -64,7 +65,7 @@ mh_thickness = 1;
 
   mh_r_primt = gr.cube('mh_r_primt');
   mh_r_primt:scale(1, mh_h, mh_b);
-  mh_r_primt:set_material(black);
+  mh_r_primt:set_material(castle_wall);
   mh_r_node:add_child(mh_r_primt);
 
   -- front wall --
@@ -74,7 +75,7 @@ mh_thickness = 1;
 
   mh_f_primt = gr.cube('mh_f_primt');
   mh_f_primt:scale(mh_w, mh_h, mh_thickness);
-  mh_f_primt:set_material(black);
+  mh_f_primt:set_material(castle_wall);
   mh_f_node:add_child(mh_f_primt);
 
 -- end main hall --
@@ -97,7 +98,7 @@ battlement_thickness = mh_thickness;
 
     battlement_primt = gr.cube("battlement_primt_" .. i);
     battlement_primt:scale(battlement_w, battlement_h, battlement_thickness);
-    battlement_primt:set_material(black)
+    battlement_primt:set_material(castle_wall)
     battlement_node:add_child(battlement_primt)
 
   end
@@ -114,7 +115,7 @@ battlement_thickness = mh_thickness;
 
     battlement_primt = gr.cube("battlement_primt_" .. i);
     battlement_primt:scale(battlement_thickness, battlement_h, battlement_w);
-    battlement_primt:set_material(black)
+    battlement_primt:set_material(castle_wall)
     battlement_node:add_child(battlement_primt)
 
   end

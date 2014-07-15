@@ -20,13 +20,13 @@ public:
   virtual ~PhongMaterial();
 
   virtual void apply_gl() const;
+  int m_texture;
 
 private:
   Colour m_kd;
   Colour m_ks;
 
   double m_shininess;
-  int m_texture;
 };
 
 

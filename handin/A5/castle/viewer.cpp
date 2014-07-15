@@ -106,6 +106,9 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   // Clear framebuffer
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+  // enable texture
+  glEnable( GL_TEXTURE_2D );
+
 /*
   float light[4] = {0.7, 0.7, 0.5, 1};
   float light1[4] = {0.1, 0.1, 0.1, 1};
@@ -334,8 +337,10 @@ void Viewer::reset_all() {
 
   vToggleDir(DIR_NONE);
 
+/*
   glDisable(GL_DEPTH_TEST);
   glDisable(GL_CULL_FACE);
+*/
 
   invalidate();
 }
@@ -504,7 +509,7 @@ void Viewer::keypress() {
     }
 
   } else if (m_mode == ROTATE) {
-    double r = 0.8 * transform_dir;
+    double r = 2.0 * transform_dir;
     Vector3D m_r = m_camera_rotate;
 
     if (m_keypress == UP || m_keypress == DOWN) {

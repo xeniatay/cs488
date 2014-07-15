@@ -25,7 +25,7 @@ blue = gr.material({0.0, 0.0, 1.0}, {0.1, 0.1, 0.1}, 10, -1 );
 green = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 10, -1);
 white = gr.material({1.0, 1.0, 1.0}, {0.1, 0.1, 0.1}, 10, -1);
 black = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10, 1);
-castle_wall = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10, 1); -- texture hardcoded as 1
+castle_wall = gr.material({0.6, 0.5, 0.5}, {0.1, 0.1, 0.1}, 10, 1); -- texture hardcoded as 1
 
 ---- rootnode ----
 rootnode = gr.node('rootnode');

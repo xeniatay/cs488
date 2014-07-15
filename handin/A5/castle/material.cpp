@@ -19,7 +19,9 @@ void PhongMaterial::apply_gl() const
 {
   // Perform OpenGL calls necessary to set up this material.
   //std::cerr << "Apply Material: " << m_kd << std::endl;
-  if (m_texture == -1) {
-    glColor4d( m_kd.R(), m_kd.G(), m_kd.B(), 1.0);
+  glColor4d( m_kd.R(), m_kd.G(), m_kd.B(), 1.0);
+  if (m_texture != -1) {
+    // map texture to shape
+    glBindTexture( GL_TEXTURE_2D, m_texture);
   }
 }

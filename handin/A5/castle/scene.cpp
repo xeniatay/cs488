@@ -145,14 +145,11 @@ void GeometryNode::walk_gl(bool picking)
     cerr << "material applied" << endl;
   }
 
-  //cerr << "GeometryNode " << m_name << " End Walk GL" << endl;
-
-
   glPushMatrix();
   gl_mult_trans();
 
-  this->m_primitive->walk_gl(false);
-  //cerr << m_name << "'s sphere was drawn" << endl;
+  PhongMaterial* p_material = (PhongMaterial*) m_material;
+  this->m_primitive->walk_gl(p_material->m_texture);
 
   for( std::list<SceneNode*>::const_iterator i = m_children.begin(); i != m_children.end(); ++i ) {
     SceneNode *node = (*i);
@@ -160,6 +157,8 @@ void GeometryNode::walk_gl(bool picking)
   }
 
   glPopMatrix();
+
+  //cerr << "GeometryNode " << m_name << " End Walk GL" << endl;
 
 }
 

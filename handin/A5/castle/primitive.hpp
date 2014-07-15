@@ -25,6 +25,7 @@ public:
   Cube();
   virtual ~Cube();
   void draw_cube(double x, double y, double z, double r, double g, double b, double a);
+  void draw_face(Matrix4x4 coords, Matrix4x4 texcoords, double r, double g, double b, double a);
   void walk_gl(bool picking);
   GLuint dl_cube;
 };

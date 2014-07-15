@@ -110,6 +110,18 @@ bool AppWindow::on_key_press_event( GdkEventKey *ev ) {
     m_viewer.set_options(m_viewer.BACKFACE_CULL);
   } else if (ev->keyval == 'f' || ev->keyval == 'F') {
     m_viewer.set_options(m_viewer.FRONTFACE_CULL);
+  } else if (ev->keyval == 65362) {
+    // up
+    m_viewer.keypress_up();
+  } else if (ev->keyval == 65364) {
+    // down
+    m_viewer.keypress_down();
+  } else if (ev->keyval == 65361) {
+    // left
+    m_viewer.keypress_left();
+  } else if (ev->keyval == 65363) {
+    // right
+    m_viewer.keypress_right();
   }
 
   //return true;

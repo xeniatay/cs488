@@ -20,18 +20,18 @@ s3:set_material(green)
 ]]
 
 -- materials
-red = gr.material({1.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10);
-blue = gr.material({0.0, 0.0, 1.0}, {0.1, 0.1, 0.1}, 10);
-green = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 10);
-white = gr.material({1.0, 1.0, 1.0}, {0.1, 0.1, 0.1}, 10);
-black = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10);
+red = gr.material({1.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10, -1);
+blue = gr.material({0.0, 0.0, 1.0}, {0.1, 0.1, 0.1}, 10, -1 );
+green = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 10, -1);
+white = gr.material({1.0, 1.0, 1.0}, {0.1, 0.1, 0.1}, 10, -1);
+black = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10, 1);
 
 ---- rootnode ----
 rootnode = gr.node('rootnode');
 
---[[
+--[[]]
 -- main hall --
--- centered on screen, cube that makes up body of castle --
+-- centeblack on screen, cube that makes up body of castle --
 mh_w = 40
 mh_h = 30
 mh_b = 20
@@ -44,7 +44,7 @@ mh_thickness = 1;
 
   mh_b_primt = gr.cube('mh_b_primt');
   mh_b_primt:scale(mh_w, mh_h, mh_thickness);
-  mh_b_primt:set_material(red);
+  mh_b_primt:set_material(black);
   mh_b_node:add_child(mh_b_primt);
 
   -- left wall --
@@ -54,7 +54,7 @@ mh_thickness = 1;
 
   mh_l_primt = gr.cube('mh_l_primt');
   mh_l_primt:scale(1, mh_h, mh_b);
-  mh_l_primt:set_material(green);
+  mh_l_primt:set_material(black);
   mh_l_node:add_child(mh_l_primt);
 
   -- right wall --
@@ -64,7 +64,7 @@ mh_thickness = 1;
 
   mh_r_primt = gr.cube('mh_r_primt');
   mh_r_primt:scale(1, mh_h, mh_b);
-  mh_r_primt:set_material(green);
+  mh_r_primt:set_material(black);
   mh_r_node:add_child(mh_r_primt);
 
   -- front wall --
@@ -74,7 +74,7 @@ mh_thickness = 1;
 
   mh_f_primt = gr.cube('mh_f_primt');
   mh_f_primt:scale(mh_w, mh_h, mh_thickness);
-  mh_f_primt:set_material(blue);
+  mh_f_primt:set_material(black);
   mh_f_node:add_child(mh_f_primt);
 
 -- end main hall --
@@ -120,7 +120,7 @@ battlement_thickness = mh_thickness;
   end
 
 -- end castle battlements --
-]]
+
 --rootnode:translate(0, 0, 5.0)
 rootnode:scale(0.2, 0.2, 0.2);
 --rootnode:rotate('y', -20.0)

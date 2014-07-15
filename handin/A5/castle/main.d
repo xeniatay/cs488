@@ -1113,5 +1113,5 @@ main.o main.d : main.cpp /usr/include/c++/4.6/iostream \
  /usr/include/gtkglextmm-1.2/gtkmm/gl/init.h \
  /usr/include/gtkglextmm-1.2/gtkmm/gl/widget.h \
  /usr/include/gtkglextmm-1.2/gtkmm/gl/drawingarea.h appwindow.hpp \
- viewer.hpp scene.hpp algebra.hpp primitive.hpp /usr/include/GL/glu.h \
- material.hpp scene_lua.hpp
+ viewer.hpp /usr/include/GL/glu.h scene.hpp algebra.hpp primitive.hpp \
+ material.hpp trackball.hpp events.hpp image.hpp a2.hpp scene_lua.hpp

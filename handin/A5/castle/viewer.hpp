@@ -3,9 +3,22 @@
 
 #include <gtkmm.h>
 #include <gtkglmm.h>
+#include <iostream>
+#include <math.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <string>
+#include <vector>
+
 #include "scene.hpp"
 #include "primitive.hpp"
-#include <vector>
+#include "algebra.hpp"
+#include "trackball.hpp"
+#include "events.hpp"
+#include "material.hpp"
+#include "image.hpp"
+#include "a2.hpp"
+
 
 using std::vector;
 
@@ -17,8 +30,17 @@ class Viewer : public Gtk::GL::DrawingArea {
     Viewer();
     virtual ~Viewer();
 
+    // camera view
+    void keypress_up();
+    void keypress_down();
+    void keypress_left();
+    void keypress_right();
+    Vector3D m_camera_scale;
+
     // texture mapping
-    void map_texture();
+    void map_texture(GLuint texture);
+    GLuint t_castle_wall;
+    GLuint texture_count;
     //void load_image(Image img, string filename, int width, int height, int depth);
 
 

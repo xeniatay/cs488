@@ -193,10 +193,12 @@ int gr_material_cmd(lua_State* L)
     lua_pop(L, 2);
   }
   double shininess = luaL_checknumber(L, 3);
+  int texture = luaL_checknumber(L, 4);
 
   data->material = new PhongMaterial(Colour(kd[0], kd[1], kd[2]),
                                      Colour(ks[0], ks[1], ks[2]),
-                                     shininess);
+                                     shininess,
+                                     texture);
 
   luaL_newmetatable(L, "gr.material");
   lua_setmetatable(L, -2);

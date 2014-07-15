@@ -1,14 +1,4 @@
 #include "viewer.hpp"
-#include "algebra.hpp"
-#include <iostream>
-#include <math.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include "trackball.hpp"
-#include "events.hpp"
-#include "material.hpp"
-#include "image.hpp"
-#include <string>
 
 using std::cerr;
 using std::endl;
@@ -89,6 +79,8 @@ void Viewer::on_realize()
 
   // default mode
   m_mode = POSITION_OR_ORIENTATION;
+  texture_count = 0;
+  map_texture(t_castle_wall);
 }
 
 bool Viewer::on_expose_event(GdkEventExpose* event)
@@ -114,6 +106,7 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   // Clear framebuffer
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+/*
   float light[4] = {0.7, 0.7, 0.5, 1};
   float light1[4] = {0.1, 0.1, 0.1, 1};
   float light2[4] = {10, 10, 10, 30};
@@ -131,6 +124,7 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   glLightfv(GL_LIGHT0, GL_SPECULAR, light2);
   glLightfv(GL_LIGHT0, GL_DIFFUSE, light1);
   glLightfv(GL_LIGHT0, GL_AMBIENT, light);
+  */
 
   // Trackball stuff
   Matrix *mRot = getMRot();
@@ -139,14 +133,26 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   glLoadMatrixd((GLdouble *) mTrans);
   glMultMatrixd((GLdouble *) mRot);
 
+  cerr << "camera sclae: " << m_camera_scale << endl;
+  glScaled(m_camera_scale[0], m_camera_scale[1], m_camera_scale[2]);
+
   // Draw stuff
   m_scenenode->walk_gl();
+
+  // map texture to shape
+  glEnable( GL_TEXTURE_2D );
+  glBindTexture( GL_TEXTURE_2D, 1);
+  glBegin( GL_QUADS );
+  glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
+  glTexCoord2d(10.0,0.0); glVertex2d(10.0,0.0);
+  glTexCoord2d(10.0,10.0); glVertex2d(10.0,10.0);
+  glTexCoord2d(0.0,10.0); glVertex2d(0.0,10.0);
+  glEnd();
 
   if (m_circle) {
     draw_trackball_circle();
   }
 
-  map_texture();
 
   // Swap the contents of the front and back buffers so we see what we
   // just drew. This should only be done if double buffering is enabled.
@@ -321,6 +327,7 @@ void Viewer::reset_joints() {
 }
 
 void Viewer::reset_all() {
+  m_camera_scale = Vector3D(1, 1, 1);
   m_circle = false;
   m_axis_dir = 1;
   x_origin = 0;
@@ -448,9 +455,7 @@ void Viewer::set_pickings(Picking picked) {
     for( std::list<GeometryNode*>::const_iterator i = all_geonodes.begin(); i != all_geonodes.end(); ++i ) {
       GeometryNode* node = (*i);
       if (node->m_geo_id == picked) {
-        PhongMaterial *material = new PhongMaterial(Colour(1.0, 1.0, 0.0),
-                                             Colour(0.1, 0.1, 0.1),
-                                             10);
+        PhongMaterial *material = new PhongMaterial(Colour(1.0, 1.0, 0.0), Colour(0.1, 0.1, 0.1), 10, -1);
         node->set_material(material);
       }
     }
@@ -467,11 +472,12 @@ void Viewer::load_image(Image img, string filename, int width, int height, int d
 }
 */
 
-void Viewer::map_texture() {
-  GLuint texture;
+// from: http://www.nullterminator.net/gltexture.html
+void Viewer::map_texture(GLuint texture) {
+  texture_count++;
 
   // allocate a texture name
-  glGenTextures( 1, &texture );
+  glGenTextures( texture_count, &texture );
 
   // select our current texture
   glBindTexture( GL_TEXTURE_2D, texture );
@@ -480,32 +486,45 @@ void Viewer::map_texture() {
   glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
 
   // when texture area is small, bilinear filter the closest mipmap
-glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
                  GL_LINEAR_MIPMAP_NEAREST );
-// when texture area is large, bilinear filter the original
-glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+  // when texture area is large, bilinear filter the original
+  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
-// the texture wraps over at the edges (repeat)
-glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+  // the texture wraps over at the edges (repeat)
+  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 
   int width = 300, height = 300;
   Image img(width, height, 3);
-  string filename = "assets/castle_wall_texture.png";
+  string filename = "assets/castle_wall_texture_3.png";
   img.loadPng(filename);
 
-// build our texture mipmaps
-gluBuild2DMipmaps( GL_TEXTURE_2D, 3, width, height,
-                   GL_RGB, GL_UNSIGNED_BYTE, img.data() );
-
-//
-glEnable( GL_TEXTURE_2D );
-glBindTexture( GL_TEXTURE_2D, texture );
-glBegin( GL_QUADS );
-glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
-glTexCoord2d(10.0,0.0); glVertex2d(10.0,0.0);
-glTexCoord2d(10.0,10.0); glVertex2d(1.0,10.0);
-glTexCoord2d(0.0,10.0); glVertex2d(0.0,10.0);
-glEnd();
+  // build our texture mipmaps
+  gluBuild2DMipmaps( GL_TEXTURE_2D, 3, width, height, GL_RGB, GL_UNSIGNED_BYTE, img.data() );
 
 }
+
+void Viewer::keypress_up() {
+  // zoom in
+  double zoom = 0.15;
+  Vector3D scale = m_camera_scale;
+  m_camera_scale = Vector3D(scale[0] + zoom, scale[1] + zoom, scale[2] + zoom);
+  on_expose_event( NULL );
+}
+
+void Viewer::keypress_down() {
+  // zoom out
+  double zoom = 0.15;
+  Vector3D scale = m_camera_scale;
+  m_camera_scale = Vector3D(scale[0] - zoom, scale[1] - zoom, scale[2] - zoom);
+  //m_camera_scale = Vector3D(scale[0] * zoom, scale[1] * zoom, scale[2] * zoom);
+  on_expose_event( NULL );
+}
+
+void Viewer::keypress_left() {
+}
+
+void Viewer::keypress_right() {
+}
+

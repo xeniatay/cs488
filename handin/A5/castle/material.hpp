@@ -16,7 +16,7 @@ protected:
 
 class PhongMaterial : public Material {
 public:
-  PhongMaterial(const Colour& kd, const Colour& ks, double shininess);
+  PhongMaterial(const Colour& kd, const Colour& ks, double shininess, int texture);
   virtual ~PhongMaterial();
 
   virtual void apply_gl() const;
@@ -26,6 +26,7 @@ private:
   Colour m_ks;
 
   double m_shininess;
+  int m_texture;
 };
 
 

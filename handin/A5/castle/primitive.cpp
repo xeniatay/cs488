@@ -74,50 +74,90 @@ void Cube::draw_cube(double x = 0, double y = 0, double z = 2, double r = 0, dou
   //bool multicolour = (m_mode == MULTICOLOURED);
   bool multicolour = true;
   double r_val = 0, g_val = 0, b_val = 0;
+  Matrix4x4 facecoords, texcoords;
+  Vector4D bl, tl, tr, br;
   std::cerr << "cube is drawn" << std::endl;
+
+  // map texture to shape
+  glEnable( GL_TEXTURE_2D );
+  glBindTexture( GL_TEXTURE_2D, 1);
+
+  Vector4D tbl(0, 0, 0, 0);
+  Vector4D ttl(0, 10, 0, 0);
+  Vector4D ttr(10, 10, 0, 0);
+  Vector4D tbr(10, 0, 0, 0);
+  texcoords = Matrix4x4(tbl, ttl, ttr, tbr);
 
   glBegin(GL_QUADS);
 
-    r_val = fmod((r + 0.4), 1);
-    //multicolour ? glColor4d( r_val, g, b, a) : glColor4d(r, g, b, a);
-    glVertex3d (x, y, z); // bottom left (front)
-    glVertex3d (x, y + 1, z); // top left (front)
-    glVertex3d (x + 1, y + 1, z); // top right (front)
-    glVertex3d (x + 1, y, z); // bottom right (front)
+    // front face
+    bl = Vector4D(x, y, z, 0);
+    tl = Vector4D(x, y + 1, z, 0);
+    tr = Vector4D(x + 1, y + 1, z, 0);
+    br = Vector4D(x + 1, y, z, 0);
+    facecoords = Matrix4x4(bl, tl, tr, br);
+    draw_face(facecoords, texcoords, r, g, b, a);
 
-    r_val = fmod((r + 0.8), 1);
-    //multicolour ? glColor4d( r_val, g, b, a) : glColor4d(r, g, b, a);
-    glVertex3d (x, y, z + 1); // bottom left (back)
-    glVertex3d (x, y + 1, z + 1); // top left (back)
-    glVertex3d (x + 1, y + 1, z + 1); // top right (back)
-    glVertex3d (x + 1, y, z + 1); // bottom right (back)
+    // back face
+    bl = Vector4D(x, y, z + 1, 0);
+    tl = Vector4D(x, y + 1, z + 1, 0);
+    tr = Vector4D(x + 1, y + 1, z + 1, 0);
+    br = Vector4D(x + 1, y, z + 1, 0);
+    facecoords = Matrix4x4(bl, tl, tr, br);
+    draw_face(facecoords, texcoords, r, g, b, a);
 
-    g_val = fmod((g + 0.4), 1);
-    //multicolour ? glColor4d( r, g_val, b, a) : glColor4d(r, g, b, a);
-    glVertex3d (x, y, z); // bottom left (left)
-    glVertex3d (x, y + 1, z); // top left (left)
-    glVertex3d (x, y + 1, z + 1); // top right (left)
-    glVertex3d (x, y, z + 1); // bottom right (left)
+    // left face
+    bl = Vector4D(x, y, z, 0);
+    tl = Vector4D(x, y + 1, z, 0);
+    tr = Vector4D(x, y + 1, z + 1, 0);
+    br = Vector4D(x, y, z + 1, 0);
+    facecoords = Matrix4x4(bl, tl, tr, br);
+    draw_face(facecoords, texcoords, r, g, b, a);
 
-    g_val = fmod((r + 0.8), 1);
-    //multicolour ? glColor4d( r, g_val, b, a) : glColor4d(r, g, b, a);
-    glVertex3d (x + 1, y, z); // bottom left (right)
-    glVertex3d (x + 1, y + 1, z); // top left (right)
-    glVertex3d (x + 1, y + 1, z + 1); // top right (right)
-    glVertex3d (x + 1, y, z + 1); // bottom right (right)
+    // right face
+    bl = Vector4D(x + 1, y, z, 0);
+    tl = Vector4D(x + 1, y + 1, z, 0);
+    tr = Vector4D(x + 1, y + 1, z + 1, 0);
+    br = Vector4D(x + 1, y, z + 1, 0);
+    facecoords = Matrix4x4(bl, tl, tr, br);
+    draw_face(facecoords, texcoords, r, g, b, a);
 
-    b_val = fmod((b + 0.4), 1);
-    //multicolour ? glColor4d( r, g, b_val, a) : glColor4d(r, g, b, a);
-    glVertex3d (x, y + 1, z); // bottom left (top)
-    glVertex3d (x, y + 1, z + 1); // top left (top)
-    glVertex3d (x + 1, y + 1, z + 1); // top right (top)
-    glVertex3d (x + 1, y + 1, z); // bottom right (top)
+    // top face
+    bl = Vector4D(x, y + 1, z, 0);
+    tl = Vector4D(x, y + 1, z + 1, 0);
+    tr = Vector4D(x + 1, y + 1, z + 1, 0);
+    br = Vector4D(x + 1, y + 1, z, 0);
+    facecoords = Matrix4x4(bl, tl, tr, br);
+    draw_face(facecoords, texcoords, r, g, b, a);
 
-    b_val = fmod((b + 0.8), 1);
-    //multicolour ? glColor4d( r, g, b_val, a) : glColor4d(r, g, b, a);
-    glVertex3d (x, y, z); // bottom left (bottom)
-    glVertex3d (x, y, z + 1); // top left (bottom)
-    glVertex3d (x + 1, y, z + 1); // top right (bottom)
-    glVertex3d (x + 1, y, z); // bottom right (bottom)
+    // bottom face
+    bl = Vector4D(x, y, z, 0);
+    tl = Vector4D(x, y, z + 1, 0);
+    tr = Vector4D(x + 1, y, z + 1, 0);
+    br = Vector4D(x + 1, y, z, 0);
+    facecoords = Matrix4x4(bl, tl, tr, br);
+    draw_face(facecoords, texcoords, r, g, b, a);
+
   glEnd();
+}
+
+void Cube::draw_face(Matrix4x4 coords, Matrix4x4 texcoords, double r, double g, double b, double a) {
+  //multicolour ? glColor4d( r_val, g, b, a) : glColor4d(r, g, b, a);
+
+  // bottom left
+  glTexCoord2d(texcoords[0][0], texcoords[0][1]);
+  glVertex3d(coords[0][0], coords[0][1], coords[0][2]);
+
+  // top left
+  glTexCoord2d(texcoords[1][0], texcoords[1][1]);
+  glVertex3d(coords[1][0], coords[1][1], coords[1][2]);
+
+  // top right
+  glTexCoord2d(texcoords[2][0], texcoords[2][1]);
+  glVertex3d(coords[2][0], coords[2][1], coords[2][2]);
+
+  // bottom right
+  glTexCoord2d(texcoords[3][0], texcoords[3][1]);
+  glVertex3d(coords[3][0], coords[3][1], coords[3][2]);
+
 }

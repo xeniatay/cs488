@@ -79,11 +79,6 @@ void Texture::init()
 
   img_png = new Image(img_h, img_w, 3);
 
-/*
-  // resize img
-  size_t img_size = 3 * img_w * img_h;
-  img = new GLubyte[img_size];
-  */
   // allocate a texture name
   glGenTextures( tex_count, &texture );
 
@@ -92,6 +87,7 @@ void Texture::init()
 
   surface_test();
   map_texture();
+  glColor3f(0.0, 1.0, 0.0);
 }
 
 // from: http://www.nullterminator.net/gltexture.html

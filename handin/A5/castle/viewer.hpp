@@ -21,6 +21,8 @@
 #include "perlinnoise.hpp"
 
 
+#include <GL/glut.h>
+
 using std::vector;
 
 // The "main" OpenGL widget
@@ -55,6 +57,10 @@ class Viewer : public Gtk::GL::DrawingArea {
 
     Keypress m_keypress;
     void set_keypress(Keypress kp) { m_keypress = kp; }
+    void fly_camera();
+
+    // lighting
+    void init_light();
 
     // texture mapping
     void map_texture(GLuint texture);

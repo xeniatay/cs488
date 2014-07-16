@@ -87,11 +87,8 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
 {
   //cerr << "On expose event!" << endl;
   Glib::RefPtr<Gdk::GL::Drawable> gldrawable = get_gl_drawable();
-
   if (!gldrawable) return false;
-
-  if (!gldrawable->gl_begin(get_gl_context()))
-    return false;
+  if (!gldrawable->gl_begin(get_gl_context())) return false;
 
   // Set up for perspective drawing
   glMatrixMode(GL_PROJECTION);
@@ -99,71 +96,32 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   glViewport(0, 0, get_width(), get_height());
   gluPerspective(40.0, (GLfloat)get_width()/(GLfloat)get_height(), 0.01, 1000.0);
 
-  // change to model view for drawing
+  // Change to model view for drawing
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 
   // Clear framebuffer
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  // enable texture
+  // Enable texture
   glEnable( GL_TEXTURE_2D );
-
-/*
-  float light[4] = {0.7, 0.7, 0.5, 1};
-  float light1[4] = {0.1, 0.1, 0.1, 1};
-  float light2[4] = {10, 10, 10, 30};
 
   // Set up lighting
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-  glEnable(GL_COLOR_MATERIAL);
-  glEnable(GL_NORMALIZE);
-  glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0f);         // sets shininess
-  glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);      // tell opengl glColor3f effects the ambient and diffuse properties of material
-  glMaterialf(GL_FRONT_AND_BACK, GL_SPECULAR, 0.5f);
+  //init_light();
 
-  glLightfv(GL_LIGHT0, GL_POSITION, light2);
-  glLightfv(GL_LIGHT0, GL_SPECULAR, light2);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, light1);
-  glLightfv(GL_LIGHT0, GL_AMBIENT, light);
-  */
-
-  // Trackball stuff
+  // Trackball
   Matrix *mRot = getMRot();
   Matrix *mTrans = getMTrans();
-  //glPushMatrix();
   glLoadMatrixd((GLdouble *) mTrans);
   glMultMatrixd((GLdouble *) mRot);
+  if (m_circle) { draw_trackball_circle(); }
 
-  cerr << "camera scale: " << m_camera_scale << endl;
-  glScaled(m_camera_scale[0], m_camera_scale[1], m_camera_scale[2]);
-  cerr << "camera rotate: " << m_camera_rotate << endl;
-  glRotated(m_camera_rotate[0], 1, 0, 0);
-  glRotated(m_camera_rotate[1], 0, 1, 0);
-  glRotated(m_camera_rotate[2], 0, 0, 1);
-  cerr << "camera translate: " << m_camera_translate << endl;
-  glTranslated(m_camera_translate[0], m_camera_translate[1], m_camera_translate[2]);
+  // Camera view
+  fly_camera();
 
-  // Draw stuff
+  // Draw scene
   m_scenenode->walk_gl();
-
-/* texture test
-  // map texture to shape
-  glEnable( GL_TEXTURE_2D );
-  glBindTexture( GL_TEXTURE_2D, 1);
-  glBegin( GL_QUADS );
-  glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
-  glTexCoord2d(10.0,0.0); glVertex2d(10.0,0.0);
-  glTexCoord2d(10.0,10.0); glVertex2d(10.0,10.0);
-  glTexCoord2d(0.0,10.0); glVertex2d(0.0,10.0);
-  glEnd();
-*/
-
-  if (m_circle) {
-    draw_trackball_circle();
-  }
-
+  //texture_test();
 
   // Swap the contents of the front and back buffers so we see what we
   // just drew. This should only be done if double buffering is enabled.
@@ -192,7 +150,6 @@ bool Viewer::on_configure_event(GdkEventConfigure* event)
   gluPerspective(40.0, (GLfloat)event->width/(GLfloat)event->height, 0.1, 1000.0);
 
   // Reset to modelview matrix mode
-
   glMatrixMode(GL_MODELVIEW);
 
   gldrawable->gl_end();
@@ -418,3 +375,40 @@ void Viewer::keypress() {
   invalidate();
 }
 
+void Viewer::init_light() {
+  GLfloat ambient[] = {0.2, 0.2, 0.2, 1.0};
+  GLfloat position[] = {0.0, 0.0, 2.0, 1.0};
+  GLfloat mat_diffuse[] = {0.6, 0.6, 0.6, 1.0};
+  GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
+  GLfloat mat_shininess[] = {50.0};
+
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
+
+  glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
+  glLightfv(GL_LIGHT0, GL_POSITION, position);
+
+  glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+  glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+  glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+}
+
+void Viewer::fly_camera() {
+  glScaled(m_camera_scale[0], m_camera_scale[1], m_camera_scale[2]);
+  glRotated(m_camera_rotate[0], 1, 0, 0);
+  glRotated(m_camera_rotate[1], 0, 1, 0);
+  glRotated(m_camera_rotate[2], 0, 0, 1);
+  glTranslated(m_camera_translate[0], m_camera_translate[1], m_camera_translate[2]);
+}
+
+void texture_test() {
+  // map texture to shape
+  glEnable( GL_TEXTURE_2D );
+  glBindTexture( GL_TEXTURE_2D, 1);
+  glBegin( GL_QUADS );
+  glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
+  glTexCoord2d(10.0,0.0); glVertex2d(10.0,0.0);
+  glTexCoord2d(10.0,10.0); glVertex2d(10.0,10.0);
+  glTexCoord2d(0.0,10.0); glVertex2d(0.0,10.0);
+  glEnd();
+}

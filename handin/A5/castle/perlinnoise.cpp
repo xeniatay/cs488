@@ -24,6 +24,7 @@ double smoothed_noise_1(double x, double y) {
   return corners + sides + center;
 }
 
+// cubic interpolation
 double interpolate(double a, double b, double x) {
   double ft = x * M_PI;
   double f = (1 - cos(ft) * 0.5);

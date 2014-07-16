@@ -1,4 +1,5 @@
 #include "viewer.hpp"
+#include "castle_terrain.hpp"
 
 using std::cerr;
 using std::endl;
@@ -122,6 +123,10 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   // Draw scene
   m_scenenode->walk_gl();
   //texture_test();
+
+  ct_init();
+  ct_display();
+  ct_reshape();
 
   // Swap the contents of the front and back buffers so we see what we
   // just drew. This should only be done if double buffering is enabled.

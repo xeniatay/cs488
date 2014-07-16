@@ -20,9 +20,6 @@
 #include "a2.hpp"
 #include "perlinnoise.hpp"
 
-
-#include <GL/glut.h>
-
 using std::vector;
 
 // The "main" OpenGL widget

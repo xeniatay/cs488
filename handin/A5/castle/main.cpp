@@ -12,6 +12,10 @@ int main(int argc, char** argv)
   // Initialize OpenGL
   Gtk::GL::init(argc, argv);
 
+  char *myargv [1];
+  int myargc = 1;
+  myargv[0] = "ct";
+
   std::string filename = "castle.lua";
   if (argc >= 2) {
     filename = argv[1];

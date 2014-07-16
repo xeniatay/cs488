@@ -16,9 +16,8 @@
 #include "trackball.hpp"
 #include "events.hpp"
 #include "material.hpp"
-#include "image.hpp"
 #include "a2.hpp"
-#include "perlinnoise.hpp"
+#include "texture.hpp"
 
 using std::vector;
 
@@ -59,10 +58,9 @@ class Viewer : public Gtk::GL::DrawingArea {
     // lighting
     void init_light();
 
-    // texture mapping
-    void map_texture(GLuint texture);
-    GLuint t_castle_wall;
-    GLuint texture_count;
+    // texture mapping and perlin noise
+    Texture *m_texture;
+
 
     // A useful function that forces this widget to rerender. If you
     // want to render a new frame, do not call on_expose_event

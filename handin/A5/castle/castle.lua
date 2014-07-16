@@ -122,7 +122,7 @@ battlement_thickness = mh_thickness;
 
 -- end castle battlements --
 
---rootnode:translate(0, 0, 5.0)
+rootnode:translate(8.0, 0, 0.0)
 rootnode:scale(0.2, 0.2, 0.2);
 --rootnode:rotate('y', -20.0)
 

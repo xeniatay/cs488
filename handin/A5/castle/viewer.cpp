@@ -1,5 +1,4 @@
 #include "viewer.hpp"
-#include "castle_terrain.hpp"
 
 using std::cerr;
 using std::endl;
@@ -80,8 +79,6 @@ void Viewer::on_realize()
 
   // default mode
   m_mode = SCALE;
-  texture_count = 0;
-  map_texture(t_castle_wall);
 }
 
 bool Viewer::on_expose_event(GdkEventExpose* event)
@@ -120,13 +117,14 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   // Camera view
   fly_camera();
 
+  //m_texture->display();
+
   // Draw scene
   m_scenenode->walk_gl();
-  //texture_test();
 
-  ct_init();
-  ct_display();
-  ct_reshape();
+  glColor3f(1.0, 1.0, 1.0);
+  glEvalMesh2(GL_FILL, 0, 20, 0, 20);
+  glFlush();
 
   // Swap the contents of the front and back buffers so we see what we
   // just drew. This should only be done if double buffering is enabled.
@@ -255,9 +253,13 @@ void Viewer::draw_trackball_circle()
 }
 
 void Viewer::reset_all() {
+
   m_camera_scale = Vector3D(1, 1, 1);
   m_camera_translate = Vector3D();
   m_camera_rotate = Vector3D();
+
+  m_texture = new Texture;
+  m_texture->init();
 
   m_circle = false;
   m_axis_dir = 1;
@@ -307,44 +309,6 @@ void Viewer::set_options(Option option) {
 
 }
 
-/*
-void Viewer::load_image(Image img, string filename, int width, int height, int depth) {
-  img.loadPng(filename);
-}
-*/
-
-// from: http://www.nullterminator.net/gltexture.html
-void Viewer::map_texture(GLuint texture) {
-  texture_count++;
-
-  // allocate a texture name
-  glGenTextures( texture_count, &texture );
-
-  // select our current texture
-  glBindTexture( GL_TEXTURE_2D, texture );
-
-  // select modulate to mix texture with color for shading
-  glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-
-  // when texture area is small, bilinear filter the closest mipmap
-  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                 GL_LINEAR_MIPMAP_NEAREST );
-  // when texture area is large, bilinear filter the original
-  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-
-  // the texture wraps over at the edges (repeat)
-  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-
-  int width = 300, height = 300;
-  Image img(width, height, 3);
-  string filename = "assets/castle_wall_texture_1.png";
-  img.loadPng(filename);
-
-  // build our texture mipmaps
-  gluBuild2DMipmaps( GL_TEXTURE_2D, 3, width, height, GL_RGB, GL_UNSIGNED_BYTE, img.data() );
-
-}
 
 void Viewer::keypress() {
 
@@ -406,14 +370,3 @@ void Viewer::fly_camera() {
   glTranslated(m_camera_translate[0], m_camera_translate[1], m_camera_translate[2]);
 }
 
-void texture_test() {
-  // map texture to shape
-  glEnable( GL_TEXTURE_2D );
-  glBindTexture( GL_TEXTURE_2D, 1);
-  glBegin( GL_QUADS );
-  glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
-  glTexCoord2d(10.0,0.0); glVertex2d(10.0,0.0);
-  glTexCoord2d(10.0,10.0); glVertex2d(10.0,10.0);
-  glTexCoord2d(0.0,10.0); glVertex2d(0.0,10.0);
-  glEnd();
-}

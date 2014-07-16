@@ -49,7 +49,7 @@ double interpolated_noise_1(double x, double y) {
   return interpolate(i1, i2, frac_y);
 }
 
-double perlin_2d(double x, double y) {
+double perlin2d(double x, double y) {
   double total = 0;
   //todo
   double p = 1; // persistence

@@ -32,7 +32,9 @@ class Texture {
     void makeImage();
     void init();
     void map_texture();
+    void map_surface();
     void texture_test();
+    void surface_test();
 
     // GLUT window
     void draw();

@@ -90,6 +90,7 @@ void Texture::init()
   // activate our current texture
   glBindTexture( GL_TEXTURE_2D, texture );
 
+  surface_test();
   map_texture();
 }
 
@@ -97,42 +98,47 @@ void Texture::init()
 // and http://www.glprogramming.com/red/chapter12.html
 void Texture::map_texture() {
   cerr << "map texture" << endl;
-  glMap2f(GL_MAP2_VERTEX_3, 0, 1, 3, 4,
-         0, 1, 12, 4, &ctrlpoints[0][0][0]);
-  glMap2f(GL_MAP2_TEXTURE_COORD_2, 0, 1, 2, 2,
-         0, 1, 4, 2, &texpts[0][0][0]);
-  glEnable(GL_MAP2_TEXTURE_COORD_2);
-  glEnable(GL_MAP2_VERTEX_3);
-  glMapGrid2f(20, 0.0, 1.0, 20, 0.0, 1.0);
 
   // select modulate to mix texture with color for shading
   glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-    // TODO decal was used for surface???
-    //glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 
   // when texture area is small, bilinear filter the closest mipmap
   glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST );
   // when texture area is large, bilinear filter the original
   glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-    // TODO idk what surface does instead
-    /*
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    */
-
   // the texture wraps over at the edges (repeat)
   glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
   glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 
   makeImage();
 
-  // mipmaps from orig
+  // mipmaps
   //gluBuild2DMipmaps( GL_TEXTURE_2D, 3, img_w, img_h, GL_RGB, GL_UNSIGNED_BYTE, img_png->data() );
   gluBuild2DMipmaps( GL_TEXTURE_2D, 3, img_w, img_h, GL_RGB, GL_UNSIGNED_BYTE, img );
-  // from surface
-  //glTexImage2D(GL_TEXTURE_2D, 0, 3, img_w, img_h, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
+}
 
-  // from surface
+void Texture::map_surface() {
+
+  cerr << "map surface" << endl;
+
+  // Surface uses decal
+  //glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+
+  // the texture wraps over at the edges (repeat)
+  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+
+  // Surface doesn't use bilinear?
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+  makeImage();
+
+  // not mipmaps
+  glTexImage2D(GL_TEXTURE_2D, 0, 3, img_w, img_h, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
+  //glTexImage2D(GL_TEXTURE_2D, 0, 3, img_w, img_h, 0, GL_RGB, GL_UNSIGNED_BYTE, img_png->data());
+
+  // enable texture stuff
   glEnable(GL_TEXTURE_2D);
   glEnable(GL_DEPTH_TEST);
   glShadeModel (GL_FLAT);
@@ -185,4 +191,13 @@ void Texture::texture_test() {
   glTexCoord2d(10.0,10.0); glVertex2d(10.0,10.0);
   glTexCoord2d(0.0,10.0); glVertex2d(0.0,10.0);
   glEnd();
+}
+
+void Texture::surface_test() {
+  // enable surface
+  glMap2f(GL_MAP2_VERTEX_3, 0, 1, 3, 4, 0, 1, 12, 4, &ctrlpoints[0][0][0]);
+  glMap2f(GL_MAP2_TEXTURE_COORD_2, 0, 1, 2, 2, 0, 1, 4, 2, &texpts[0][0][0]);
+  glEnable(GL_MAP2_TEXTURE_COORD_2);
+  glEnable(GL_MAP2_VERTEX_3);
+  glMapGrid2f(20, 0.0, 1.0, 20, 0.0, 1.0);
 }

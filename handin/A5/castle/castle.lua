@@ -37,15 +37,30 @@ blue = gr.material({0.0, 0.0, 1.0}, {0.1, 0.1, 0.1}, 10, -1 );
 green = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 10, -1);
 white = gr.material({1.0, 1.0, 1.0}, {0.1, 0.1, 0.1}, 10, -1);
 black = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10, 1);
+grass_c = gr.material({0.0, 1.5, 0.5}, {0.1, 0.1, 0.1}, 10, 1);
 castle_wall_c = gr.material({0.6, 0.5, 0.5}, {0.1, 0.1, 0.1}, 10, 1);
 
 -- textures
 -- tex_type, tex_id, tex_w, tex_h, tex_filename
 castle_wall_t = gr.texture(tex_image, texid_cw, 300, 300, castle_wall_fn);
-grass = gr.texture(tex_perlin, texid_grass, 64, 64, "");
+grass_t = gr.texture(tex_perlin, texid_grass, 64, 64, "");
 
 ---- rootnode ----
 rootnode = gr.node('rootnode');
+
+  -- ground terrain --
+  ground_w = 200
+  ground_h = 1
+  ground_b = 300
+  ground_node = gr.node('ground_node');
+  ground_node:translate(-ground_w/2, 0, 1);
+  rootnode:add_child(ground_node);
+
+  ground_primt = gr.cube('ground_primt');
+  ground_primt:scale(ground_w, ground_h, ground_b);
+  ground_primt:set_texture(grass_t);
+  ground_primt:set_material(grass_c);
+  ground_node:add_child(ground_primt);
 
 --[[]]
 -- main hall --
@@ -57,42 +72,45 @@ mh_thickness = 1;
 
   -- back wall --
   mh_b_node = gr.node('mh_b_node');
-  mh_b_node:translate(-mh_w/2, -mh_h/2, 1);
+  mh_b_node:translate(-mh_w/2, 0, 1);
   rootnode:add_child(mh_b_node);
 
   mh_b_primt = gr.cube('mh_b_primt');
   mh_b_primt:scale(mh_w, mh_h, mh_thickness);
-  mh_b_primt:set_texture(grass);
+  mh_b_primt:set_texture(castle_wall_t);
   mh_b_primt:set_material(castle_wall_c);
   mh_b_node:add_child(mh_b_primt);
 
   -- left wall --
   mh_l_node = gr.node('mh_l_node');
-  mh_l_node:translate(-mh_w/2, -mh_h/2, 1);
+  mh_l_node:translate(-mh_w/2, 0, 1);
   rootnode:add_child(mh_l_node);
 
   mh_l_primt = gr.cube('mh_l_primt');
   mh_l_primt:scale(1, mh_h, mh_b);
+  mh_l_primt:set_texture(castle_wall_t);
   mh_l_primt:set_material(castle_wall_c);
   mh_l_node:add_child(mh_l_primt);
 
   -- right wall --
   mh_r_node = gr.node('mh_r_node');
-  mh_r_node:translate(mh_w/2 - mh_thickness, -mh_h/2, 1);
+  mh_r_node:translate(mh_w/2 - mh_thickness, 0, 1);
   rootnode:add_child(mh_r_node);
 
   mh_r_primt = gr.cube('mh_r_primt');
   mh_r_primt:scale(1, mh_h, mh_b);
+  mh_r_primt:set_texture(castle_wall_t);
   mh_r_primt:set_material(castle_wall_c);
   mh_r_node:add_child(mh_r_primt);
 
   -- front wall --
   mh_f_node = gr.node('mh_f_node');
-  mh_f_node:translate(-mh_w/2, -mh_h/2, mh_b);
+  mh_f_node:translate(-mh_w/2, 0, mh_b);
   rootnode:add_child(mh_f_node);
 
   mh_f_primt = gr.cube('mh_f_primt');
   mh_f_primt:scale(mh_w, mh_h, mh_thickness);
+  mh_f_primt:set_texture(castle_wall_t);
   mh_f_primt:set_material(castle_wall_c);
   mh_f_node:add_child(mh_f_primt);
 
@@ -116,6 +134,7 @@ battlement_thickness = mh_thickness;
 
     battlement_primt = gr.cube("battlement_primt_" .. i);
     battlement_primt:scale(battlement_w, battlement_h, battlement_thickness);
+    battlement_primt:set_texture(castle_wall_t);
     battlement_primt:set_material(castle_wall_c)
     battlement_node:add_child(battlement_primt)
 
@@ -140,7 +159,7 @@ battlement_thickness = mh_thickness;
 
 -- end castle battlements --
 
-rootnode:translate(8.0, 0, 0.0)
+--rootnode:translate(8.0, 0, 0.0)
 rootnode:scale(0.2, 0.2, 0.2);
 --rootnode:rotate('y', -20.0)
 

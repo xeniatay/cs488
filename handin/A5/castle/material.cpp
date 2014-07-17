@@ -6,22 +6,13 @@ Material::~Material()
 {
 }
 
-PhongMaterial::PhongMaterial(const Colour& kd, const Colour& ks, double shininess, int texture)
-  : m_kd(kd), m_ks(ks), m_shininess(shininess), m_texture(texture)
-{
+PhongMaterial::PhongMaterial(const Colour& kd) : m_kd(kd) {
 }
 
-PhongMaterial::~PhongMaterial()
-{
-}
+PhongMaterial::~PhongMaterial() { }
 
-void PhongMaterial::apply_gl() const
-{
+void PhongMaterial::apply_gl() {
   // Perform OpenGL calls necessary to set up this material.
   //std::cerr << "Apply Material: " << m_kd << std::endl;
   glColor4d( m_kd.R(), m_kd.G(), m_kd.B(), 1.0);
-  if (m_texture != -1) {
-    // map texture to shape
-    glBindTexture( GL_TEXTURE_2D, m_texture);
-  }
 }

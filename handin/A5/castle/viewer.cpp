@@ -117,14 +117,11 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   // Camera view
   fly_camera();
 
-  //m_texture->display();
-
   // Draw scene
   m_scenenode->walk_gl();
 
-  glColor3f(1.0, 1.0, 1.0);
-  glEvalMesh2(GL_FILL, 0, 20, 0, 20);
-  glFlush();
+  // Display texture
+  m_texture->display();
 
   // Swap the contents of the front and back buffers so we see what we
   // just drew. This should only be done if double buffering is enabled.
@@ -258,8 +255,8 @@ void Viewer::reset_all() {
   m_camera_translate = Vector3D();
   m_camera_rotate = Vector3D();
 
-  m_texture = new Texture;
-  m_texture->init();
+  //m_texture = new Texture;
+  //m_texture->init();
 
   m_circle = false;
   m_axis_dir = 1;

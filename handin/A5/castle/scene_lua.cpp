@@ -78,6 +78,12 @@ struct gr_material_ud {
   Material* material;
 };
 
+// The "userdata" type for a material. Objects of this type will be
+// allocated by Lua to represent materials.
+struct gr_texture_ud {
+  Texture* texture;
+};
+
 // Create a node
 extern "C"
 int gr_node_cmd(lua_State* L)
@@ -180,27 +186,39 @@ int gr_material_cmd(lua_State* L)
 
   luaL_checktype(L, 1, LUA_TTABLE);
   luaL_argcheck(L, luaL_getn(L, 1) == 3, 1, "Three-tuple expected");
-  luaL_checktype(L, 2, LUA_TTABLE);
-  luaL_argcheck(L, luaL_getn(L, 2) == 3, 2, "Three-tuple expected");
-  luaL_checktype(L, 3, LUA_TNUMBER);
 
-  double kd[3], ks[3];
+  double kd[3];
   for (int i = 1; i <= 3; i++) {
     lua_rawgeti(L, 1, i);
     kd[i - 1] = luaL_checknumber(L, -1);
-    lua_rawgeti(L, 2, i);
-    ks[i - 1] = luaL_checknumber(L, -1);
-    lua_pop(L, 2);
   }
-  double shininess = luaL_checknumber(L, 3);
-  int texture = luaL_checknumber(L, 4);
 
-  data->material = new PhongMaterial(Colour(kd[0], kd[1], kd[2]),
-                                     Colour(ks[0], ks[1], ks[2]),
-                                     shininess,
-                                     texture);
+  data->material = new PhongMaterial(Colour(kd[0], kd[1], kd[2]));
 
   luaL_newmetatable(L, "gr.material");
+  lua_setmetatable(L, -2);
+
+  return 1;
+}
+
+// Create a texture
+extern "C"
+int gr_texture_cmd(lua_State* L)
+{
+  GRLUA_DEBUG_CALL;
+
+  gr_texture_ud* data = (gr_texture_ud*)lua_newuserdata(L, sizeof(gr_texture_ud));
+  data->texture = 0;
+
+  int tex_mode = luaL_checknumber(L, 1);
+  int tex_id = luaL_checknumber(L, 2);
+  int tex_w = luaL_checknumber(L, 3);
+  int tex_h = luaL_checknumber(L, 4);
+  const char* filename = luaL_checkstring(L, 5);
+
+  data->texture = new Texture((Texture::Mode)tex_mode, (Texture::TexId)tex_id, tex_w, tex_h, filename);
+
+  luaL_newmetatable(L, "gr.texture");
   lua_setmetatable(L, -2);
 
   return 1;
@@ -223,6 +241,29 @@ int gr_node_add_child_cmd(lua_State* L)
   SceneNode* child = childdata->node;
 
   self->add_child(child);
+
+  return 0;
+}
+
+// Set a node's texture
+extern "C"
+int gr_node_set_texture_cmd(lua_State* L)
+{
+  GRLUA_DEBUG_CALL;
+
+  gr_node_ud* selfdata = (gr_node_ud*)luaL_checkudata(L, 1, "gr.node");
+  luaL_argcheck(L, selfdata != 0, 1, "Node expected");
+
+  GeometryNode* self = dynamic_cast<GeometryNode*>(selfdata->node);
+
+  luaL_argcheck(L, self != 0, 1, "Geometry node expected");
+
+  gr_texture_ud* texdata = (gr_texture_ud*)luaL_checkudata(L, 2, "gr.texture");
+  luaL_argcheck(L, texdata != 0, 2, "Texture expected");
+
+  Texture* texture = texdata->texture;
+
+  self->set_texture(texture);
 
   return 0;
 }
@@ -350,6 +391,7 @@ static const luaL_reg grlib_functions[] = {
   {"sphere", gr_sphere_cmd},
   {"cube", gr_cube_cmd},
   {"material", gr_material_cmd},
+  {"texture", gr_texture_cmd},
   {0, 0}
 };
 
@@ -369,6 +411,7 @@ static const luaL_reg grlib_node_methods[] = {
   {"__gc", gr_node_gc_cmd},
   {"add_child", gr_node_add_child_cmd},
   {"set_material", gr_node_set_material_cmd},
+  {"set_texture", gr_node_set_texture_cmd},
   {"scale", gr_node_scale_cmd},
   {"rotate", gr_node_rotate_cmd},
   {"translate", gr_node_translate_cmd},

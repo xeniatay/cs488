@@ -97,8 +97,10 @@ scene_lua.o scene_lua.d : scene_lua.cpp scene_lua.hpp /usr/include/c++/4.6/strin
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h primitive.hpp \
  /usr/include/GL/gl.h /usr/include/GL/glext.h /usr/include/inttypes.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdint.h /usr/include/stdint.h \
- /usr/include/GL/glu.h material.hpp /usr/include/c++/4.6/cstring \
- /usr/include/string.h /usr/include/c++/4.6/cstdio /usr/include/libio.h \
+ /usr/include/GL/glu.h material.hpp texture.hpp /usr/include/GL/glut.h \
+ /usr/include/GL/freeglut_std.h image.hpp perlinnoise.hpp \
+ /usr/include/c++/4.6/cstring /usr/include/string.h \
+ /usr/include/c++/4.6/cstdio /usr/include/libio.h \
  /usr/include/_G_config.h /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h lua488.hpp \
  /usr/include/lua5.1/lua.h /usr/include/lua5.1/luaconf.h \

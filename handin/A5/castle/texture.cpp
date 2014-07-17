@@ -1,7 +1,5 @@
 #include "texture.hpp"
 
-using namespace std;
-
 GLfloat ctrlpoints[4][4][3] = {
    {{ -1.5, -1.5, 4.0}, { -0.5, -1.5, 2.0},
     {0.5, -1.5, -1.0}, {1.5, -1.5, 2.0}},
@@ -18,76 +16,45 @@ GLfloat texpts[2][2][2] = {{{0.0, 0.0}, {0.0, 1.0}},
 
 GLuint tex_count = 0;
 
-Texture::Texture() {
-  img_h = 64;
-  img_w = 64;
+Texture::Texture(Mode mode, TexId texid, int h, int w, string filename)
+  : m_mode(mode), m_texid(texid), m_h(h), m_w(w), m_filename(filename) {
 }
 
 Texture::~Texture() {
 }
 
 void Texture::display(void) {
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   glColor3f(1.0, 1.0, 1.0);
-   glEvalMesh2(GL_FILL, 0, 20, 0, 20);
-   glFlush();
+  surface_test();
 }
 
-void Texture::makeImage() {
+void Texture::build_texture() {
   int i, j;
   float ti, tj;
 
-  for (i = 0; i < img_w; i++) {
-    ti = 2.0*3.14159265*i/img_w;
-    for (j = 0; j < img_h; j++) {
-      /*
-      tj = 2.0*3.14159265*j/img_h;
-      img[3*(img_h*i+j)] = (GLubyte) 127*(1.0+sin(ti));
-      img[3*(img_h*i+j)+1] = (GLubyte) 127*(1.0+cos(2*tj));
-      img[3*(img_h*i+j)+2] = (GLubyte) 127*(1.0+cos(ti+tj));
-      */
-      img[3*(img_h*i+j)] = (GLubyte) perlin2d(i, j);
-      img[3*(img_h*i+j)+1] = (GLubyte) perlin2d(i, j);
-      img[3*(img_h*i+j)+2] = (GLubyte) perlin2d(i, j);
+  for (i = 0; i < m_w; i++) {
+    ti = 2.0*3.14159265*i/m_w;
+    for (j = 0; j < m_h; j++) {
+      img[3*(m_h*i+j)] = (GLubyte) perlin2d(i, j);
+      img[3*(m_h*i+j)+1] = (GLubyte) perlin2d(i, j);
+      img[3*(m_h*i+j)+2] = (GLubyte) perlin2d(i, j);
     }
   }
-
-/*
-  img = new Image(img_w, img_h, 3);
-
-  for (i = 0; i < img_w; i++) {
-    ti = 2.0*3.14159265*i/img_w;
-    for (j = 0; j < img_h; j++) {
-      tj = 2.0*3.14159265*j/img_h;
-      img->m_data[3*(img_h*i+j)] = (GLubyte) 127*(1.0+sin(ti));
-      img->m_data[3*(img_h*i+j)+1] = (GLubyte) 127*(1.0+cos(2*tj));
-      img->m_data[3*(img_h*i+j)+2] = (GLubyte) 127*(1.0+cos(ti+tj));
-    }
-  }
-  */
-
-  // hardcoded for now
-  string filename = "assets/castle_wall_texture_1.png";
-  img_png->loadPng(filename);
-
 }
 
-void Texture::init()
-{
-  GLuint texture;
-  tex_count++;
+void Texture::load_image(string filename, int w, int h) {
+  img_png = new Image(w, h, 3);
+  img_png->loadPng(filename);
+}
 
-  img_png = new Image(img_h, img_w, 3);
-
+void Texture::init() {
   // allocate a texture name
+  GLuint texture = (GLuint)m_texid;
   glGenTextures( tex_count, &texture );
 
   // activate our current texture
   glBindTexture( GL_TEXTURE_2D, texture );
 
-  surface_test();
   map_texture();
-  glColor3f(0.0, 1.0, 0.0);
 }
 
 // from: http://www.nullterminator.net/gltexture.html
@@ -106,11 +73,8 @@ void Texture::map_texture() {
   glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
   glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 
-  makeImage();
-
   // mipmaps
-  //gluBuild2DMipmaps( GL_TEXTURE_2D, 3, img_w, img_h, GL_RGB, GL_UNSIGNED_BYTE, img_png->data() );
-  gluBuild2DMipmaps( GL_TEXTURE_2D, 3, img_w, img_h, GL_RGB, GL_UNSIGNED_BYTE, img );
+  gluBuild2DMipmaps( GL_TEXTURE_2D, 3, m_w, m_h, GL_RGB, GL_UNSIGNED_BYTE, img);
 }
 
 void Texture::map_surface() {
@@ -118,7 +82,7 @@ void Texture::map_surface() {
   cerr << "map surface" << endl;
 
   // Surface uses decal
-  //glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 
   // the texture wraps over at the edges (repeat)
   glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
@@ -128,11 +92,11 @@ void Texture::map_surface() {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-  makeImage();
+  build_texture();
 
   // not mipmaps
-  glTexImage2D(GL_TEXTURE_2D, 0, 3, img_w, img_h, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
-  //glTexImage2D(GL_TEXTURE_2D, 0, 3, img_w, img_h, 0, GL_RGB, GL_UNSIGNED_BYTE, img_png->data());
+  glTexImage2D(GL_TEXTURE_2D, 0, 3, m_w, m_h, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
+  //glTexImage2D(GL_TEXTURE_2D, 0, 3, m_w, m_h, 0, GL_RGB, GL_UNSIGNED_BYTE, img_png->data());
 
   // enable texture stuff
   glEnable(GL_TEXTURE_2D);
@@ -140,42 +104,6 @@ void Texture::map_surface() {
   glShadeModel (GL_FLAT);
 
 }
-
-void Texture::reshape(int w, int h)
-{
-   glViewport(0, 0, (GLsizei) w, (GLsizei) h);
-   glMatrixMode(GL_PROJECTION);
-   glLoadIdentity();
-   if (w <= h)
-      glOrtho(-4.0, 4.0, -4.0*(GLfloat)h/(GLfloat)w,
-              4.0*(GLfloat)h/(GLfloat)w, -4.0, 4.0);
-   else
-      glOrtho(-4.0*(GLfloat)w/(GLfloat)h,
-              4.0*(GLfloat)w/(GLfloat)h, -4.0, 4.0, -4.0, 4.0);
-   glMatrixMode(GL_MODELVIEW);
-   glLoadIdentity();
-   glRotatef(85.0, 1.0, 1.0, 1.0);
-}
-
-// glut window rendering that we don't need
-void Texture::draw() {
-  /*
-  char *myargv [1];
-  int myargc = 1;
-  myargv[0] = "ct";
-
-  glutInit(&myargc, myargv);
-  glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
-  glutInitWindowSize (500, 500);
-  glutInitWindowPosition (100, 100);
-  glutCreateWindow (myargv[0]);
-  Texture::init();
-  glutDisplayFunc(display);
-  glutReshapeFunc(reshape);
-  glutMainLoop();
-  */
-}
-
 
 void Texture::texture_test() {
   // map texture to shape
@@ -196,4 +124,10 @@ void Texture::surface_test() {
   glEnable(GL_MAP2_TEXTURE_COORD_2);
   glEnable(GL_MAP2_VERTEX_3);
   glMapGrid2f(20, 0.0, 1.0, 20, 0.0, 1.0);
+
+  // display shape
+  //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glColor3f(0.0, 1.0, 0.6);
+  glEvalMesh2(GL_FILL, 0, 20, 0, 20);
+  glFlush();
 }

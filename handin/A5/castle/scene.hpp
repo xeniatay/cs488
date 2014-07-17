@@ -101,12 +101,11 @@ class GeometryNode : public SceneNode {
     const Material* get_material() const;
     Material* get_material();
 
-    void set_material(Material* material)
-    {
-      m_material = material;
-    }
+    void set_material(Material* material) { m_material = material; }
+    void set_texture(Texture* texture) { m_texture = texture; }
 
     Material* m_material;
+    Texture* m_texture;
     Primitive* m_primitive;
 
     void transform_node();

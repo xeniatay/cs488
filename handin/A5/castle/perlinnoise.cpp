@@ -68,3 +68,6 @@ double perlin2d(double x, double y) {
   return total;
 }
 
+
+/// 8pn (x, y, z)
+// + 4pn(3x, 3y, 3z);

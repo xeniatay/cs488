@@ -14,31 +14,48 @@
 #define imageWidth 64
 #define imageHeight 64
 
+using namespace std;
+
 extern GLfloat ctrlpoints[4][4][3];
 extern GLfloat texpts[2][2][2];
 extern GLuint tex_count;
 
 class Texture {
   public:
+    enum Mode {
+      IMAGE,
+      PERLIN,
+      NONE
+    };
+
+    enum TexId {
+      CASTLE_WALL,
+      GRASS
+    };
+
+    Mode m_mode;
+    TexId m_texid;
+    string m_filename;
+    int m_h, m_w;
+
     virtual ~Texture();
-    Texture();
+    Texture(Mode mode, TexId texid, int h, int w, string filename);
 
     GLubyte img[3*imageWidth*imageHeight];
     Image *img_png;
 
-    int img_h, img_w;
-
-    void display();
-    void makeImage();
     void init();
+
     void map_texture();
     void map_surface();
+
+    void build_texture();
+    void load_image(string filename, int w, int h);
+
+    void display();
     void texture_test();
     void surface_test();
 
-    // GLUT window
-    void draw();
-    void reshape(int w, int h);
 };
 
 

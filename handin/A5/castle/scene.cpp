@@ -141,24 +141,26 @@ void GeometryNode::walk_gl(bool picking)
   //cerr << "GeometryNode " << m_name << " Walk GL" << endl;
 
   if (m_material) {
-    m_material->apply_gl();
+    PhongMaterial* p_material = (PhongMaterial*) m_material;
+    p_material->apply_gl();
     cerr << "material applied" << endl;
+
+    glPushMatrix();
+    gl_mult_trans();
+
+    this->m_primitive->walk_gl(0);
+
+    for( std::list<SceneNode*>::const_iterator i = m_children.begin(); i != m_children.end(); ++i ) {
+      SceneNode *node = (*i);
+      node->walk_gl();
+    }
+
+    glPopMatrix();
+
+    //cerr << "GeometryNode " << m_name << " End Walk GL" << endl;
+  } else {
+    cerr << "ERROR no m_material!" << endl;
   }
-
-  glPushMatrix();
-  gl_mult_trans();
-
-  PhongMaterial* p_material = (PhongMaterial*) m_material;
-  this->m_primitive->walk_gl(p_material->m_texture);
-
-  for( std::list<SceneNode*>::const_iterator i = m_children.begin(); i != m_children.end(); ++i ) {
-    SceneNode *node = (*i);
-    node->walk_gl();
-  }
-
-  glPopMatrix();
-
-  //cerr << "GeometryNode " << m_name << " End Walk GL" << endl;
 
 }
 

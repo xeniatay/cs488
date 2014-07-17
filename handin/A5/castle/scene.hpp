@@ -5,6 +5,7 @@
 #include "algebra.hpp"
 #include "primitive.hpp"
 #include "material.hpp"
+#include "texture.hpp"
 #include <GL/gl.h>
 #include <GL/glu.h>
 

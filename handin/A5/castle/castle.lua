@@ -32,12 +32,12 @@ texid_grass = 1
 castle_wall_fn = "assets/castle_wall_texture_1.png";
 
 -- materials
-red = gr.material({1.0, 0.0, 0.0});
-blue = gr.material({0.0, 0.0, 1.0});
-green = gr.material({0.0, 1.0, 0.0});
-white = gr.material({1.0, 1.0, 1.0});
-black = gr.material({0.0, 0.0, 0.0});
-castle_wall_c = gr.material({0.0, 1.0, 0.5});
+red = gr.material({1.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10, -1);
+blue = gr.material({0.0, 0.0, 1.0}, {0.1, 0.1, 0.1}, 10, -1 );
+green = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 10, -1);
+white = gr.material({1.0, 1.0, 1.0}, {0.1, 0.1, 0.1}, 10, -1);
+black = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10, 1);
+castle_wall_c = gr.material({0.6, 0.5, 0.5}, {0.1, 0.1, 0.1}, 10, 1);
 
 -- textures
 -- tex_type, tex_id, tex_w, tex_h, tex_filename

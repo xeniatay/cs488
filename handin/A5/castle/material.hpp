@@ -2,30 +2,31 @@
 #define CS488_MATERIAL_HPP
 
 #include "algebra.hpp"
-#include "texture.hpp"
-#include <string>
-
-using namespace std;
 
 class Material {
-  public:
-    virtual ~Material();
+public:
+  virtual ~Material();
+  virtual void apply_gl() const = 0;
 
-  protected:
-    Material() { }
+protected:
+  Material()
+  {
+  }
 };
 
 class PhongMaterial : public Material {
-  public:
+public:
+  PhongMaterial(const Colour& kd, const Colour& ks, double shininess, int texture);
+  virtual ~PhongMaterial();
 
-    PhongMaterial(const Colour& kd);
-    virtual ~PhongMaterial();
+  virtual void apply_gl() const;
 
-    void apply_gl();
+private:
+  Colour m_kd;
+  Colour m_ks;
 
-    Colour m_kd;
-
-  private:
+  double m_shininess;
+  int m_texture;
 };
 
 

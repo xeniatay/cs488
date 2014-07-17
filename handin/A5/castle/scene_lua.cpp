@@ -186,18 +186,28 @@ int gr_material_cmd(lua_State* L)
 
   luaL_checktype(L, 1, LUA_TTABLE);
   luaL_argcheck(L, luaL_getn(L, 1) == 3, 1, "Three-tuple expected");
+  luaL_checktype(L, 2, LUA_TTABLE);
+  luaL_argcheck(L, luaL_getn(L, 2) == 3, 2, "Three-tuple expected");
+  luaL_checktype(L, 3, LUA_TNUMBER);
 
-  double kd[3];
+  double kd[3], ks[3];
   for (int i = 1; i <= 3; i++) {
     lua_rawgeti(L, 1, i);
     kd[i - 1] = luaL_checknumber(L, -1);
+    lua_rawgeti(L, 2, i);
+    ks[i - 1] = luaL_checknumber(L, -1);
+    lua_pop(L, 2);
   }
+  double shininess = luaL_checknumber(L, 3);
+  int texture = luaL_checknumber(L, 4);
 
-  data->material = new PhongMaterial(Colour(kd[0], kd[1], kd[2]));
+  data->material = new PhongMaterial(Colour(kd[0], kd[1], kd[2]),
+    Colour(ks[0], ks[1], ks[2]),
+    shininess,
+    texture);
 
   luaL_newmetatable(L, "gr.material");
   lua_setmetatable(L, -2);
-
   return 1;
 }
 

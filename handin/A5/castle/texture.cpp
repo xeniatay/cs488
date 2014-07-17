@@ -18,50 +18,64 @@ GLuint tex_count = 0;
 
 Texture::Texture(Mode mode, TexId texid, int h, int w, string filename)
   : m_mode(mode), m_texid(texid), m_h(h), m_w(w), m_filename(filename) {
+
+  m_init = false;
+
 }
 
 Texture::~Texture() {
 }
 
-void Texture::display(void) {
-  surface_test();
-}
-
 void Texture::build_texture() {
   int i, j;
-  float ti, tj;
+
+  GLubyte perlin[3 * m_h * m_w];
 
   for (i = 0; i < m_w; i++) {
-    ti = 2.0*3.14159265*i/m_w;
     for (j = 0; j < m_h; j++) {
-      img[3*(m_h*i+j)] = (GLubyte) perlin2d(i, j);
-      img[3*(m_h*i+j)+1] = (GLubyte) perlin2d(i, j);
-      img[3*(m_h*i+j)+2] = (GLubyte) perlin2d(i, j);
+      perlin[3*(m_h*i+j)] = (GLubyte) perlin2d(i, j);
+      perlin[3*(m_h*i+j)+1] = (GLubyte) perlin2d(i, j);
+      perlin[3*(m_h*i+j)+2] = (GLubyte) perlin2d(i, j);
     }
   }
+
+  img = perlin;
 }
 
-void Texture::load_image(string filename, int w, int h) {
-  img_png = new Image(w, h, 3);
-  img_png->loadPng(filename);
+void Texture::load_image() {
+  img_png = new Image(m_w, m_h, 3);
+  img_png->loadPng(m_filename);
 }
 
 void Texture::init() {
-  // allocate a texture name
+  if (!m_init) {
+    if (m_mode == IMAGE) {
+      load_image();
+    } else if (m_mode == PERLIN) {
+      build_texture();
+    }
+
+    m_init = true;
+  }
+}
+
+void Texture::apply_gl() {
+  // allocate a texture
   GLuint texture = (GLuint)m_texid;
   glGenTextures( tex_count, &texture );
 
   // activate our current texture
   glBindTexture( GL_TEXTURE_2D, texture );
 
+  init();
+
+  // map texture
   map_texture();
 }
 
 // from: http://www.nullterminator.net/gltexture.html
 // and http://www.glprogramming.com/red/chapter12.html
 void Texture::map_texture() {
-  cerr << "map texture" << endl;
-
   // select modulate to mix texture with color for shading
   glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
 
@@ -74,7 +88,11 @@ void Texture::map_texture() {
   glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 
   // mipmaps
-  gluBuild2DMipmaps( GL_TEXTURE_2D, 3, m_w, m_h, GL_RGB, GL_UNSIGNED_BYTE, img);
+  if (m_mode == IMAGE) {
+    gluBuild2DMipmaps( GL_TEXTURE_2D, 3, m_w, m_h, GL_RGB, GL_UNSIGNED_BYTE, img_png->data());
+  } else if (m_mode == PERLIN) {
+    gluBuild2DMipmaps( GL_TEXTURE_2D, 3, m_w, m_h, GL_RGB, GL_UNSIGNED_BYTE, img);
+  }
 }
 
 void Texture::map_surface() {
@@ -95,13 +113,16 @@ void Texture::map_surface() {
   build_texture();
 
   // not mipmaps
-  glTexImage2D(GL_TEXTURE_2D, 0, 3, m_w, m_h, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
-  //glTexImage2D(GL_TEXTURE_2D, 0, 3, m_w, m_h, 0, GL_RGB, GL_UNSIGNED_BYTE, img_png->data());
+  if (m_mode == IMAGE) {
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, m_w, m_h, 0, GL_RGB, GL_UNSIGNED_BYTE, img_png->data());
+  } else if (m_mode == PERLIN) {
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, m_w, m_h, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
+  }
 
   // enable texture stuff
-  glEnable(GL_TEXTURE_2D);
-  glEnable(GL_DEPTH_TEST);
-  glShadeModel (GL_FLAT);
+  //glEnable(GL_TEXTURE_2D);
+  //glEnable(GL_DEPTH_TEST);
+  //glShadeModel (GL_FLAT);
 
 }
 

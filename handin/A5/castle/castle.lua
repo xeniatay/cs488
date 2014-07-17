@@ -42,7 +42,7 @@ castle_wall_c = gr.material({0.6, 0.5, 0.5}, {0.1, 0.1, 0.1}, 10, 1);
 -- textures
 -- tex_type, tex_id, tex_w, tex_h, tex_filename
 castle_wall_t = gr.texture(tex_image, texid_cw, 300, 300, castle_wall_fn);
-grass = gr.texture(tex_perlin, texid_grass, 300, 300, "");
+grass = gr.texture(tex_perlin, texid_grass, 64, 64, "");
 
 ---- rootnode ----
 rootnode = gr.node('rootnode');
@@ -62,7 +62,7 @@ mh_thickness = 1;
 
   mh_b_primt = gr.cube('mh_b_primt');
   mh_b_primt:scale(mh_w, mh_h, mh_thickness);
-  mh_b_primt:set_texture(castle_wall_t);
+  mh_b_primt:set_texture(grass);
   mh_b_primt:set_material(castle_wall_c);
   mh_b_node:add_child(mh_b_primt);
 

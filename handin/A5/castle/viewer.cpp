@@ -71,6 +71,7 @@ void Viewer::on_realize()
   glShadeModel(GL_SMOOTH);
   glClearColor( 1.0, 1.0, 1.0, 0.0 );
   glEnable(GL_DEPTH_TEST);
+  glEnable(GL_TEXTURE_2D);
 
   gldrawable->gl_end();
 
@@ -101,9 +102,6 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   // Clear framebuffer
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  // Enable texture
-  glEnable( GL_TEXTURE_2D );
-
   // Set up lighting
   //init_light();
 
@@ -119,9 +117,6 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
 
   // Draw scene
   m_scenenode->walk_gl();
-
-  // Display texture
-  m_texture->display();
 
   // Swap the contents of the front and back buffers so we see what we
   // just drew. This should only be done if double buffering is enabled.
@@ -254,9 +249,6 @@ void Viewer::reset_all() {
   m_camera_scale = Vector3D(1, 1, 1);
   m_camera_translate = Vector3D();
   m_camera_rotate = Vector3D();
-
-  //m_texture = new Texture;
-  //m_texture->init();
 
   m_circle = false;
   m_axis_dir = 1;

@@ -130,6 +130,9 @@ GeometryNode::GeometryNode(const std::string& name, Primitive* primitive) : Scen
   this->m_geo_id = all_geonodes.size();
   all_geonodes.push_back(this);
 
+  this->m_texture = NULL;
+  this->m_material = NULL;
+
 }
 
 GeometryNode::~GeometryNode() {
@@ -143,25 +146,28 @@ void GeometryNode::walk_gl(bool picking)
   if (m_material) {
     PhongMaterial* p_material = (PhongMaterial*) m_material;
     p_material->apply_gl();
-    cerr << "material applied" << endl;
-
-    glPushMatrix();
-    gl_mult_trans();
-
-    this->m_primitive->walk_gl(0);
-
-    for( std::list<SceneNode*>::const_iterator i = m_children.begin(); i != m_children.end(); ++i ) {
-      SceneNode *node = (*i);
-      node->walk_gl();
-    }
-
-    glPopMatrix();
-
-    //cerr << "GeometryNode " << m_name << " End Walk GL" << endl;
-  } else {
-    cerr << "ERROR no m_material!" << endl;
   }
 
+  if (m_texture != NULL) {
+    m_texture->apply_gl();
+  }
+
+  glPushMatrix();
+  gl_mult_trans();
+
+  this->m_primitive->walk_gl(0);
+
+  for( std::list<SceneNode*>::const_iterator i = m_children.begin(); i != m_children.end(); ++i ) {
+    SceneNode *node = (*i);
+    node->walk_gl();
+  }
+
+  glPopMatrix();
+
+  // unbind texture
+  glBindTexture( GL_TEXTURE_2D, NULL);
+
+  //cerr << "GeometryNode " << m_name << " End Walk GL" << endl;
 }
 
 // make the transform matrix into a gl_float

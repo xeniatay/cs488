@@ -5,6 +5,9 @@
 #ifndef CS488_PERLINNOISE_HPP
 #define CS488_PERLINNOISE_HPP
 
+#include <cmath>
+#include <iostream>
+
 // noise functions, basically random number generators
 double noise_1(double x);
 double smoothed_noise_1(double x, double y);

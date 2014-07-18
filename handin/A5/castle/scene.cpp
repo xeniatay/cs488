@@ -146,10 +146,12 @@ void GeometryNode::walk_gl(bool picking)
   if (m_material) {
     PhongMaterial* p_material = (PhongMaterial*) m_material;
     p_material->apply_gl();
+    //cerr << "material applied" << endl;
   }
 
   if (m_texture != NULL) {
     m_texture->apply_gl();
+    //cerr << "texture applied" << endl;
   }
 
   glPushMatrix();

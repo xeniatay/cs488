@@ -27,6 +27,7 @@ tex_none = 2
 -- id for texs
 texid_cw = 0
 texid_grass = 1
+texid_sky = 2
 
 -- filenames for texs
 castle_wall_fn = "assets/castle_wall_texture_1.png";
@@ -37,23 +38,39 @@ blue = gr.material({0.0, 0.0, 1.0}, {0.1, 0.1, 0.1}, 10, -1 );
 green = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 10, -1);
 white = gr.material({1.0, 1.0, 1.0}, {0.1, 0.1, 0.1}, 10, -1);
 black = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10, 1);
-grass_c = gr.material({0.0, 1.5, 0.5}, {0.1, 0.1, 0.1}, 10, 1);
+grass_c = gr.material({0.0, 1.0, 0.5}, {0.1, 0.1, 0.1}, 10, 1);
+sky_c = gr.material({0.36, 0.8, 1.0}, {0.1, 0.1, 0.1}, 10, 1);
 castle_wall_c = gr.material({0.6, 0.5, 0.5}, {0.1, 0.1, 0.1}, 10, 1);
 
 -- textures
 -- tex_type, tex_id, tex_w, tex_h, tex_filename
 castle_wall_t = gr.texture(tex_image, texid_cw, 300, 300, castle_wall_fn);
+sky_t = gr.texture(tex_perlin, texid_sky, 64, 64, "");
 grass_t = gr.texture(tex_perlin, texid_grass, 64, 64, "");
 
 ---- rootnode ----
 rootnode = gr.node('rootnode');
 
+  -- sky terrain --
+  sky_w = 140
+  sky_h = 60
+  sky_b = 1
+  sky_node = gr.node('sky_node');
+  sky_node:translate(-sky_w/2, 0, 0);
+  rootnode:add_child(sky_node);
+
+  sky_primt = gr.cube('sky_primt');
+  sky_primt:scale(sky_w, sky_h, sky_b);
+  sky_primt:set_texture(grass_t);
+  sky_primt:set_material(sky_c);
+  sky_node:add_child(sky_primt);
+
   -- ground terrain --
-  ground_w = 200
+  ground_w = 140
   ground_h = 1
-  ground_b = 300
+  ground_b = 65
   ground_node = gr.node('ground_node');
-  ground_node:translate(-ground_w/2, 0, 1);
+  ground_node:translate(-ground_w/2, 0, 0);
   rootnode:add_child(ground_node);
 
   ground_primt = gr.cube('ground_primt');

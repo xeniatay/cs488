@@ -91,4 +91,5 @@ texture.o texture.d : texture.cpp texture.hpp /usr/include/GL/gl.h \
  /usr/include/c++/4.6/bits/locale_facets.tcc \
  /usr/include/c++/4.6/bits/basic_ios.tcc \
  /usr/include/c++/4.6/bits/ostream.tcc /usr/include/c++/4.6/istream \
- /usr/include/c++/4.6/bits/istream.tcc image.hpp perlinnoise.hpp
+ /usr/include/c++/4.6/bits/istream.tcc image.hpp perlinnoise.hpp \
+ /usr/include/c++/4.6/cmath

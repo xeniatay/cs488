@@ -48,12 +48,18 @@ void Texture::load_image() {
 }
 
 void Texture::init() {
+
+  // only init texture once
   if (!m_init) {
+    cerr << "texture " << m_texid << " is inited" << endl;
     if (m_mode == IMAGE) {
       load_image();
     } else if (m_mode == PERLIN) {
       build_texture();
     }
+
+    // map texture
+    map_texture();
 
     m_init = true;
   }
@@ -67,15 +73,15 @@ void Texture::apply_gl() {
   // activate our current texture
   glBindTexture( GL_TEXTURE_2D, texture );
 
+  // if texture hasn't been inited, init it
   init();
-
-  // map texture
-  map_texture();
 }
 
 // from: http://www.nullterminator.net/gltexture.html
 // and http://www.glprogramming.com/red/chapter12.html
 void Texture::map_texture() {
+  cerr << "map texture" << endl;
+
   // select modulate to mix texture with color for shading
   glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
 

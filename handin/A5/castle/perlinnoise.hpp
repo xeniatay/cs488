@@ -8,6 +8,8 @@
 #include <cmath>
 #include <iostream>
 
+using namespace std;
+
 // noise functions, basically random number generators
 double noise_1(double x);
 double smoothed_noise_1(double x, double y);

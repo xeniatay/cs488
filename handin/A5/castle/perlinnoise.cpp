@@ -4,8 +4,6 @@
 
 #include "perlinnoise.hpp"
 
-using namespace std;
-
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
@@ -188,48 +186,49 @@ double interpolate(double a, double b, double x) {
 
 // actual perlin
 double perlin2d(double x, double y) {
-  int num_octaves = 5;
-  double n = num_octaves - 1, amp = 0, total = 0, freq = 0;
-  double freq1 = 2, p1 = 1; // persistence
-  double freq2 = 2, p2 = sqrt(2.0); // persistence
-  double freq3 = 2, p3 = 1/2; // persistence
-  double freq4 = 2, p4 = 1/4; // persistence
-  double freq5 = 2, p5 = 1/8; // persistence
+  int num_octaves = 1, j = 0;
+  double n = 10, amp = 0, total = 0, freq = 0;
+  double freq1 = 2, p1 = 0.25; // persistence
+  double freq2 = 8, p2 = 0.25; // persistence
+  double freq3 = 3, p3 = 0.25; // persistence
+  double freq4 = 4, p4 = 0.5; // persistence
+  double freq5 = 2, p5 = 0.030; // persistence
 
   for(int i = 1; i <= n; i++) {
+    j = i % num_octaves;
 
-    switch (i) {
+    switch (j) {
       case 1:
-        freq = pow(2, i);
+        freq = pow(freq1, i);
         amp = pow(p1, i);
         total = total + interpolated_noise_1(x * freq, y * freq) * amp;
         break;
       case 2:
-        freq = pow(2, i);
+        freq = pow(freq2, i);
         amp = pow(p2, i);
-        //total = total + interpolated_noise_2(x * freq, y * freq) * amp;
+        total = total + interpolated_noise_2(x * freq, y * freq) * amp;
         break;
       case 3:
-        freq = pow(2, i);
+        freq = pow(freq3, i);
         amp = pow(p3, i);
-        //total = total + interpolated_noise_3(x * freq, y * freq) * amp;
+        total = total + interpolated_noise_3(x * freq, y * freq) * amp;
         break;
       case 4:
-        freq = pow(2, i);
+        freq = pow(freq4, i);
         amp = pow(p4, i);
-        //total = total + interpolated_noise_4(x * freq, y * freq) * amp;
+        total = total + interpolated_noise_4(x * freq, y * freq) * amp;
         break;
       case 5:
-        freq = pow(2, i);
+        freq = pow(freq5, i);
         amp = pow(p5, i);
-        //total = total + interpolated_noise_5(x * freq, y * freq) * amp;
+        total = total + interpolated_noise_5(x * freq, y * freq) * amp;
         break;
       default:
         break;
     }
   }
 
-  cerr << "total: " << total << endl;
+  //cerr << total << " " ;
   return total;
 }
 

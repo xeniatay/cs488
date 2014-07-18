@@ -28,14 +28,13 @@ Texture::~Texture() {
 
 void Texture::build_texture() {
   int i, j;
+  double color;
 
   GLubyte perlin[3 * m_h * m_w];
 
   for (i = 0; i < m_w; i++) {
     for (j = 0; j < m_h; j++) {
-      perlin[3*(m_h*i+j)] = (GLubyte) perlin2d(i, j);
-      perlin[3*(m_h*i+j)+1] = (GLubyte) perlin2d(i, j);
-      perlin[3*(m_h*i+j)+2] = (GLubyte) perlin2d(i, j);
+      perlin[3*(m_h*i+j)] = (GLubyte) (8 * perlin2d(i, j)) + ( 4 * perlin2d(3 * i, 3 * j));
     }
   }
 

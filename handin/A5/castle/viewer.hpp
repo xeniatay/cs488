@@ -1,12 +1,13 @@
 #ifndef CS488_VIEWER_HPP
 #define CS488_VIEWER_HPP
 
+#include <GL/glew.h>
 #include <gtkmm.h>
 #include <gtkglmm.h>
+#include <GL/glu.h>
+
 #include <iostream>
 #include <math.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
 #include <string>
 #include <vector>
 
@@ -54,6 +55,9 @@ class Viewer : public Gtk::GL::DrawingArea {
     Keypress m_keypress;
     void set_keypress(Keypress kp) { m_keypress = kp; }
     void fly_camera();
+
+    // GLEW
+    bool glew_init;
 
     // lighting
     void init_light();

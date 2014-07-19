@@ -1,6 +1,8 @@
 #ifndef CS488_MATERIAL_HPP
 #define CS488_MATERIAL_HPP
 
+#include <GL/glew.h>
+#include <GL/glu.h>
 #include "algebra.hpp"
 
 class Material {

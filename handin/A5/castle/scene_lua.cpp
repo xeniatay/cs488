@@ -225,8 +225,10 @@ int gr_texture_cmd(lua_State* L)
   int tex_w = luaL_checknumber(L, 3);
   int tex_h = luaL_checknumber(L, 4);
   const char* filename = luaL_checkstring(L, 5);
+  double freq = luaL_checknumber(L, 6);
+  double amp = luaL_checknumber(L, 7);
 
-  data->texture = new Texture((Texture::Mode)tex_mode, (Texture::TexId)tex_id, tex_w, tex_h, filename);
+  data->texture = new Texture((Texture::Mode)tex_mode, (Texture::TexId)tex_id, tex_w, tex_h, filename, freq, amp);
 
   luaL_newmetatable(L, "gr.texture");
   lua_setmetatable(L, -2);

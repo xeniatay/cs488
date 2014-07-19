@@ -11,7 +11,7 @@
 #ifndef __EVENTS_H
 #define __EVENTS_H
 
-#include <GL/gl.h>
+#include <GL/glew.h>
 
 /*
  * Constants

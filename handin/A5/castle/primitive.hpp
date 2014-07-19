@@ -1,6 +1,6 @@
 #ifndef CS488_PRIMITIVE_HPP
 #define CS488_PRIMITIVE_HPP
-#include <GL/gl.h>
+#include <GL/glew.h>
 #include <GL/glu.h>
 
 #include "algebra.hpp"

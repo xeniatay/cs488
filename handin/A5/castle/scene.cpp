@@ -168,6 +168,7 @@ void GeometryNode::walk_gl(bool picking)
 
   // unbind texture
   glBindTexture( GL_TEXTURE_2D, NULL);
+  glBindTexture( GL_TEXTURE_3D, NULL);
 
   //cerr << "GeometryNode " << m_name << " End Walk GL" << endl;
 }

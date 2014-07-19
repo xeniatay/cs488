@@ -38,15 +38,16 @@ blue = gr.material({0.0, 0.0, 1.0}, {0.1, 0.1, 0.1}, 10, -1 );
 green = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 10, -1);
 white = gr.material({1.0, 1.0, 1.0}, {0.1, 0.1, 0.1}, 10, -1);
 black = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10, 1);
-grass_c = gr.material({1.0, 1.0, 1.0}, {0.1, 0.1, 0.1}, 10, 1);
-sky_c = gr.material({0.36, 0.8, 1.0}, {0.1, 0.1, 0.1}, 10, 1);
+grass_c = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 10, 1);
+sky_c = gr.material({.1, 0.1, 0.9}, {0.1, 0.1, 0.1}, 10, 1);
 castle_wall_c = gr.material({0.6, 0.5, 0.5}, {0.1, 0.1, 0.1}, 10, 1);
 
 -- textures
 -- tex_type, tex_id, tex_w, tex_h, tex_filename
-castle_wall_t = gr.texture(tex_image, texid_cw, 300, 300, castle_wall_fn);
-sky_t = gr.texture(tex_perlin, texid_sky, 64, 64, "");
-grass_t = gr.texture(tex_perlin, texid_grass, 64, 64, "");
+none_t = gr.texture(tex_none, 0, 0, 0, "", 0, 0);
+castle_wall_t = gr.texture(tex_image, texid_cw, 300, 300, castle_wall_fn, 0, 0);
+sky_t = gr.texture(tex_perlin, texid_sky, 64, 64, "", 8, 2);
+grass_t = gr.texture(tex_perlin, texid_grass, 64, 64, "", 16, 1);
 
 ---- rootnode ----
 rootnode = gr.node('rootnode');
@@ -61,7 +62,7 @@ rootnode = gr.node('rootnode');
 
   sky_primt = gr.cube('sky_primt');
   sky_primt:scale(sky_w, sky_h, sky_b);
-  sky_primt:set_texture(grass_t);
+  sky_primt:set_texture(sky_t);
   sky_primt:set_material(sky_c);
   sky_node:add_child(sky_primt);
 
@@ -79,7 +80,7 @@ rootnode = gr.node('rootnode');
   ground_primt:set_material(grass_c);
   ground_node:add_child(ground_primt);
 
---[[]]
+
 -- main hall --
 -- centecastle_wall_c on screen, cube that makes up body of castle --
 mh_w = 40
@@ -175,7 +176,6 @@ battlement_thickness = mh_thickness;
   end
 
 -- end castle battlements --
-
 --rootnode:translate(8.0, 0, 0.0)
 rootnode:scale(0.2, 0.2, 0.2);
 --rootnode:rotate('y', -20.0)

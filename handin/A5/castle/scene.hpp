@@ -6,7 +6,7 @@
 #include "primitive.hpp"
 #include "material.hpp"
 #include "texture.hpp"
-#include <GL/gl.h>
+#include <GL/glew.h>
 #include <GL/glu.h>
 
 class SceneNode {

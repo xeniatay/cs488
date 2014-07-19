@@ -16,8 +16,8 @@ GLfloat texpts[2][2][2] = {{{0.0, 0.0}, {0.0, 1.0}},
 
 GLuint tex_count = 0;
 
-Texture::Texture(Mode mode, TexId texid, int h, int w, string filename)
-  : m_mode(mode), m_texid(texid), m_h(h), m_w(w), m_filename(filename) {
+Texture::Texture(Mode mode, TexId texid, int h, int w, string filename, double freq, double amp)
+  : m_mode(mode), m_texid(texid), m_h(h), m_w(w), m_filename(filename), m_freq(freq), m_amp(amp) {
 
   m_init = false;
 
@@ -30,15 +30,14 @@ void Texture::build_texture() {
   int i, j;
   double color;
 
-  GLubyte perlin[3 * m_h * m_w];
+  img = new GLubyte[3 * m_h * m_w];
 
   for (i = 0; i < m_w; i++) {
     for (j = 0; j < m_h; j++) {
-      perlin[3*(m_h*i+j)] = (GLubyte) (8 * perlin2d(i, j)) + ( 4 * perlin2d(3 * i, 3 * j));
+      img[3*(m_h*i+j)] = (GLubyte) (8 * perlin2d(i, j)) + ( 4 * perlin2d(3 * i, 3 * j));
     }
   }
 
-  img = perlin;
 }
 
 void Texture::load_image() {
@@ -50,11 +49,17 @@ void Texture::init() {
 
   // only init texture once
   if (!m_init) {
-    cerr << "texture " << m_texid << " is inited" << endl;
     if (m_mode == IMAGE) {
       load_image();
+
     } else if (m_mode == PERLIN) {
-      build_texture();
+      if (m_texid == SKY) {
+        cerr << "SKYYY" << endl;
+        makeSkyTexture(m_freq, m_amp);
+      } else {
+        make3DNoiseTexture(m_freq, m_amp);
+      }
+      //build_texture();
     }
 
     // map texture
@@ -70,33 +75,45 @@ void Texture::apply_gl() {
   glGenTextures( tex_count, &texture );
 
   // activate our current texture
-  glBindTexture( GL_TEXTURE_2D, texture );
+  glBindTexture( GL_TEXTURE_3D, texture );
 
   // if texture hasn't been inited, init it
   init();
+
+  if (m_mode == IMAGE) {
+    glDisable(GL_TEXTURE_3D);
+    glEnable(GL_TEXTURE_2D);
+  } else {
+    glDisable(GL_TEXTURE_2D);
+    glEnable(GL_TEXTURE_3D);
+  }
 }
 
 // from: http://www.nullterminator.net/gltexture.html
 // and http://www.glprogramming.com/red/chapter12.html
 void Texture::map_texture() {
-  cerr << "map texture" << endl;
-
-  // select modulate to mix texture with color for shading
-  glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-
-  // when texture area is small, bilinear filter the closest mipmap
-  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST );
-  // when texture area is large, bilinear filter the original
-  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-  // the texture wraps over at the edges (repeat)
-  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 
   // mipmaps
   if (m_mode == IMAGE) {
+    cerr << "start image texture" ;
+    // select modulate to mix texture with color for shading
+    glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+
+    // when texture area is small, bilinear filter the closest mipmap
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST );
+    // when texture area is large, bilinear filter the original
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    // the texture wraps over at the edges (repeat)
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+
     gluBuild2DMipmaps( GL_TEXTURE_2D, 3, m_w, m_h, GL_RGB, GL_UNSIGNED_BYTE, img_png->data());
+    cerr << "end" << endl;
   } else if (m_mode == PERLIN) {
-    gluBuild2DMipmaps( GL_TEXTURE_2D, 3, m_w, m_h, GL_RGB, GL_UNSIGNED_BYTE, img);
+    cerr << "start perlin texture" ;
+    //gluBuild2DMipmaps( GL_TEXTURE_2D, 3, m_w, m_h, GL_RGB, GL_UNSIGNED_BYTE, img);
+    init3DNoiseTexture();
+    cerr << "end" << endl;
   }
 }
 
@@ -114,8 +131,6 @@ void Texture::map_surface() {
   // Surface doesn't use bilinear?
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-  build_texture();
 
   // not mipmaps
   if (m_mode == IMAGE) {

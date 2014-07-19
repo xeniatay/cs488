@@ -39,6 +39,8 @@ Viewer::Viewer() {
              Gdk::BUTTON_PRESS_MASK      |
              Gdk::BUTTON_RELEASE_MASK    |
              Gdk::VISIBILITY_NOTIFY_MASK);
+
+  glew_init = false;
 }
 
 Viewer::~Viewer()
@@ -71,7 +73,6 @@ void Viewer::on_realize()
   glShadeModel(GL_SMOOTH);
   glClearColor( 1.0, 1.0, 1.0, 0.0 );
   glEnable(GL_DEPTH_TEST);
-  glEnable(GL_TEXTURE_2D);
 
   gldrawable->gl_end();
 
@@ -101,6 +102,18 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
 
   // Clear framebuffer
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  // init GLEW once
+  if (!glew_init) {
+    glewInit();
+    glew_init = true;
+
+    if (glewIsSupported("GL_VERSION_2_0"))
+      printf("Ready for OpenGL 2.0\n");
+    else {
+      printf("OpenGL 2.0 not supported\n");
+    }
+  }
 
   // Set up lighting
   //init_light();

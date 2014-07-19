@@ -1087,6 +1087,9 @@ appwindow.o appwindow.d : appwindow.cpp appwindow.hpp /usr/include/gtkmm-2.4/gtk
  /usr/include/gtkmm-2.4/gtkmm/uimanager.h \
  /usr/include/gtkmm-2.4/gtkmm/actiongroup.h \
  /usr/include/gtkmm-2.4/gtkmm/viewport.h viewer.hpp \
+ /usr/include/GL/glew.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdint.h /usr/include/stdint.h \
+ /usr/include/GL/glu.h /usr/include/GL/gl.h \
  /usr/include/gtkglextmm-1.2/gtkglmm.h \
  /usr/include/gtkglextmm-1.2/gdkglmm.h \
  /usr/lib/gtkglextmm-1.2/include/gdkglextmm-config.h \
@@ -1099,9 +1102,7 @@ appwindow.o appwindow.d : appwindow.cpp appwindow.hpp /usr/include/gtkmm-2.4/gtk
  /usr/include/gtkglext-1.0/gdk/gdkgltypes.h \
  /usr/include/gtkglextmm-1.2/gdkmm/gl/config.h \
  /usr/include/gtkglextmm-1.2/gdkmm/gl/context.h \
- /usr/include/gtkglextmm-1.2/gdkmm/gl/drawable.h /usr/include/GL/gl.h \
- /usr/include/GL/glext.h /usr/include/inttypes.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdint.h /usr/include/stdint.h \
+ /usr/include/gtkglextmm-1.2/gdkmm/gl/drawable.h \
  /usr/include/gtkglextmm-1.2/gdkmm/gl/pixmap.h \
  /usr/include/gtkglextmm-1.2/gdkmm/gl/pixmapext.h \
  /usr/include/gtkglextmm-1.2/gdkmm/gl/window.h \
@@ -1113,7 +1114,7 @@ appwindow.o appwindow.d : appwindow.cpp appwindow.hpp /usr/include/gtkmm-2.4/gtk
  /usr/include/gtkglextmm-1.2/gtkmm/gl/init.h \
  /usr/include/gtkglextmm-1.2/gtkmm/gl/widget.h \
  /usr/include/gtkglextmm-1.2/gtkmm/gl/drawingarea.h \
- /usr/include/c++/4.6/iostream /usr/include/GL/glu.h scene.hpp \
- algebra.hpp primitive.hpp material.hpp texture.hpp \
- /usr/include/GL/glut.h /usr/include/GL/freeglut_std.h image.hpp \
- perlinnoise.hpp trackball.hpp events.hpp a2.hpp
+ /usr/include/c++/4.6/iostream scene.hpp algebra.hpp primitive.hpp \
+ material.hpp texture.hpp /usr/include/GL/glut.h \
+ /usr/include/GL/freeglut_std.h image.hpp perlinnoise.hpp perlin.hpp \
+ trackball.hpp events.hpp a2.hpp

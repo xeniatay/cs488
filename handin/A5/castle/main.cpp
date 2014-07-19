@@ -1,6 +1,7 @@
-#include <iostream>
+#include <GL/glew.h>
 #include <gtkmm.h>
 #include <gtkglmm.h>
+#include <iostream>
 #include "appwindow.hpp"
 #include "scene_lua.hpp"
 

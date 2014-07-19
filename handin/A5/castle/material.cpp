@@ -1,6 +1,4 @@
 #include "material.hpp"
-#include <GL/gl.h>
-#include <GL/glu.h>
 
 Material::~Material()
 {

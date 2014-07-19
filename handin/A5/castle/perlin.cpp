@@ -1,38 +1,13 @@
-#include <stdlib.h>
-#include <math.h>
-#define GLEW_STATIC 1
-#include <GL/glew.h>
-#include <GL/glu.h>
-#include <GL/glut.h>
+#include "perlin.hpp"
 
-void init3DNoiseTexture(int texsize, GLubyte* texptr);
-void make3DNoiseTexture();
-
-int Noise3DTexSize = 256;
+//int Noise3DTexSize = 256;
+int Noise3DTexSize = 64;
 GLubyte* Noise3DTexPtr;
 
-#define MAXB 0x100
-#define N 0x1000
-#define NP 12   // 2^N
-#define NM 0xfff
-
-#define s_curve(t) ( t * t * (3. - 2. * t) )
-#define lerp(t, a, b) ( a + t * (b - a) )
-#define setup(i, b0, b1, r0, r1)\
-        t = vec[i] + N;\
-        b0 = ((int)t) & BM;\
-        b1 = (b0+1) & BM;\
-        r0 = t - (int)t;\
-        r1 = r0 - 1.;
-#define at2(rx, ry) ( rx * q[0] + ry * q[1] )
-#define at3(rx, ry, rz) ( rx * q[0] + ry * q[1] + rz * q[2] )
-
-static void initNoise();
-
-static int p[MAXB + MAXB + 2];
-static double g3[MAXB + MAXB + 2][3];
-static double g2[MAXB + MAXB + 2][2];
-static double g1[MAXB + MAXB + 2];
+int p[MAXB + MAXB + 2];
+double g3[MAXB + MAXB + 2][3];
+double g2[MAXB + MAXB + 2][2];
+double g1[MAXB + MAXB + 2];
 
 int start;
 int B;
@@ -40,8 +15,10 @@ int BM;
 
 void CreateNoise3D()
 {
-  make3DNoiseTexture();
-  init3DNoiseTexture(Noise3DTexSize, Noise3DTexPtr);
+  make3DNoiseTexture(2, 0.5);
+  cerr << "made 3d noise texture" << endl;
+  init3DNoiseTexture();
+  cerr << "inited 3d noise texture" << endl;
 }
 
 void SetNoiseFrequency(int frequency)
@@ -281,19 +258,18 @@ double PerlinNoise3D(double x, double y, double z, double alpha, double beta, in
   return(sum);
 }
 
-void make3DNoiseTexture()
+// f = 2, amp = 0.5
+void make3DNoiseTexture(double startFrequency, double amp)
 {
   int f, i, j, k, inc;
-  int startFrequency = 4;
   int numOctaves = 4;
   double ni[3];
   double inci, incj, inck;
-  int frequency = startFrequency;
+  int frequency = (int)startFrequency;
   GLubyte* ptr;
-  double amp = 0.5;
 
-  GLubyte texptr[Noise3DTexSize * Noise3DTexSize * Noise3DTexSize * 4];
-  Noise3DTexPtr = texptr;
+  int size = Noise3DTexSize * Noise3DTexSize * Noise3DTexSize * 4;
+  Noise3DTexPtr = new GLubyte[size];
   for (f = 0, inc = 0; f < numOctaves; ++f, frequency *= 2, ++inc, amp *= 0.5)
   {
     SetNoiseFrequency(frequency);
@@ -314,7 +290,7 @@ void make3DNoiseTexture()
   }
 }
 
-void init3DNoiseTexture(int texsize, GLubyte* texptr)
+void init3DNoiseTexture()
 {
   glTexParameterf(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameterf(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -323,4 +299,56 @@ void init3DNoiseTexture(int texsize, GLubyte* texptr)
   glTexParameterf(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, Noise3DTexSize, Noise3DTexSize, Noise3DTexSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, Noise3DTexPtr);
   free(Noise3DTexPtr);
+}
+
+void makeSkyTexture(double startFrequency, double amp) {
+  int f, i, j, k, inc;
+  int numOctaves = 4;
+  double ni[3];
+  double inci, incj, inck, noise;
+  int frequency = (int)startFrequency;
+  GLubyte* ptr;
+
+  int size = Noise3DTexSize * Noise3DTexSize * Noise3DTexSize * 4;
+  Noise3DTexPtr = new GLubyte[size];
+  for (f = 0, inc = 0; f < numOctaves; ++f, frequency *= 2, ++inc, amp *= 0.5)
+  {
+    SetNoiseFrequency(frequency);
+    ptr = Noise3DTexPtr;
+    ni[0] = ni[1] = ni[2] = 0;
+
+    inci = 1.0 / (Noise3DTexSize / frequency);
+    for (i = 0; i < Noise3DTexSize; ++i, ni[0] += inci)
+    {
+      incj = 1.0 / (Noise3DTexSize / frequency);
+      for (j = 0; j < Noise3DTexSize; ++j, ni[1] += incj)
+      {
+        inck = 1.0 / (Noise3DTexSize / frequency);
+        for (k = 0; k < Noise3DTexSize; ++k, ni[2] += inck, ptr += 4)
+          *(ptr + inc) = (GLubyte) cloudExpCurve(
+            ( ( ( noise3(ni) + 1.0 ) * amp ) * 128.0 )
+            // TODO cloudmaps
+            + ((( (noise3(ni) + 1.0) * amp) * 128.0)/2)
+            + ((( (noise3(ni) + 1.0) * amp) * 128.0)/4)
+            + ((( (noise3(ni) + 1.0) * amp) * 128.0)/8)
+          );
+          //*(ptr + inc) = (GLubyte) cloudExpCurve(noise);
+      }
+    }
+  }
+}
+
+double cloudExpCurve(double v) {
+  double cloudSharpness = 0.8;
+  double cloudCover = 130;
+  double c = v - cloudCover;
+  double cloudDensity = 0;
+
+  if (c < 0) {
+    c = 0;
+  }
+
+  cloudDensity = 255 - ((pow(cloudSharpness,c) * 255));
+  //cerr << "v: " << v << " cloudDensity: " << cloudDensity << " | ";
+  return cloudDensity;
 }

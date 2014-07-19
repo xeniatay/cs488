@@ -1,20 +1,22 @@
-viewer.o viewer.d : viewer.cpp viewer.hpp /usr/include/gtkmm-2.4/gtkmm.h \
+viewer.o viewer.d : viewer.cpp viewer.hpp /usr/include/GL/glew.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stddef.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdint.h /usr/include/stdint.h \
+ /usr/include/features.h /usr/include/x86_64-linux-gnu/bits/predefs.h \
+ /usr/include/x86_64-linux-gnu/sys/cdefs.h \
+ /usr/include/x86_64-linux-gnu/bits/wordsize.h \
+ /usr/include/x86_64-linux-gnu/gnu/stubs.h \
+ /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
+ /usr/include/x86_64-linux-gnu/bits/wchar.h /usr/include/GL/glu.h \
+ /usr/include/GL/gl.h /usr/include/gtkmm-2.4/gtkmm.h \
  /usr/include/glibmm-2.4/glibmm.h \
  /usr/lib/x86_64-linux-gnu/glibmm-2.4/include/glibmmconfig.h \
  /usr/include/glibmm-2.4/glibmm/thread.h /usr/include/glib-2.0/glib.h \
  /usr/include/glib-2.0/glib/galloca.h /usr/include/glib-2.0/glib/gtypes.h \
  /usr/lib/x86_64-linux-gnu/glib-2.0/include/glibconfig.h \
  /usr/include/glib-2.0/glib/gmacros.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stddef.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include-fixed/limits.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include-fixed/syslimits.h \
- /usr/include/limits.h /usr/include/features.h \
- /usr/include/x86_64-linux-gnu/bits/predefs.h \
- /usr/include/x86_64-linux-gnu/sys/cdefs.h \
- /usr/include/x86_64-linux-gnu/bits/wordsize.h \
- /usr/include/x86_64-linux-gnu/gnu/stubs.h \
- /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
- /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
+ /usr/include/limits.h /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
  /usr/include/x86_64-linux-gnu/bits/local_lim.h \
  /usr/include/linux/limits.h \
  /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
@@ -109,8 +111,7 @@ viewer.o viewer.d : viewer.cpp viewer.hpp /usr/include/gtkmm-2.4/gtkmm.h \
  /usr/include/ctype.h /usr/include/c++/4.6/iosfwd \
  /usr/include/c++/4.6/bits/stringfwd.h \
  /usr/include/c++/4.6/bits/postypes.h /usr/include/c++/4.6/cwchar \
- /usr/include/wchar.h /usr/include/stdio.h \
- /usr/include/x86_64-linux-gnu/bits/wchar.h /usr/include/c++/4.6/iterator \
+ /usr/include/wchar.h /usr/include/stdio.h /usr/include/c++/4.6/iterator \
  /usr/include/c++/4.6/bits/stl_iterator_base_types.h \
  /usr/include/c++/4.6/bits/stl_iterator_base_funcs.h \
  /usr/include/c++/4.6/bits/concept_check.h \
@@ -1099,9 +1100,7 @@ viewer.o viewer.d : viewer.cpp viewer.hpp /usr/include/gtkmm-2.4/gtkmm.h \
  /usr/include/gtkglext-1.0/gdk/gdkgltypes.h \
  /usr/include/gtkglextmm-1.2/gdkmm/gl/config.h \
  /usr/include/gtkglextmm-1.2/gdkmm/gl/context.h \
- /usr/include/gtkglextmm-1.2/gdkmm/gl/drawable.h /usr/include/GL/gl.h \
- /usr/include/GL/glext.h /usr/include/inttypes.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdint.h /usr/include/stdint.h \
+ /usr/include/gtkglextmm-1.2/gdkmm/gl/drawable.h \
  /usr/include/gtkglextmm-1.2/gdkmm/gl/pixmap.h \
  /usr/include/gtkglextmm-1.2/gdkmm/gl/pixmapext.h \
  /usr/include/gtkglextmm-1.2/gdkmm/gl/window.h \
@@ -1113,7 +1112,7 @@ viewer.o viewer.d : viewer.cpp viewer.hpp /usr/include/gtkmm-2.4/gtkmm.h \
  /usr/include/gtkglextmm-1.2/gtkmm/gl/init.h \
  /usr/include/gtkglextmm-1.2/gtkmm/gl/widget.h \
  /usr/include/gtkglextmm-1.2/gtkmm/gl/drawingarea.h \
- /usr/include/c++/4.6/iostream /usr/include/GL/glu.h scene.hpp \
- algebra.hpp primitive.hpp material.hpp texture.hpp \
- /usr/include/GL/glut.h /usr/include/GL/freeglut_std.h image.hpp \
- perlinnoise.hpp trackball.hpp events.hpp a2.hpp
+ /usr/include/c++/4.6/iostream scene.hpp algebra.hpp primitive.hpp \
+ material.hpp texture.hpp /usr/include/GL/glut.h \
+ /usr/include/GL/freeglut_std.h image.hpp perlinnoise.hpp perlin.hpp \
+ trackball.hpp events.hpp a2.hpp

@@ -41,6 +41,7 @@ void Texture::build_texture() {
 }
 
 void Texture::load_image() {
+  cerr << "loading " << m_filename << endl;
   img_png = new Image(m_w, m_h, 3);
   img_png->loadPng(m_filename);
 }
@@ -51,7 +52,6 @@ void Texture::init() {
   if (!m_init) {
     if (m_mode == IMAGE) {
       load_image();
-
     } else if (m_mode == PERLIN) {
       if (m_texid == SKY) {
         cerr << "SKYYY" << endl;
@@ -74,19 +74,19 @@ void Texture::apply_gl() {
   GLuint texture = (GLuint)m_texid;
   glGenTextures( tex_count, &texture );
 
-  // activate our current texture
-  glBindTexture( GL_TEXTURE_3D, texture );
-
-  // if texture hasn't been inited, init it
-  init();
-
   if (m_mode == IMAGE) {
+    // activate our current texture
+    glBindTexture( GL_TEXTURE_2D, texture );
     glDisable(GL_TEXTURE_3D);
     glEnable(GL_TEXTURE_2D);
   } else {
+    glBindTexture( GL_TEXTURE_3D, texture );
     glDisable(GL_TEXTURE_2D);
     glEnable(GL_TEXTURE_3D);
   }
+
+  // if texture hasn't been inited, init it
+  init();
 }
 
 // from: http://www.nullterminator.net/gltexture.html
@@ -108,6 +108,7 @@ void Texture::map_texture() {
     glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 
     gluBuild2DMipmaps( GL_TEXTURE_2D, 3, m_w, m_h, GL_RGB, GL_UNSIGNED_BYTE, img_png->data());
+    img_png->~Image();
     cerr << "end" << endl;
   } else if (m_mode == PERLIN) {
     cerr << "start perlin texture" ;
@@ -121,22 +122,24 @@ void Texture::map_surface() {
 
   cerr << "map surface" << endl;
 
-  // Surface uses decal
-  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-
-  // the texture wraps over at the edges (repeat)
-  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-
-  // Surface doesn't use bilinear?
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
   // not mipmaps
   if (m_mode == IMAGE) {
+    // Surface uses decal
+    //glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+    glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+
+    // the texture wraps over at the edges (repeat)
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+
+    // Surface doesn't use bilinear?
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
     glTexImage2D(GL_TEXTURE_2D, 0, 3, m_w, m_h, 0, GL_RGB, GL_UNSIGNED_BYTE, img_png->data());
   } else if (m_mode == PERLIN) {
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, m_w, m_h, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
+    init3DNoiseTexture();
+    //glTexImage2D(GL_TEXTURE_2D, 0, 3, m_w, m_h, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
   }
 
   // enable texture stuff

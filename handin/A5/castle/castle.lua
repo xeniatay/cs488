@@ -30,7 +30,8 @@ texid_grass = 1
 texid_sky = 2
 
 -- filenames for texs
-castle_wall_fn = "assets/castle_wall_texture_1.png";
+castle_wall_fn = "assets/castle_wall_texture_3.png";
+sky_fn = "assets/sky_texture_1.png";
 
 -- materials
 red = gr.material({1.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10, -1);
@@ -39,14 +40,16 @@ green = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 10, -1);
 white = gr.material({1.0, 1.0, 1.0}, {0.1, 0.1, 0.1}, 10, -1);
 black = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10, 1);
 grass_c = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 10, 1);
-sky_c = gr.material({.1, 0.1, 0.9}, {0.1, 0.1, 0.1}, 10, 1);
+sky_c = gr.material({0.3, 0.8, 1.0}, {0.1, 0.1, 0.1}, 10, 1);
 castle_wall_c = gr.material({0.6, 0.5, 0.5}, {0.1, 0.1, 0.1}, 10, 1);
 
 -- textures
 -- tex_type, tex_id, tex_w, tex_h, tex_filename
 none_t = gr.texture(tex_none, 0, 0, 0, "", 0, 0);
 castle_wall_t = gr.texture(tex_image, texid_cw, 300, 300, castle_wall_fn, 0, 0);
-sky_t = gr.texture(tex_perlin, texid_sky, 64, 64, "", 8, 2);
+-- TODO why is only one image loaded --
+sky_t = gr.texture(tex_image, texid_sky, 900, 600, sky_fn, 0, 0);
+--sky_t = gr.texture(tex_perlin, texid_sky, 64, 64, "", 8, 2);
 grass_t = gr.texture(tex_perlin, texid_grass, 64, 64, "", 16, 1);
 
 ---- rootnode ----

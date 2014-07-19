@@ -15,7 +15,7 @@ OBJS = \
 # end
 
 # from GLUT
-LDLIBS = -lGL -lGLU -lglut -lSDL -lSDL_mixer
+LDLIBS = -lGL -lGLU -lglut -lSDL -lSDL_mixer -lGLEW
 # end
 
 CPPFLAGS = $(shell pkg-config --cflags gtkmm-2.4 gtkglextmm-1.2 lua5.1)

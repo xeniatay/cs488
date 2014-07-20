@@ -23,6 +23,8 @@ SceneNode::SceneNode(const std::string& name) : m_name(name) {
   all_scenenodes.push_back(this);
   scenenodes_v.push_back(this);
 
+  m_scale = Vector3D(1, 1, 1);
+
   //cerr << "Init sceneNode: " << name << " " << this->m_id << endl;
 }
 
@@ -60,6 +62,8 @@ void SceneNode::scale(const Vector3D& amount)
 {
   std::cerr << "Stub: Scale " << m_name << " by " << amount << std::endl;
   m_trans = m_trans * scaling(amount);
+
+  m_scale = Vector3D(m_scale[0] * amount[0], m_scale[1] * amount[1], m_scale[2] * amount[2]);
 }
 
 void SceneNode::translate(const Vector3D& amount)
@@ -143,6 +147,8 @@ void GeometryNode::walk_gl(bool picking)
 
   //cerr << "GeometryNode " << m_name << " Walk GL" << endl;
 
+  bool has_texture = false;
+
   glPushMatrix();
   gl_mult_trans(); // Convert transform matrix into a gl_float and apply it
 
@@ -158,10 +164,15 @@ void GeometryNode::walk_gl(bool picking)
   }
 
   //cerr << "texture applied to " << m_name << endl;
-  if (m_texture != NULL) { m_texture->apply_gl(); }
+  if (m_texture != NULL) {
+    m_texture->apply_gl();
+    has_texture = true;
+  } else {
+    has_texture = false;
+  }
 
   // render primitive
-  this->m_primitive->walk_gl(0);
+  this->m_primitive->walk_gl(has_texture, m_scale);
 
   // render children primitive
   for( std::list<SceneNode*>::const_iterator i = m_children.begin(); i != m_children.end(); ++i ) {
@@ -182,6 +193,7 @@ void GeometryNode::walk_gl(bool picking)
   glPopMatrix();
 
   //cerr << "GeometryNode " << m_name << " End Walk GL" << endl;
+  cerr << m_name << " drawn | ";
 }
 
 // make the transform matrix into a gl_float

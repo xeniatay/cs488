@@ -255,6 +255,7 @@ double PerlinNoise3D(double x, double y, double z, double alpha, double beta, in
     p[1] *= beta;
     p[2] *= beta;
   }
+  //cerr << "pn: "<< sum << " | ";
   return(sum);
 }
 
@@ -309,6 +310,12 @@ void makeSkyTexture(double startFrequency, double amp) {
   int frequency = (int)startFrequency;
   GLubyte* ptr;
 
+  Colour gradientStart(0.5, 0.0, 1.0);
+  Colour gradientEnd(0.5, 0.1, 0.8);
+  double colourU;
+  Colour colourFinal = Colour(1.0, 1.0, 1.0);
+
+
   int size = Noise3DTexSize * Noise3DTexSize * Noise3DTexSize * 4;
   Noise3DTexPtr = new GLubyte[size];
   for (f = 0, inc = 0; f < numOctaves; ++f, frequency *= 2, ++inc, amp *= 0.5)
@@ -325,14 +332,46 @@ void makeSkyTexture(double startFrequency, double amp) {
       {
         inck = 1.0 / (Noise3DTexSize / frequency);
         for (k = 0; k < Noise3DTexSize; ++k, ni[2] += inck, ptr += 4)
-          *(ptr + inc) = (GLubyte) cloudExpCurve(
-            ( ( ( noise3(ni) + 1.0 ) * amp ) * 128.0 )
-            // TODO cloudmaps
-            + ((( (noise3(ni) + 1.0) * amp) * 128.0)/2)
-            + ((( (noise3(ni) + 1.0) * amp) * 128.0)/4)
-            + ((( (noise3(ni) + 1.0) * amp) * 128.0)/8)
-          );
-          //*(ptr + inc) = (GLubyte) cloudExpCurve(noise);
+
+          if (f == 0) {
+            /*
+            *(ptr + inc) = (GLubyte) getColour(gradientStart, gradientEnd, (double) 255 - fmod(cloudExpCurve(
+              ( ( ( ( noise3(ni) + 1.0 ) * amp ) * 128.0 )
+              + ((( (noise3(ni) + 1.0) * amp) * 128.0)/2)
+              + ((( (noise3(ni) + 1.0) * amp) * 128.0)/4)
+              + ((( (noise3(ni) + 1.0) * amp) * 128.0)/8) )
+            ), 255) ).R();
+            */
+            *(ptr + inc ) = (GLubyte) 255;
+          } else if (f == 1) {
+            /*
+            *(ptr + inc) = (GLubyte) getColour(gradientStart, gradientEnd, (double) 255 - fmod(cloudExpCurve(
+              ( ( ( ( noise3(ni) + 1.0 ) * amp ) * 128.0 )
+              + ((( (noise3(ni) + 1.0) * amp) * 128.0)/2)
+              + ((( (noise3(ni) + 1.0) * amp) * 128.0)/4)
+              + ((( (noise3(ni) + 1.0) * amp) * 128.0)/8) )
+            ), 255) ).G();
+            */
+            *(ptr + inc ) = (GLubyte) 255;
+          } else if (f == 3) {
+            *(ptr + inc ) = (GLubyte) 255;
+          } else {
+            colourFinal = getColour(gradientStart, gradientEnd, (double) cloudExpCurve(
+              ( ( ( ( noise3(ni) + 1.0 ) * amp ) * 128.0 )
+              + ((( (noise3(ni) + 1.0) * amp) * 128.0)/2)
+              + ((( (noise3(ni) + 1.0) * amp) * 128.0)/4)
+              + ((( (noise3(ni) + 1.0) * amp) * 128.0)/8) )
+            ) );
+            *(ptr + inc) = (GLubyte) colourFinal.B();
+            /*
+            getColour(gradientStart, gradientEnd, (double) cloudExpCurve(
+              ( ( ( ( noise3(ni) + 1.0 ) * amp ) * 128.0 )
+              + ((( (noise3(ni) + 1.0) * amp) * 128.0)/2)
+              + ((( (noise3(ni) + 1.0) * amp) * 128.0)/4)
+              + ((( (noise3(ni) + 1.0) * amp) * 128.0)/8) )
+            ) ).B();
+            */
+          }
       }
     }
   }
@@ -349,6 +388,44 @@ double cloudExpCurve(double v) {
   }
 
   cloudDensity = 255 - ((pow(cloudSharpness,c) * 255));
-  //cerr << "v: " << v << " cloudDensity: " << cloudDensity << " | ";
+  /*
+  if (cloudDensity != 0 && cloudDensity != 255) {
+    cerr << "v: " << v << " CD: " << cloudDensity << " | ";
+  }
+  */
   return cloudDensity;
 }
+
+// from: http://devmag.org.za/2009/04/25/perlin-noise/
+Colour getColour(Colour &gradientStart, Colour &gradientEnd, double t)
+{
+  double u = 255 - t;
+
+  Colour colour = Colour(
+     (gradientStart.R() * u + gradientEnd.R() * t),
+     (gradientStart.G() * u + gradientEnd.G() * t),
+     (gradientStart.B() * u + gradientEnd.B() * t)
+  );
+
+  return colour;
+}
+
+/*
+Colour[][] MapGradient(Colour gradientStart, Colour gradientEnd, float[][] perlinNoise)
+{
+   int width = perlinNoise.Length;
+   int height = perlinNoise[0].Length;
+
+   Colour[][] image = GetEmptyArray(width, height);
+
+   for (int i = 0; i &lt; width; i++)
+   {
+      for (int j = 0; j &lt; height; j++)
+      {
+         image[i][j] = GetColour(gradientStart, gradientEnd, perlinNoise[i][j]);
+      }
+   }
+
+   return image;
+}
+*/

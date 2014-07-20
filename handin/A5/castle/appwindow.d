@@ -1115,6 +1115,6 @@ appwindow.o appwindow.d : appwindow.cpp appwindow.hpp /usr/include/gtkmm-2.4/gtk
  /usr/include/gtkglextmm-1.2/gtkmm/gl/widget.h \
  /usr/include/gtkglextmm-1.2/gtkmm/gl/drawingarea.h \
  /usr/include/c++/4.6/iostream scene.hpp algebra.hpp primitive.hpp \
- material.hpp texture.hpp /usr/include/GL/glut.h \
- /usr/include/GL/freeglut_std.h image.hpp perlinnoise.hpp perlin.hpp \
- trackball.hpp events.hpp a2.hpp
+ texture.hpp /usr/include/GL/glut.h /usr/include/GL/freeglut_std.h \
+ image.hpp perlinnoise.hpp perlin.hpp material.hpp trackball.hpp \
+ events.hpp a2.hpp

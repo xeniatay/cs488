@@ -8,6 +8,7 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 #include <iostream>
+#include "algebra.hpp"
 
 using namespace std;
 
@@ -58,5 +59,6 @@ void make3DNoiseTexture(double startFrequency, double amp);
 void makeSkyTexture(double startFrequency, double amp);
 void init3DNoiseTexture();
 double cloudExpCurve(double v);
+Colour getColour(Colour &start, Colour &end, double u);
 
 #endif

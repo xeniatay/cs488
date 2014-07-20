@@ -94,4 +94,6 @@ primitive.o primitive.d : primitive.cpp primitive.hpp /usr/include/GL/glew.h \
  /usr/include/x86_64-linux-gnu/bits/inf.h \
  /usr/include/x86_64-linux-gnu/bits/nan.h \
  /usr/include/x86_64-linux-gnu/bits/mathdef.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls.h
+ /usr/include/x86_64-linux-gnu/bits/mathcalls.h texture.hpp \
+ /usr/include/GL/glut.h /usr/include/GL/freeglut_std.h image.hpp \
+ perlinnoise.hpp perlin.hpp

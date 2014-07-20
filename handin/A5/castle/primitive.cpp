@@ -1,5 +1,4 @@
 #include "primitive.hpp"
-#include <iostream>
 
 using std::cerr;
 using std::endl;
@@ -17,7 +16,7 @@ Sphere::Sphere() {
 
 }
 
-void Sphere::walk_gl(int texture) {
+void Sphere::walk_gl(bool texture, Vector3D scale) {
   //cerr << "Sphere Walk GL" << endl;
 
   glNewList(dl, GL_COMPILE);
@@ -33,7 +32,8 @@ void Sphere::walk_gl(int texture) {
 
   glCallList (dl);
 
-  has_texture = (texture == -1) ? false : true;
+  has_texture = texture;
+  m_scale = scale;
 
   //cerr << "Sphere End Walk GL" << endl;
 }
@@ -48,9 +48,9 @@ Cube::Cube() {
 
 }
 
-void Primitive::walk_gl(int texture){ }
+void Primitive::walk_gl(bool texture, Vector3D scale){ }
 
-void Cube::walk_gl(int texture)
+void Cube::walk_gl(bool texture, Vector3D scale)
 {
   //cerr << "Cube Walk GL" << endl;
 
@@ -59,7 +59,9 @@ void Cube::walk_gl(int texture)
   //GLUquadric *quadric = gluNewQuadric();
   //gluQuadricOrientation(quadric, GLU_OUTSIDE);
 
-  has_texture = (texture == -1) ? false : true;
+  has_texture = texture;
+  m_scale = scale;
+
   draw_cube(0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0);
 
   glEndList();
@@ -79,13 +81,15 @@ void Cube::draw_cube(double x = 0, double y = 0, double z = 2, double r = 0, dou
   double r_val = 0, g_val = 0, b_val = 0;
   Matrix4x4 facecoords, texcoords;
   Vector4D bl, tl, tr, br;
-  std::cerr << "cube is drawn" << std::endl;
 
+  // texcoords
   Vector4D tbl(0, 0, 0, 0);
-  Vector4D ttl(0, 5, 0, 0);
-  Vector4D ttr(5, 5, 0, 0);
-  Vector4D tbr(5, 0, 0, 0);
+  Vector4D ttl(0, 1, 0, 0);
+  Vector4D ttr(1, 1, 0, 0);
+  Vector4D tbr(1, 0, 0, 0);
   texcoords = Matrix4x4(tbl, ttl, ttr, tbr);
+
+  //cerr << "texcoords: " << endl << texcoords << endl;
 
   glBegin(GL_QUADS);
 

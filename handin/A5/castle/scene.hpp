@@ -57,6 +57,9 @@ class SceneNode {
     int m_geo_id;
     std::string m_name;
 
+    // scaling for texture
+    Vector3D m_scale;
+
     void printTM();
 
     void gl_mult_trans();

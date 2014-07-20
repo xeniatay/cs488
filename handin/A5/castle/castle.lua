@@ -40,7 +40,7 @@ green = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 1.0, -1);
 white = gr.material({1.0, 1.0, 1.0}, {0.1, 0.1, 0.1}, 1.0, -1);
 black = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 1.0, 1);
 grass_c = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 1.0, 1);
-sky_c = gr.material({0.3, 0.8, 1.0}, {0.1, 0.1, 0.1}, 1.0, 1);
+sky_c = gr.material({0.2, 0.5, 1.0}, {0.1, 0.1, 0.1}, 1.0, 1);
 castle_wall_c = gr.material({0.6, 0.5, 0.5}, {0.1, 0.1, 0.1}, 1.0, 1);
 castle_wall_window_c = gr.material({0.8, 1.0, 1.0}, {0.1, 0.1, 0.1}, 0.1, -1);
 
@@ -48,8 +48,8 @@ castle_wall_window_c = gr.material({0.8, 1.0, 1.0}, {0.1, 0.1, 0.1}, 0.1, -1);
 -- tex_type, tex_id, tex_w, tex_h, tex_filename
 none_t = gr.texture(tex_none, 0, 0, 0, "", 0, 0);
 castle_wall_t = gr.texture(tex_image, texid_cw, 300, 300, castle_wall_fn, 0, 0);
-sky_t = gr.texture(tex_image, texid_sky, 900, 600, sky_fn, 0, 0);
---sky_t = gr.texture(tex_perlin, texid_sky, 64, 64, "", 8, 2);
+--sky_t = gr.texture(tex_image, texid_sky, 900, 600, sky_fn, 0, 0);
+sky_t = gr.texture(tex_perlin, texid_sky, 64, 64, "", 4, 2);
 grass_t = gr.texture(tex_perlin, texid_grass, 64, 64, "", 16, 1);
 
 ---- rootnode ----

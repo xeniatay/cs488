@@ -1113,6 +1113,6 @@ main.o main.d : main.cpp /usr/include/GL/glew.h \
  /usr/include/gtkglextmm-1.2/gtkmm/gl/widget.h \
  /usr/include/gtkglextmm-1.2/gtkmm/gl/drawingarea.h \
  /usr/include/c++/4.6/iostream appwindow.hpp viewer.hpp scene.hpp \
- algebra.hpp primitive.hpp material.hpp texture.hpp \
- /usr/include/GL/glut.h /usr/include/GL/freeglut_std.h image.hpp \
- perlinnoise.hpp perlin.hpp trackball.hpp events.hpp a2.hpp scene_lua.hpp
+ algebra.hpp primitive.hpp texture.hpp /usr/include/GL/glut.h \
+ /usr/include/GL/freeglut_std.h image.hpp perlinnoise.hpp perlin.hpp \
+ material.hpp trackball.hpp events.hpp a2.hpp scene_lua.hpp

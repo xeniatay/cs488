@@ -96,9 +96,10 @@ scene.o scene.d : scene.cpp scene.hpp /usr/include/c++/4.6/list \
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h primitive.hpp \
  /usr/include/GL/glew.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdint.h /usr/include/stdint.h \
- /usr/include/GL/glu.h /usr/include/GL/gl.h material.hpp texture.hpp \
+ /usr/include/GL/glu.h /usr/include/GL/gl.h texture.hpp \
  /usr/include/GL/glut.h /usr/include/GL/freeglut_std.h image.hpp \
- perlinnoise.hpp perlin.hpp a2.hpp /usr/include/c++/4.6/vector \
+ perlinnoise.hpp perlin.hpp material.hpp a2.hpp \
+ /usr/include/c++/4.6/vector \
  /usr/include/c++/4.6/bits/stl_uninitialized.h \
  /usr/include/c++/4.6/bits/stl_vector.h \
  /usr/include/c++/4.6/bits/stl_bvector.h \

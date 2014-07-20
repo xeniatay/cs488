@@ -143,32 +143,43 @@ void GeometryNode::walk_gl(bool picking)
 
   //cerr << "GeometryNode " << m_name << " Walk GL" << endl;
 
+  glPushMatrix();
+  gl_mult_trans(); // Convert transform matrix into a gl_float and apply it
+
+  // enable alpha blending
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glDepthMask(0); // Disable writing to depth buffer
+
+  //cerr << "material applied to " << m_name << endl;
   if (m_material) {
     PhongMaterial* p_material = (PhongMaterial*) m_material;
     p_material->apply_gl();
-    //cerr << "material applied" << endl;
   }
 
-  if (m_texture != NULL) {
-    m_texture->apply_gl();
-    //cerr << "texture applied" << endl;
-  }
+  //cerr << "texture applied to " << m_name << endl;
+  if (m_texture != NULL) { m_texture->apply_gl(); }
 
-  glPushMatrix();
-  gl_mult_trans();
-
+  // render primitive
   this->m_primitive->walk_gl(0);
 
+  // render children primitive
   for( std::list<SceneNode*>::const_iterator i = m_children.begin(); i != m_children.end(); ++i ) {
     SceneNode *node = (*i);
     node->walk_gl();
   }
 
-  glPopMatrix();
-
-  // unbind texture
+  // unbind and disable texture
   glBindTexture( GL_TEXTURE_2D, NULL);
   glBindTexture( GL_TEXTURE_3D, NULL);
+  glDisable(GL_TEXTURE_2D);
+  glDisable(GL_TEXTURE_3D);
+
+  // disable alpha blending
+  glDisable(GL_BLEND);
+  glDepthMask(1); // Re-enable writing to depth buffer
+
+  glPopMatrix();
 
   //cerr << "GeometryNode " << m_name << " End Walk GL" << endl;
 }

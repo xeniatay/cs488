@@ -34,20 +34,20 @@ castle_wall_fn = "assets/castle_wall_texture_3.png";
 sky_fn = "assets/sky_texture_1.png";
 
 -- materials
-red = gr.material({1.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10, -1);
-blue = gr.material({0.0, 0.0, 1.0}, {0.1, 0.1, 0.1}, 10, -1 );
-green = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 10, -1);
-white = gr.material({1.0, 1.0, 1.0}, {0.1, 0.1, 0.1}, 10, -1);
-black = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10, 1);
-grass_c = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 10, 1);
-sky_c = gr.material({0.3, 0.8, 1.0}, {0.1, 0.1, 0.1}, 10, 1);
-castle_wall_c = gr.material({0.6, 0.5, 0.5}, {0.1, 0.1, 0.1}, 10, 1);
+red = gr.material({1.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 1.0, -1);
+blue = gr.material({0.0, 0.0, 1.0}, {0.1, 0.1, 0.1}, 1.0, -1 );
+green = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 1.0, -1);
+white = gr.material({1.0, 1.0, 1.0}, {0.1, 0.1, 0.1}, 1.0, -1);
+black = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 1.0, 1);
+grass_c = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 1.0, 1);
+sky_c = gr.material({0.3, 0.8, 1.0}, {0.1, 0.1, 0.1}, 1.0, 1);
+castle_wall_c = gr.material({0.6, 0.5, 0.5}, {0.1, 0.1, 0.1}, 1.0, 1);
+castle_wall_window_c = gr.material({0.8, 1.0, 1.0}, {0.1, 0.1, 0.1}, 0.1, -1);
 
 -- textures
 -- tex_type, tex_id, tex_w, tex_h, tex_filename
 none_t = gr.texture(tex_none, 0, 0, 0, "", 0, 0);
 castle_wall_t = gr.texture(tex_image, texid_cw, 300, 300, castle_wall_fn, 0, 0);
--- TODO why is only one image loaded --
 sky_t = gr.texture(tex_image, texid_sky, 900, 600, sky_fn, 0, 0);
 --sky_t = gr.texture(tex_perlin, texid_sky, 64, 64, "", 8, 2);
 grass_t = gr.texture(tex_perlin, texid_grass, 64, 64, "", 16, 1);
@@ -129,11 +129,43 @@ mh_thickness = 1;
   mh_f_node:translate(-mh_w/2, 0, mh_b);
   rootnode:add_child(mh_f_node);
 
-  mh_f_primt = gr.cube('mh_f_primt');
-  mh_f_primt:scale(mh_w, mh_h, mh_thickness);
-  mh_f_primt:set_texture(castle_wall_t);
-  mh_f_primt:set_material(castle_wall_c);
-  mh_f_node:add_child(mh_f_primt);
+  -- front wall left --
+  mh_fl_primt = gr.cube('mh_fl_primt');
+  mh_fl_primt:scale(mh_w/3, mh_h, mh_thickness);
+  mh_fl_primt:set_texture(castle_wall_t);
+  mh_fl_primt:set_material(castle_wall_c);
+  mh_f_node:add_child(mh_fl_primt);
+
+  -- front wall middle bottom --
+  mh_fmt_primt = gr.cube('mh_fmt_primt');
+  mh_fmt_primt:translate(mh_w/3, 0, 0);
+  mh_fmt_primt:scale(mh_w/3, mh_h/3, mh_thickness);
+  mh_fmt_primt:set_texture(castle_wall_t);
+  mh_fmt_primt:set_material(castle_wall_c);
+  mh_f_node:add_child(mh_fmt_primt);
+
+  -- front wall window --
+  mh_fw_primt = gr.cube('mh_fw_primt');
+  mh_fw_primt:translate(mh_w/3, mh_h/3, 0);
+  mh_fw_primt:scale(mh_w/3, mh_h/3, mh_thickness);
+  mh_fw_primt:set_material(castle_wall_window_c);
+  mh_f_node:add_child(mh_fw_primt);
+
+  -- front wall middle top --
+  mh_fmt_primt = gr.cube('mh_fmt_primt');
+  mh_fmt_primt:translate(mh_w/3, 2 * mh_h/3, 0);
+  mh_fmt_primt:scale(mh_w/3, mh_h/3, mh_thickness);
+  mh_fmt_primt:set_texture(castle_wall_t);
+  mh_fmt_primt:set_material(castle_wall_c);
+  mh_f_node:add_child(mh_fmt_primt);
+
+  -- front wall right --
+  mh_fr_primt = gr.cube('mh_fr_primt');
+  mh_fr_primt:translate(2 * mh_w/3, 0, 0);
+  mh_fr_primt:scale(mh_w/3, mh_h, mh_thickness);
+  mh_fr_primt:set_texture(castle_wall_t);
+  mh_fr_primt:set_material(castle_wall_c);
+  mh_f_node:add_child(mh_fr_primt);
 
 -- end main hall --
 
@@ -173,6 +205,7 @@ battlement_thickness = mh_thickness;
 
     battlement_primt = gr.cube("battlement_primt_" .. i);
     battlement_primt:scale(battlement_thickness, battlement_h, battlement_w);
+    battlement_primt:set_texture(castle_wall_t);
     battlement_primt:set_material(castle_wall_c)
     battlement_node:add_child(battlement_primt)
 

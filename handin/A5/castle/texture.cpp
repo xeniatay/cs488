@@ -74,12 +74,15 @@ void Texture::apply_gl() {
   GLuint texture = (GLuint)m_texid;
   glGenTextures( tex_count, &texture );
 
-  if (m_mode == IMAGE) {
+  if (m_mode == NONE) {
+    return;
+  } else if (m_mode == IMAGE) {
     // activate our current texture
     glBindTexture( GL_TEXTURE_2D, texture );
     glDisable(GL_TEXTURE_3D);
     glEnable(GL_TEXTURE_2D);
   } else {
+    glBlendFunc(GL_ONE, GL_ZERO);
     glBindTexture( GL_TEXTURE_3D, texture );
     glDisable(GL_TEXTURE_2D);
     glEnable(GL_TEXTURE_3D);
@@ -107,7 +110,7 @@ void Texture::map_texture() {
     glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
     glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 
-    gluBuild2DMipmaps( GL_TEXTURE_2D, 3, m_w, m_h, GL_RGB, GL_UNSIGNED_BYTE, img_png->data());
+    gluBuild2DMipmaps( GL_TEXTURE_2D, 3, m_w, m_h, GL_RGBA, GL_UNSIGNED_BYTE, img_png->data());
     img_png->~Image();
     cerr << "end" << endl;
   } else if (m_mode == PERLIN) {

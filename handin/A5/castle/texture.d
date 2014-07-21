@@ -98,4 +98,4 @@ texture.o texture.d : texture.cpp texture.hpp /usr/include/GL/glew.h \
  /usr/include/c++/4.6/bits/algorithmfwd.h \
  /usr/include/c++/4.6/bits/stl_heap.h \
  /usr/include/c++/4.6/bits/stl_tempbuf.h \
- /usr/include/c++/4.6/bits/stl_construct.h
+ /usr/include/c++/4.6/bits/stl_construct.h includes/SOIL.h

@@ -98,7 +98,7 @@ scene.o scene.d : scene.cpp scene.hpp /usr/include/c++/4.6/list \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdint.h /usr/include/stdint.h \
  /usr/include/GL/glu.h /usr/include/GL/gl.h texture.hpp \
  /usr/include/GL/glut.h /usr/include/GL/freeglut_std.h image.hpp \
- perlinnoise.hpp perlin.hpp material.hpp a2.hpp \
+ perlinnoise.hpp perlin.hpp includes/SOIL.h material.hpp a2.hpp \
  /usr/include/c++/4.6/vector \
  /usr/include/c++/4.6/bits/stl_uninitialized.h \
  /usr/include/c++/4.6/bits/stl_vector.h \

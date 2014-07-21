@@ -44,6 +44,15 @@ void Texture::load_image() {
   cerr << "loading " << m_filename << endl;
   img_png = new Image(m_w, m_h, 3);
   img_png->loadPng(m_filename);
+
+  // SOIL can't link
+  /*
+    GLuint myTexture;
+    char* fn = "assets/castle_wall_texture_3.png";
+    myTexture = SOIL_load_OGL_texture( fn, 0, 1,
+                       SOIL_FLAG_POWER_OF_TWO |
+                       SOIL_FLAG_INVERT_Y );
+  */
 }
 
 void Texture::init() {
@@ -136,9 +145,10 @@ void Texture::map_surface() {
     glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 
     // Surface doesn't use bilinear?
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
+    //glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
     glTexImage2D(GL_TEXTURE_2D, 0, 3, m_w, m_h, 0, GL_RGB, GL_UNSIGNED_BYTE, img_png->data());
   } else if (m_mode == PERLIN) {
     init3DNoiseTexture();

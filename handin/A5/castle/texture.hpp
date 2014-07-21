@@ -11,6 +11,7 @@
 #include "image.hpp"
 #include "perlinnoise.hpp"
 #include "perlin.hpp"
+#include "includes/SOIL.h"
 
 using namespace std;
 

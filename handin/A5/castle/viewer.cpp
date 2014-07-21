@@ -131,6 +131,12 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   // Draw scene
   m_scenenode->walk_gl();
 
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_ONE, GL_SRC_ALPHA);
+  glColor4f(0.1, 0.1, 0.1, 0.7);
+  glRecti(0, 0, m_width, m_height);
+  glDisable(GL_BLEND);
+
   // Swap the contents of the front and back buffers so we see what we
   // just drew. This should only be done if double buffering is enabled.
   gldrawable->swap_buffers();

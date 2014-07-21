@@ -3,6 +3,10 @@
 using std::cerr;
 using std::endl;
 
+Primitive::Primitive() {
+  m_celshading = false;
+}
+
 Primitive::~Primitive() {
 }
 
@@ -113,6 +117,13 @@ void Cube::walk_gl(bool texture, Vector3D scale)
 {
   //cerr << "Cube Walk GL" << endl;
 
+  if (m_celshading == true) {
+    cerr << "CELSHADING HAPPENING ===" << endl;
+    // read shader.txt
+    read_shader();
+    init_celshading();
+  }
+
   glNewList(dl_cube, GL_COMPILE);
 
   //GLUquadric *quadric = gluNewQuadric();
@@ -128,9 +139,11 @@ void Cube::walk_gl(bool texture, Vector3D scale)
 
   //cerr << "w, h, b: " << m_w << ", " << m_h << ", "<<m_b<<endl;
   for (int i = 0; i < m_w; i++) {
-    for (int j = 0; j < m_h; j++) {
+    //for (int j = 0; j < m_h; j++) {
+    for (int j = m_h - 1; j >= 0; j--) {
       for (int k = 0; k < m_b; k++) {
         draw_cube(i, j, k);
+        //draw_cube_outline(i, j, k);
       }
     }
   }
@@ -141,6 +154,9 @@ void Cube::walk_gl(bool texture, Vector3D scale)
 
   glCallList (dl_cube);
 
+  if (m_celshading == true) {
+    destruct_celshading();
+  }
 
   //cerr << "Cube End Walk GL" << endl;
 }
@@ -151,17 +167,6 @@ void Cube::draw_cube(double x = 0, double y = 0, double z = 2) {
   //bool multicolour = true;
   Matrix4x4 facecoords, texcoords;
   Vector4D bl, tl, tr, br;
-
-  // read shader.txt
-  read_shader();
-
-  // Cel-Shading Code //
-  /*
-  glDisable(GL_TEXTURE_3D);
-  glDisable(GL_TEXTURE_2D);
-  glEnable(GL_TEXTURE_1D);                 // Enable 1D Texturing
-  glBindTexture(GL_TEXTURE_1D, shaderTexture[0]);      // Bind Our Texture
-  */
 
   // texcoords
   Vector4D tbl(0, 0, 0, 0);
@@ -223,15 +228,6 @@ void Cube::draw_cube(double x = 0, double y = 0, double z = 2) {
     draw_face(facecoords, texcoords);
 
   glEnd();
-
-  // end cel shading
-  /*
-    glDepthFunc(GL_LESS); // Reset The Depth-Testing Mode
-    glCullFace(GL_BACK); // Reset The Face To Be Culled
-    glPolygonMode(GL_BACK, GL_FILL); // Reset Back-Facing Polygon Drawing Mode
-    glDisable(GL_BLEND);
-    glDisable(GL_CULL_FACE);
-    */
 }
 
 void Cube::draw_face(Matrix4x4 coords, Matrix4x4 texcoords) {
@@ -241,27 +237,18 @@ void Cube::draw_face(Matrix4x4 coords, Matrix4x4 texcoords) {
   Vector3D v1 = Vector3D(coords[3][0], coords[3][1], coords[3][2]);
   Vector3D v2 = Vector3D(coords[1][0], coords[1][1], coords[1][2]);
   Vector3D cross = v1.cross(v2);
-  //cerr << v1 << ", " << v2 << ", " << cross << " | ";
   GLdouble normal[] = {cross[0], cross[1], cross[2]};
 
-  // calculate lighting stuff from http://tomdalling.com/blog/modern-opengl/06-diffuse-point-lighting/
-
-  Vector3D lightPos = Vector3D{-300 - coords[3][0], 800 - coords[3][1], 1000 - coords[3][2]}; // hardccoded, please change
-  lightPos.normalize();
-  double tmpShade = cross.dot(lightPos);
-
-  if (tmpShade < 0.0) {
-    tmpShade = 0.0;
+  if (m_celshading == true) {
+    // calculate lighting stuff from http://tomdalling.com/blog/modern-opengl/06-diffuse-point-lighting/
+    Vector3D lightPos = Vector3D{0 - coords[3][0], 800 - coords[3][1], 1000 - coords[3][2]}; // hardcoded, please change
+    lightPos.normalize();
+    double tmpShade = cross.dot(lightPos);
+    if (tmpShade < 0.0) { tmpShade = 0.0; }
+    int lightIndex = (int)tmpShade;
+    double gray = shaderData[lightIndex][1];
+    glColor4d( gray, gray, gray, 1);
   }
-  glTexCoord1f(tmpShade);
-
-  int lightIndex = (int)tmpShade;
-  double gray = shaderData[lightIndex][1];
-  if (gray > 32) {
-    gray = 32;
-  }
-
-  glColor4d( gray, gray, gray, 1.0);
 
   // bottom left
   if (has_texture) {
@@ -300,25 +287,6 @@ bool Primitive::read_shader() {
 
   FILE *In  = NULL;                     // File Pointer
 
-  //g_window  = window;
-  //g_keys  = keys;
-
-  // Start Of User Initialization
-  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);     // Realy Nice perspective calculations
-
-  glClearColor(0.7f, 0.7f, 0.7f, 0.0f);            // Light Grey Background
-  glClearDepth(1.0f);                    // Depth Buffer Setup
-
-  glEnable(GL_DEPTH_TEST);                 // Enable Depth Testing
-  glDepthFunc(GL_LESS);                    // The Type Of Depth Test To Do
-
-  glShadeModel(GL_SMOOTH);                 // Enables Smooth Color Shading
-  glDisable(GL_LINE_SMOOTH);                 // Initially Disable Line Smoothing
-
-//  glEnable(GL_CULL_FACE);                  // Enable OpenGL Face Culling
-
-  glDisable(GL_LIGHTING);                  // Disable OpenGL Lighting
-
   In = fopen("./Shader.txt", "r");            // Open The Shader File
 
   if(In) {
@@ -326,7 +294,6 @@ bool Primitive::read_shader() {
       if(feof(In)) {
         break;
       }
-
       fgets(Line, 255, In);                // Get The Current Line
       shaderData[i][0] = shaderData[i][1] = shaderData[i][2] = double(atof(Line)); // Copy Over The Value
     }
@@ -335,21 +302,48 @@ bool Primitive::read_shader() {
     return false;                     // It Went Horribly Horribly Wrong
   }
 
-/*
-  glGenTextures(1, &shaderTexture[0]);           // Get A Free Texture ID
-  glBindTexture(GL_TEXTURE_1D, shaderTexture[0]);      // Bind This Texture. From Now On It Will Be 1D
-
-  // For Crying Out Loud Don't Let OpenGL Use Bi/Trilinear Filtering!
-  glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-  glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB, 32, 0, GL_RGB , GL_FLOAT, shaderData);  // Upload
-
-  lightAngle.X = 0.0f;                    // Set The X Direction
-  lightAngle.Y = 0.0f;                    // Set The Y Direction
-  lightAngle.Z = 1.0f;                    // Set The Z Direction
-
-  Normalize(lightAngle); // Normalize The Light Direction
-*/
   return false;
+}
+
+// http://www.gamedev.net/page/resources/_/technical/graphics-programming-and-theory/cel-shading-r1438
+void Primitive::init_celshading() {
+  // these are defaults
+  glClearDepth(1.0f);                    // Depth Buffer Setup
+  glEnable(GL_DEPTH_TEST);                 // Enable Depth Testing
+  glDepthFunc(GL_LESS);                    // The Type Of Depth Test To Do
+
+  // this is default
+  glShadeModel(GL_SMOOTH);                 // Enables Smooth Color Shading
+
+  glDisable(GL_LINE_SMOOTH);                 // Initially Disable Line Smoothing
+  glEnable(GL_CULL_FACE);                  // Enable OpenGL Face Culling
+  glCullFace(GL_FRONT);
+  glDisable(GL_LIGHTING);                  // Disable OpenGL Lighting
+}
+
+void Primitive::destruct_celshading() {
+  glDisable(GL_CULL_FACE);
+  glEnable(GL_LINE_SMOOTH);                 // Initially Disable Line Smoothing
+  glEnable(GL_LIGHTING);                  // Disable OpenGL Lighting
+}
+
+void Cube::draw_cube_outline(double i, double j, double k) {
+  //glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
+  // Draw Backfacing Polygons As Wireframes
+  glPolygonMode(GL_BACK, GL_LINE);
+  // Set The Line Width
+  glLineWidth(outlineWidth);
+  glCullFace(GL_FRONT);                  // Don't Draw Any Front-Facing Polygons
+  glDepthFunc(GL_LEQUAL);                // Change The Depth Mode
+  glColor4d( 1.0, 1.0, 1.0, 1.0);
+
+  draw_cube(i, j, k);
+
+  glDepthFunc(GL_LESS); // Reset The Depth-Testing Mode
+  glCullFace(GL_BACK); // Reset The Face To Be Culled
+  glPolygonMode(GL_BACK, GL_FILL); // Reset Back-Facing Polygon Drawing Mode
+  //glDisable(GL_BLEND);
+  glDisable(GL_CULL_FACE);
 }

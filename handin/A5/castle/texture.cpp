@@ -52,7 +52,7 @@ void Texture::load_image() {
     myTexture = SOIL_load_OGL_texture( fn, 0, 1,
                        SOIL_FLAG_POWER_OF_TWO |
                        SOIL_FLAG_INVERT_Y );
-  */
+                       */
 }
 
 void Texture::init() {

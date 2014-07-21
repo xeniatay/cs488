@@ -115,6 +115,7 @@ class GeometryNode : public SceneNode {
 
     void transform_node();
     void dimensions(int w, int h, int b);
+    void celshading(int shade);
 
 };
 

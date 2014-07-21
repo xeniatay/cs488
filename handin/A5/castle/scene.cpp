@@ -148,10 +148,13 @@ GeometryNode::~GeometryNode() {
 }
 
 void GeometryNode::dimensions(int w, int h, int b) {
-  cerr << "Dimensions called on GeoNode" << endl;
   m_primitive->m_w = w;
   m_primitive->m_h = h;
   m_primitive->m_b = b;
+}
+
+void GeometryNode::celshading(int has_shade) {
+  //m_primitive->m_celshading = true;
 }
 
 void GeometryNode::walk_gl(bool picking)

@@ -12,6 +12,7 @@ using namespace std;
 
 class Primitive {
 public:
+  Primitive();
   virtual ~Primitive();
   void draw_cube(double x, double y, double z, double r, double g, double b, double a);
   virtual void walk_gl(bool texture, Vector3D scale);
@@ -23,6 +24,10 @@ public:
   bool read_shader();
 
   int m_w, m_h, m_b;
+
+  void init_celshading();
+  void destruct_celshading();
+  bool m_celshading;
 
 };
 
@@ -42,6 +47,7 @@ public:
   void draw_cube(double x, double y, double z);
   void draw_face(Matrix4x4 coords, Matrix4x4 texcoords);
   void walk_gl(bool texture, Vector3D scale);
+  void draw_cube_outline(double x, double y, double z);
   GLuint dl_cube;
 };
 

@@ -67,6 +67,9 @@ class Viewer : public Gtk::GL::DrawingArea {
     //trackball
     void init_trackball();
 
+    // gl_settings
+    void gl_settings();
+
     // A useful function that forces this widget to rerender. If you
     // want to render a new frame, do not call on_expose_event
     // directly. Instead call this, which will cause an on_expose_event

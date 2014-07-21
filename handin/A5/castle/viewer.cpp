@@ -93,12 +93,12 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   glViewport(0, 0, get_width(), get_height());
-  gluPerspective(40.0, (GLfloat)get_width()/(GLfloat)get_height(), 0.01, 1000.0);
+
+  gl_settings();
+
   // Change to model view for drawing
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  // Clear framebuffer
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   init_glew();
   init_light();
@@ -271,10 +271,8 @@ void Viewer::reset_all() {
 
   vToggleDir(DIR_NONE);
 
-/*
-  glDisable(GL_DEPTH_TEST);
+  //glDisable(GL_DEPTH_TEST);
   glDisable(GL_CULL_FACE);
-*/
 
   invalidate();
 }
@@ -394,4 +392,17 @@ void Viewer::init_trackball() {
   glLoadMatrixd((GLdouble *) mTrans);
   glMultMatrixd((GLdouble *) mRot);
   if (m_circle) { draw_trackball_circle(); }
+}
+
+void Viewer::gl_settings() {
+  gluPerspective(40.0, (GLfloat)get_width()/(GLfloat)get_height(), 0.01, 1000.0);
+
+  // Clear framebuffer
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  //glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);     // Realy Nice perspective calculations
+
+  // Enable depth test done in on_realize
+  // glEnable(GL_DEPTH_TEST);
+
 }

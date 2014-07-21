@@ -31,6 +31,7 @@ AppWindow::AppWindow()
   m_menu_options.items().push_back(CheckMenuElem("_Z-buffer (Z)", sigc::bind(option_slot, Viewer::Z_BUFFER)));
   m_menu_options.items().push_back(CheckMenuElem("_Backface Cull (B)", sigc::bind(option_slot, Viewer::BACKFACE_CULL)));
   m_menu_options.items().push_back(CheckMenuElem("_Frontface Cull (F)", sigc::bind(option_slot, Viewer::FRONTFACE_CULL)));
+  m_menu_options.items().push_back(CheckMenuElem("_Front and Backface Cull ()", sigc::bind(option_slot, Viewer::FRONTANDBACK_CULL)));
 
   // Set up the menu bar
   m_menubar.items().push_back(Gtk::Menu_Helpers::MenuElem("_Application", m_menu_app));

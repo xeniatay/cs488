@@ -99,12 +99,13 @@ scene_lua.o scene_lua.d : scene_lua.cpp scene_lua.hpp /usr/include/c++/4.6/strin
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdint.h /usr/include/stdint.h \
  /usr/include/GL/glu.h /usr/include/GL/gl.h texture.hpp \
  /usr/include/GL/glut.h /usr/include/GL/freeglut_std.h image.hpp \
- perlinnoise.hpp perlin.hpp includes/SOIL.h material.hpp \
+ perlinnoise.hpp perlin.hpp includes/SOIL.h celshading.hpp \
+ /usr/include/libio.h /usr/include/_G_config.h \
+ /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/sys_errlist.h material.hpp \
  /usr/include/c++/4.6/cstring /usr/include/string.h \
- /usr/include/c++/4.6/cstdio /usr/include/libio.h \
- /usr/include/_G_config.h /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
- /usr/include/x86_64-linux-gnu/bits/sys_errlist.h lua488.hpp \
- /usr/include/lua5.1/lua.h /usr/include/lua5.1/luaconf.h \
+ /usr/include/c++/4.6/cstdio lua488.hpp /usr/include/lua5.1/lua.h \
+ /usr/include/lua5.1/luaconf.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include-fixed/limits.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include-fixed/syslimits.h \
  /usr/include/limits.h /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \

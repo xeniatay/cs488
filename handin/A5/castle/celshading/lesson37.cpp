@@ -12,7 +12,11 @@
 #include <unistd.h>     // Header file for sleeping.
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
 #include <math.h>
+
+using namespace std;
+
 /* ascii code for the escape key */
 #define ESCAPE 27
 
@@ -30,14 +34,12 @@ int window;
 typedef struct tagMATRIX										// A Structure To Hold An OpenGL Matrix ( NEW )
 {
 	float Data[16];												// We Use [16] Due To OpenGL's Matrix Format ( NEW )
-}
-MATRIX;
+} MATRIX;
 
 typedef struct tagVECTOR										// A Structure To Hold A Single Vector ( NEW )
 {
 	float X, Y, Z;												// The Components Of The Vector ( NEW )
-}
-VECTOR;
+} VECTOR;
 
 typedef struct tagVERTEX										// A Structure To Hold A Single Vertex ( NEW )
 {
@@ -76,8 +78,12 @@ bool ReadMesh(void)	// Reads The Contents Of The "model.txt" File ( NEW )
 {
 	FILE *In = fopen ("Data/Model.txt", "rb");					// Open The File ( NEW )
 
-	if (!In)
+	if (!In) {
+    cerr << "Model.txt not opened" << endl;
 		return FALSE;											// Return FALSE If File Not Opened ( NEW )
+  } else {
+    cerr << "Model.txt read" << endl;
+  }
 
 	fread (&polyNum, sizeof (int), 1, In);						// Read The Header (i.e. Number Of Polygons) ( NEW )
 
@@ -164,11 +170,12 @@ bool InitGL(int Width, int Height)	        // We call this right after our OpenG
       shaderData[i][0] = shaderData[i][1] = shaderData[i][2] = float(atof(Line)); // Copy Over The Value ( NEW )
     }
 
+    cerr << "Shader.txt read" <<endl;
     fclose (In);											// Close The File ( NEW )
-  }
-
-  else
+  } else {
+    cerr << "Shader.txt not opened" << endl;
     return FALSE;											// It Went Horribly Horribly Wrong ( NEW )
+  }
 
   glGenTextures (1, &shaderTexture[0]);						// Get A Free Texture ID ( NEW )
 

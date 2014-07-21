@@ -48,12 +48,14 @@ castle_wall_window_c = gr.material({0.8, 1.0, 1.0}, {0.1, 0.1, 0.1}, 0.1, -1);
 -- tex_type, tex_id, tex_w, tex_h, tex_filename
 none_t = gr.texture(tex_none, 0, 0, 0, "", 0, 0);
 castle_wall_t = gr.texture(tex_image, texid_cw, 300, 300, castle_wall_fn, 0, 0);
-sky_t = gr.texture(tex_image, texid_sky, 900, 600, sky_fn, 0, 0);
---sky_t = gr.texture(tex_perlin, texid_sky, 64, 64, "", 4, 2);
+--sky_t = gr.texture(tex_image, texid_sky, 900, 600, sky_fn, 0, 0);
+sky_t = gr.texture(tex_perlin, texid_sky, 64, 64, "", 4, 2);
 grass_t = gr.texture(tex_perlin, texid_grass, 64, 64, "", 16, 1);
 
 ---- rootnode ----
 rootnode = gr.node('rootnode');
+
+--[[]]
 
   -- sky terrain --
   sky_w = 140
@@ -68,6 +70,7 @@ rootnode = gr.node('rootnode');
   sky_primt:set_texture(sky_t);
   sky_primt:set_material(sky_c);
   sky_node:add_child(sky_primt);
+
 
   -- ground terrain --
   ground_w = 140
@@ -210,6 +213,12 @@ battlement_thickness = mh_thickness;
     battlement_node:add_child(battlement_primt)
 
   end
+
+  sphere_primt = gr.sphere('sphere_primt');
+  sphere_primt:translate(-30, 40, 60);
+  sphere_primt:scale(10, 10, 10);
+  sphere_primt:set_material(red);
+  rootnode:add_child(sphere_primt);
 
 -- end castle battlements --
 --rootnode:translate(8.0, 0, 0.0)

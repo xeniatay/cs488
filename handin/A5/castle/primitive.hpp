@@ -6,6 +6,7 @@
 #include "algebra.hpp"
 #include "texture.hpp"
 #include <iostream>
+#include "celshading.hpp"
 
 using namespace std;
 
@@ -17,12 +18,17 @@ public:
 
   bool has_texture;
   Vector3D m_scale;
+  double shaderData[32][3];
+
+  bool read_shader();
+
 };
 
 class Sphere : public Primitive {
 public:
   Sphere();
   virtual ~Sphere();
+  void draw_sphereface(int p_recurse, double p_radius, GLdouble *a, GLdouble *b, GLdouble *c);
   void walk_gl(bool texture, Vector3D scale);
   GLuint dl;
 };

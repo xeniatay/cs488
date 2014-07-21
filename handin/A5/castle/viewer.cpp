@@ -89,60 +89,40 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   Glib::RefPtr<Gdk::GL::Drawable> gldrawable = get_gl_drawable();
   if (!gldrawable) return false;
   if (!gldrawable->gl_begin(get_gl_context())) return false;
-
   // Set up for perspective drawing
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   glViewport(0, 0, get_width(), get_height());
   gluPerspective(40.0, (GLfloat)get_width()/(GLfloat)get_height(), 0.01, 1000.0);
-
   // Change to model view for drawing
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-
   // Clear framebuffer
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  // init GLEW once
-  if (!glew_init) {
-    glewInit();
-    glew_init = true;
-
-    if (glewIsSupported("GL_VERSION_2_0"))
-      printf("Ready for OpenGL 2.0\n");
-    else {
-      printf("OpenGL 2.0 not supported\n");
-    }
-  }
-
-  // Set up lighting
-  //init_light();
-
-  // Trackball
-  Matrix *mRot = getMRot();
-  Matrix *mTrans = getMTrans();
-  glLoadMatrixd((GLdouble *) mTrans);
-  glMultMatrixd((GLdouble *) mRot);
-  if (m_circle) { draw_trackball_circle(); }
-
-  // Camera view
+  init_glew();
+  init_light();
+  init_trackball();
   fly_camera();
 
   // Draw scene
   m_scenenode->walk_gl();
 
+/*
+  // Lens Flare
   glEnable(GL_BLEND);
   glBlendFunc(GL_ONE, GL_SRC_ALPHA);
   glColor4f(0.1, 0.1, 0.1, 0.7);
   glRecti(0, 0, m_width, m_height);
   glDisable(GL_BLEND);
+*/
+
+  DrawGLScene();
 
   // Swap the contents of the front and back buffers so we see what we
   // just drew. This should only be done if double buffering is enabled.
   gldrawable->swap_buffers();
-
   gldrawable->gl_end();
-
   return true;
 }
 
@@ -309,6 +289,9 @@ void Viewer::set_options(Option option) {
   } else if (option == BACKFACE_CULL) {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
+  } else if (option == FRONTANDBACK_CULL) {
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT_AND_BACK);
   } else if (option == CIRCLE) {
     m_circle = true;
   }
@@ -352,15 +335,18 @@ void Viewer::keypress() {
   invalidate();
 }
 
+/// https://www.cse.msu.edu/~cse872/tutorial3.html
 void Viewer::init_light() {
   GLfloat ambient[] = {0.2, 0.2, 0.2, 1.0};
-  GLfloat position[] = {0.0, 0.0, 2.0, 1.0};
+  // trying to make it like a sun
+  GLfloat position[] = {-m_width / 2, m_height, 1000, 1.0};
   GLfloat mat_diffuse[] = {0.6, 0.6, 0.6, 1.0};
   GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
   GLfloat mat_shininess[] = {50.0};
 
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
+  glEnable(GL_COLOR_MATERIAL);
 
   glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
   glLightfv(GL_LIGHT0, GL_POSITION, position);
@@ -368,6 +354,16 @@ void Viewer::init_light() {
   glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
   glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
   glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+
+  /*
+GLfloat white[] = {0.8f, 0.8f, 0.8f, 1.0f};
+GLfloat cyan[] = {0.f, .8f, .8f, 1.f};
+glMaterialfv(GL_FRONT, GL_DIFFUSE, cyan);
+glMaterialfv(GL_FRONT, GL_SPECULAR, white);
+GLfloat shininess[] = {50};
+glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
+*/
+
 }
 
 void Viewer::fly_camera() {
@@ -378,3 +374,24 @@ void Viewer::fly_camera() {
   glTranslated(m_camera_translate[0], m_camera_translate[1], m_camera_translate[2]);
 }
 
+void Viewer::init_glew() {
+  // init GLEW once
+  if (!glew_init) {
+    glewInit();
+    glew_init = true;
+
+    if (glewIsSupported("GL_VERSION_2_0"))
+      printf("Ready for OpenGL 2.0\n");
+    else {
+      printf("OpenGL 2.0 not supported\n");
+    }
+  }
+}
+
+void Viewer::init_trackball() {
+  Matrix *mRot = getMRot();
+  Matrix *mTrans = getMTrans();
+  glLoadMatrixd((GLdouble *) mTrans);
+  glMultMatrixd((GLdouble *) mRot);
+  if (m_circle) { draw_trackball_circle(); }
+}

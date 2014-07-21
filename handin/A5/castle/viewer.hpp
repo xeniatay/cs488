@@ -19,6 +19,7 @@
 #include "material.hpp"
 #include "a2.hpp"
 #include "texture.hpp"
+#include "celshading.hpp"
 
 using std::vector;
 
@@ -58,9 +59,13 @@ class Viewer : public Gtk::GL::DrawingArea {
 
     // GLEW
     bool glew_init;
+    void init_glew();
 
     // lighting
     void init_light();
+
+    //trackball
+    void init_trackball();
 
     // A useful function that forces this widget to rerender. If you
     // want to render a new frame, do not call on_expose_event
@@ -79,7 +84,8 @@ class Viewer : public Gtk::GL::DrawingArea {
         CIRCLE,
         Z_BUFFER,
         BACKFACE_CULL,
-        FRONTFACE_CULL
+        FRONTFACE_CULL,
+        FRONTANDBACK_CULL
     };
 
     void set_options(Option option);
@@ -91,9 +97,9 @@ class Viewer : public Gtk::GL::DrawingArea {
 
     // others
     bool m_circle;
-    Option m_zbuffer;
-    Option m_backface_cull;
-    Option m_frontface_cull;
+    bool m_zbuffer;
+    bool m_backface_cull;
+    bool m_frontface_cull;
 
 
     int x_origin;

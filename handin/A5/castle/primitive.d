@@ -96,4 +96,7 @@ primitive.o primitive.d : primitive.cpp primitive.hpp /usr/include/GL/glew.h \
  /usr/include/x86_64-linux-gnu/bits/mathdef.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h texture.hpp \
  /usr/include/GL/glut.h /usr/include/GL/freeglut_std.h image.hpp \
- perlinnoise.hpp perlin.hpp includes/SOIL.h
+ perlinnoise.hpp perlin.hpp includes/SOIL.h celshading.hpp \
+ /usr/include/libio.h /usr/include/_G_config.h \
+ /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/sys_errlist.h

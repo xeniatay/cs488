@@ -16,11 +16,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <iostream>
+
+using namespace std;
 
 /* ascii code for the escape key */
 #define ESCAPE 27
-#define FALSE 0
-#define TRUE 1
 
 /* The number of our GLUT window */
 extern int window;
@@ -90,7 +91,7 @@ void RotateVector (MATRIX &M, VECTOR &V, VECTOR &D);
 /* A general OpenGL initialization function.  Sets all of the initial parameters. */
 
 // We call this right after our OpenGL window is created.
-bool InitGL(int Width, int Height);
+bool initGL();
 
 /* The function called when our window is resized (which shouldn't happen, because we're fullscreen) */
 void ReSizeGLScene(int Width, int Height);

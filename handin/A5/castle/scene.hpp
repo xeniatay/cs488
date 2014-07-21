@@ -48,6 +48,7 @@ class SceneNode {
     void rotate(char axis, double angle);
     void scale(const Vector3D& amount);
     void translate(const Vector3D& amount);
+    void dimensions(int w, int h, int b);
 
     // Returns true if and only if this node is a JointNode
     virtual bool is_joint();
@@ -113,6 +114,7 @@ class GeometryNode : public SceneNode {
     Primitive* m_primitive;
 
     void transform_node();
+    void dimensions(int w, int h, int b);
 
 };
 

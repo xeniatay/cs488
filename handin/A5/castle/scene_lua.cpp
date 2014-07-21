@@ -373,6 +373,27 @@ int gr_node_rotate_cmd(lua_State* L)
   return 0;
 }
 
+// Dimensions a node.
+extern "C"
+int gr_node_dimensions_cmd(lua_State* L)
+{
+  GRLUA_DEBUG_CALL;
+
+  gr_node_ud* selfdata = (gr_node_ud*)luaL_checkudata(L, 1, "gr.node");
+  luaL_argcheck(L, selfdata != 0, 1, "Node expected");
+
+  GeometryNode* self = dynamic_cast<GeometryNode*>(selfdata->node);
+  luaL_argcheck(L, self != 0, 1, "Geometry node expected");
+
+  double w = luaL_checknumber(L, 2);
+  double h = luaL_checknumber(L, 3);
+  double b = luaL_checknumber(L, 4);
+
+  self->dimensions(w, h, b);
+
+  return 0;
+}
+
 // Garbage collection function for lua.
 extern "C"
 int gr_node_gc_cmd(lua_State* L)
@@ -426,6 +447,7 @@ static const luaL_reg grlib_node_methods[] = {
   {"set_texture", gr_node_set_texture_cmd},
   {"scale", gr_node_scale_cmd},
   {"rotate", gr_node_rotate_cmd},
+  {"dimensions", gr_node_dimensions_cmd},
   {"translate", gr_node_translate_cmd},
   {0, 0}
 };

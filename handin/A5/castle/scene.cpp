@@ -72,6 +72,11 @@ void SceneNode::translate(const Vector3D& amount)
   m_trans = m_trans * translation(amount);
 }
 
+void SceneNode::dimensions(int w, int h, int z) {
+  cerr << "Error: Dimensions called on SceneNode" << endl;
+  exit(1);
+}
+
 bool SceneNode::is_joint() {
   return false;
 }
@@ -140,6 +145,13 @@ GeometryNode::GeometryNode(const std::string& name, Primitive* primitive) : Scen
 }
 
 GeometryNode::~GeometryNode() {
+}
+
+void GeometryNode::dimensions(int w, int h, int b) {
+  cerr << "Dimensions called on GeoNode" << endl;
+  m_primitive->m_w = w;
+  m_primitive->m_h = h;
+  m_primitive->m_b = b;
 }
 
 void GeometryNode::walk_gl(bool picking)

@@ -22,6 +22,8 @@ public:
 
   bool read_shader();
 
+  int m_w, m_h, m_b;
+
 };
 
 class Sphere : public Primitive {
@@ -37,8 +39,8 @@ class Cube : public Primitive {
 public:
   Cube();
   virtual ~Cube();
-  void draw_cube(double x, double y, double z, double r, double g, double b, double a);
-  void draw_face(Matrix4x4 coords, Matrix4x4 texcoords, double r, double g, double b, double a);
+  void draw_cube(double x, double y, double z);
+  void draw_face(Matrix4x4 coords, Matrix4x4 texcoords);
   void walk_gl(bool texture, Vector3D scale);
   GLuint dl_cube;
 };

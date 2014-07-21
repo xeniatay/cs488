@@ -134,7 +134,7 @@ mh_thickness = 1;
 
   -- front wall left --
   mh_fl_primt = gr.cube('mh_fl_primt');
-  mh_fl_primt:scale(mh_w/3, mh_h, mh_thickness);
+  mh_fl_primt:dimensions(mh_w/3, mh_h, mh_thickness);
   mh_fl_primt:set_texture(castle_wall_t);
   mh_fl_primt:set_material(castle_wall_c);
   mh_f_node:add_child(mh_fl_primt);

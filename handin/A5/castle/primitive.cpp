@@ -101,6 +101,10 @@ Cube::Cube() {
   // display list
   dl_cube = glGenLists(1);
 
+  m_w = 1;
+  m_h = 1;
+  m_b = 1;
+
 }
 
 void Primitive::walk_gl(bool texture, Vector3D scale){ }
@@ -122,7 +126,14 @@ void Cube::walk_gl(bool texture, Vector3D scale)
   double y1 = 0;
   double y2 = 1;
 
-  draw_cube(0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0);
+  //cerr << "w, h, b: " << m_w << ", " << m_h << ", "<<m_b<<endl;
+  for (int i = 0; i < m_w; i++) {
+    for (int j = 0; j < m_h; j++) {
+      for (int k = 0; k < m_b; k++) {
+        draw_cube(i, j, k);
+      }
+    }
+  }
 
   glEndList();
 
@@ -136,9 +147,8 @@ void Cube::walk_gl(bool texture, Vector3D scale)
 
 // Params: x, y z coords and r, g, b colour values
 // Draws a unit cube (width = 1, height = 1, breadth = 1)
-void Cube::draw_cube(double x = 0, double y = 0, double z = 2, double r = 0, double g = 0, double b = 0, double a = 0.8) {
+void Cube::draw_cube(double x = 0, double y = 0, double z = 2) {
   //bool multicolour = true;
-  double r_val = 0, g_val = 0, b_val = 0;
   Matrix4x4 facecoords, texcoords;
   Vector4D bl, tl, tr, br;
 
@@ -164,60 +174,53 @@ void Cube::draw_cube(double x = 0, double y = 0, double z = 2, double r = 0, dou
 
   glBegin(GL_QUADS);
 
-
-    r = fmod((r + 0.4), 1);
     // front face
     bl = Vector4D(x, y, z, 0);
     tl = Vector4D(x, y + 1, z, 0);
     tr = Vector4D(x + 1, y + 1, z, 0);
     br = Vector4D(x + 1, y, z, 0);
     facecoords = Matrix4x4(bl, tl, tr, br);
-    draw_face(facecoords, texcoords, r, g, b, a);
+    draw_face(facecoords, texcoords);
 
-    r = fmod((r + 0.8), 1);
     // back face
     bl = Vector4D(x, y, z + 1, 0);
     tl = Vector4D(x, y + 1, z + 1, 0);
     tr = Vector4D(x + 1, y + 1, z + 1, 0);
     br = Vector4D(x + 1, y, z + 1, 0);
     facecoords = Matrix4x4(bl, tl, tr, br);
-    draw_face(facecoords, texcoords, r, g, b, a);
+    draw_face(facecoords, texcoords);
 
-    g = fmod((g + 0.4), 1);
     // left face
     bl = Vector4D(x, y, z, 0);
     tl = Vector4D(x, y + 1, z, 0);
     tr = Vector4D(x, y + 1, z + 1, 0);
     br = Vector4D(x, y, z + 1, 0);
     facecoords = Matrix4x4(bl, tl, tr, br);
-    draw_face(facecoords, texcoords, r, g, b, a);
+    draw_face(facecoords, texcoords);
 
-    g = fmod((g + 0.8), 1);
     // right face
     bl = Vector4D(x + 1, y, z, 0);
     tl = Vector4D(x + 1, y + 1, z, 0);
     tr = Vector4D(x + 1, y + 1, z + 1, 0);
     br = Vector4D(x + 1, y, z + 1, 0);
     facecoords = Matrix4x4(bl, tl, tr, br);
-    draw_face(facecoords, texcoords, r, g, b, a);
+    draw_face(facecoords, texcoords);
 
-    b = fmod((b + 0.4), 1);
     // top face
     bl = Vector4D(x, y + 1, z, 0);
     tl = Vector4D(x, y + 1, z + 1, 0);
     tr = Vector4D(x + 1, y + 1, z + 1, 0);
     br = Vector4D(x + 1, y + 1, z, 0);
     facecoords = Matrix4x4(bl, tl, tr, br);
-    draw_face(facecoords, texcoords, r, g, b, a);
+    draw_face(facecoords, texcoords);
 
-    b = fmod((b + 0.8), 1);
     // bottom face
     bl = Vector4D(x, y, z, 0);
     tl = Vector4D(x, y, z + 1, 0);
     tr = Vector4D(x + 1, y, z + 1, 0);
     br = Vector4D(x + 1, y, z, 0);
     facecoords = Matrix4x4(bl, tl, tr, br);
-    draw_face(facecoords, texcoords, r, g, b, a);
+    draw_face(facecoords, texcoords);
 
   glEnd();
 
@@ -231,7 +234,7 @@ void Cube::draw_cube(double x = 0, double y = 0, double z = 2, double r = 0, dou
     */
 }
 
-void Cube::draw_face(Matrix4x4 coords, Matrix4x4 texcoords, double r, double g, double b, double a) {
+void Cube::draw_face(Matrix4x4 coords, Matrix4x4 texcoords) {
   // multicolour
   //glColor4d(r, g, b, a);
 
@@ -252,11 +255,13 @@ void Cube::draw_face(Matrix4x4 coords, Matrix4x4 texcoords, double r, double g, 
   }
   glTexCoord1f(tmpShade);
 
-  int lightIndex = (int)tmpShade * 15;
-  int gray = shaderData[lightIndex][1];
+  int lightIndex = (int)tmpShade;
+  double gray = shaderData[lightIndex][1];
+  if (gray > 32) {
+    gray = 32;
+  }
 
   glColor4d( gray, gray, gray, 1.0);
-  cerr << gray << " | " ;
 
   // bottom left
   if (has_texture) {
@@ -301,7 +306,6 @@ bool Primitive::read_shader() {
   // Start Of User Initialization
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);     // Realy Nice perspective calculations
 
-/*
   glClearColor(0.7f, 0.7f, 0.7f, 0.0f);            // Light Grey Background
   glClearDepth(1.0f);                    // Depth Buffer Setup
 
@@ -311,10 +315,9 @@ bool Primitive::read_shader() {
   glShadeModel(GL_SMOOTH);                 // Enables Smooth Color Shading
   glDisable(GL_LINE_SMOOTH);                 // Initially Disable Line Smoothing
 
-  glEnable(GL_CULL_FACE);                  // Enable OpenGL Face Culling
+//  glEnable(GL_CULL_FACE);                  // Enable OpenGL Face Culling
 
   glDisable(GL_LIGHTING);                  // Disable OpenGL Lighting
-  */
 
   In = fopen("./Shader.txt", "r");            // Open The Shader File
 

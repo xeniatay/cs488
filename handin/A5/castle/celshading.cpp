@@ -86,7 +86,7 @@ bool initGL()         // We call this right after our OpenGL window is created.
 
   int i;                            // Looping Variable
   char Line[255];                       // Storage For 255 Characters
-  double shaderData[32][3];                  // Storate For The 96 Shader Values
+  float shaderData[32][3];                  // Storate For The 96 Shader Values
 
   FILE *In  = NULL;                     // File Pointer
 
@@ -168,6 +168,8 @@ void DrawGLScene() {
   glGetFloatv(GL_MODELVIEW_MATRIX, TmpMatrix.Data);      // Get The Generated Matrix
 
   // Cel-Shading Code //
+  glDisable(GL_TEXTURE_2D);
+  glDisable(GL_TEXTURE_3D);
   glEnable(GL_TEXTURE_1D);                 // Enable 1D Texturing
   glBindTexture(GL_TEXTURE_1D, shaderTexture[0]);      // Bind Our Texture
   glColor3f(1.0f, 1.0f, 1.0f);               // Set The Color Of The Model

@@ -175,6 +175,7 @@ void DrawGLScene() {
   glColor3f(1.0f, 1.0f, 1.0f);               // Set The Color Of The Model
 
   glBegin(GL_TRIANGLES);
+  /*
     for(i = 0; i < polyNum; i++) {
       for(j = 0; j < 3; j++) {
         TmpNormal.X = polyData[i].Verts[j].Nor.X;   // Fill Up The TmpNormal Structure With
@@ -191,6 +192,8 @@ void DrawGLScene() {
         glVertex3fv(&polyData[i].Verts[j].Pos.X);    // Send The Vertex Position
       }
     }
+    */
+
   glEnd();
   glDisable(GL_TEXTURE_1D);                  // Disable 1D Textures
 

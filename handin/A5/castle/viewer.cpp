@@ -106,7 +106,7 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   fly_camera();
 
   // Draw scene
-  m_scenenode->walk_gl();
+  //m_scenenode->walk_gl();
 
 /*
   // Lens Flare
@@ -117,7 +117,21 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   glDisable(GL_BLEND);
 */
 
-  DrawGLScene();
+  GLMmodel *model = glmReadOBJ("models/castle_model_1/castle.obj");
+
+   if (!model) {
+    cerr << "ERROR: no model" << endl;
+       exit(0);
+   }
+
+     glmUnitize(model);
+     glmFacetNormals(model);
+     glmVertexNormals(model, 90.0);
+
+  glmDraw(model, GLM_SMOOTH);
+
+
+  //DrawGLScene();
 
   // Swap the contents of the front and back buffers so we see what we
   // just drew. This should only be done if double buffering is enabled.

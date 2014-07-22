@@ -106,7 +106,7 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   fly_camera();
 
   // Draw scene
-  //m_scenenode->walk_gl();
+  m_scenenode->walk_gl();
 
 /*
   // Lens Flare
@@ -116,8 +116,29 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   glRecti(0, 0, m_width, m_height);
   glDisable(GL_BLEND);
 */
+  //glEnable(GL_BLEND);
+  //glBlendFunc(GL_ONE, GL_SRC_ALPHA);
+  glEnable(GL_TEXTURE_2D);
+  glBindTexture( GL_TEXTURE_2D, Texture::CASTLE_WALL);
+      // select modulate to mix texture with color for shading
+    glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-  GLMmodel *model = glmReadOBJ("models/castle_model_1/castle.obj");
+    // when texture area is small, bilinear filter the closest mipmap
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST );
+    // when texture area is large, bilinear filter the original
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    // the texture wraps over at the edges (repeat)
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+  Image *img_png = new Image(300, 300, 3);
+  img_png->loadPng("assets/castle_wall_texture_3.png");
+    gluBuild2DMipmaps( GL_TEXTURE_2D, 3, 300, 300, GL_RGBA, GL_UNSIGNED_BYTE, img_png->data());
+
+
+  glColor4f(1.0, 0.9, 0.9, 0.7);
+  glScaled(8, 8, 8);
+  GLMmodel *model = glmReadOBJ("models/castle_model_3/castle.obj");
+  //GLMmodel *model = glmReadOBJ("models/dragon.obj");
 
    if (!model) {
     cerr << "ERROR: no model" << endl;
@@ -126,10 +147,10 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
 
      glmUnitize(model);
      glmFacetNormals(model);
+     glmLinearTexture(model);
      glmVertexNormals(model, 90.0);
 
-  glmDraw(model, GLM_SMOOTH);
-
+  glmDraw(model, GLM_SMOOTH | GLM_TEXTURE );
 
   //DrawGLScene();
 

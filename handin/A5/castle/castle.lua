@@ -55,7 +55,7 @@ grass_t = gr.texture(tex_perlin, texid_grass, 64, 64, "", 16, 1);
 ---- rootnode ----
 rootnode = gr.node('rootnode');
 
---[[]]
+--[[
 
   -- sky terrain --
   sky_w = 140
@@ -227,9 +227,9 @@ battlement_thickness = mh_thickness;
   sphere_primt:set_material(red);
   rootnode:add_child(sphere_primt);
 
+]]
 -- end castle battlements --
 --rootnode:translate(8.0, 0, 0.0)
 rootnode:scale(0.5, 0.5, 0.5);
 --rootnode:rotate('y', -20.0)
-
 return rootnode

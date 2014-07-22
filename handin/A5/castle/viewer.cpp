@@ -119,6 +119,17 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   glColor4f(0.1, 0.1, 0.1, 0.7);
   glRecti(0, 0, m_width, m_height);
   glDisable(GL_BLEND);
+
+   glBegin(GL_POLYGON);            // These vertices form a closed polygon
+      glColor3f(1.0f, 1.0f, 0.0f); // Yellow
+      glVertex2f(0.4f, 0.2f);
+      glVertex2f(0.6f, 0.2f);
+      glVertex2f(0.7f, 0.4f);
+      glVertex2f(0.6f, 0.6f);
+      glVertex2f(0.4f, 0.6f);
+      glVertex2f(0.3f, 0.4f);
+   glEnd();
+
 */
   //DrawGLScene();
 

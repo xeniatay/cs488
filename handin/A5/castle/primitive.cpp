@@ -118,13 +118,6 @@ void Cube::walk_gl(bool texture, Vector3D scale)
 {
   //cerr << "Cube Walk GL" << endl;
 
-  init_celshading();
-
-  glNewList(dl_cube, GL_COMPILE);
-
-  //GLUquadric *quadric = gluNewQuadric();
-  //gluQuadricOrientation(quadric, GLU_OUTSIDE);
-
   has_texture = texture;
   m_scale = scale;
 
@@ -132,6 +125,10 @@ void Cube::walk_gl(bool texture, Vector3D scale)
   double x2 = 1;
   double y1 = 0;
   double y2 = 1;
+
+  //glDisable(GL_LIGHTING);                  // Disable OpenGL Lighting
+
+  glNewList(dl_cube, GL_COMPILE);
 
   //cerr << "w, h, b: " << m_w << ", " << m_h << ", "<<m_b<<endl;
   for (int i = 0; i < m_w; i++) {
@@ -147,10 +144,8 @@ void Cube::walk_gl(bool texture, Vector3D scale)
   glEndList();
 
   glShadeModel(GL_SMOOTH);
-
   glCallList (dl_cube);
-
-  destruct_celshading();
+  //glEnable(GL_LIGHTING);                  // Disable OpenGL Lighting
 
   //cerr << "Cube End Walk GL" << endl;
 }
@@ -322,21 +317,36 @@ Model::~Model() {
 }
 
 void Model::walk_gl(bool texture, Vector3D scale) {
-  cerr << "model awlk gl" << m_filename <<endl;
-  //glScaled(8, 8, 8);
-  if (m_filename) {
-    GLMmodel *model = glmReadOBJ(m_filename);
+
+  GLMmodel *model = glmReadOBJ(m_filename);
 
   if (!model) {
     cerr << "ERROR: model " << m_filename << " not found"<< endl;
     exit(0);
   }
 
+  // Celshading
   glmUnitize(model);
   glmFacetNormals(model);
   glmLinearTexture(model);
   glmVertexNormals(model, 90.0);
 
   glmDraw(model, GLM_SMOOTH | GLM_TEXTURE | GLM_CELSHADING);
-  }
+
+  // Draw outline
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+  // Draw Backfacing Polygons As Wireframes
+  glPolygonMode(GL_BACK, GL_LINE);
+  // Set The Line Width
+  glLineWidth(outlineWidth);
+  glCullFace(GL_FRONT);                  // Don't Draw Any Front-Facing Polygons
+  glDepthFunc(GL_LEQUAL);                // Change The Depth Mode
+  glColor4d( 1.0, 1.0, 1.0, 1.0);
+  glmDraw(model, GLM_SMOOTH );
+  glDepthFunc(GL_LESS); // Reset The Depth-Testing Mode
+  glCullFace(GL_BACK); // Reset The Face To Be Culled
+  glPolygonMode(GL_BACK, GL_FILL); // Reset Back-Facing Polygon Drawing Mode
+  glDisable(GL_BLEND);
+  glDisable(GL_CULL_FACE);
 }

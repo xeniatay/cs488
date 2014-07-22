@@ -50,19 +50,22 @@ none_t = gr.texture(tex_none, 0, 0, 0, "", 0, 0);
 castle_wall_t = gr.texture(tex_image, texid_cw, 300, 300, castle_wall_fn, 0, 0);
 --sky_t = gr.texture(tex_image, texid_sky, 900, 600, sky_fn, 0, 0);
 sky_t = gr.texture(tex_perlin, texid_sky, 64, 64, "", 4, 2);
-grass_t = gr.texture(tex_perlin, texid_grass, 64, 64, "", 16, 1);
+grass_t = gr.texture(tex_perlin, texid_grass, 64, 64, "", 8, 2);
 
 ---- rootnode ----
 rootnode = gr.node('rootnode');
-
---[[
 
   -- sky terrain --
   sky_w = 140
   sky_h = 60
   sky_b = 1
+
+  ground_w = 50
+  ground_h = 50
+  ground_b = 30
+
   sky_node = gr.node('sky_node');
-  sky_node:translate(-sky_w/2, 0, 0);
+  sky_node:translate(-sky_w/2, -ground_h/2, 0);
   rootnode:add_child(sky_node);
 
   sky_primt = gr.cube('sky_primt');
@@ -73,19 +76,27 @@ rootnode = gr.node('rootnode');
 
 
   -- ground terrain --
-  ground_w = 140
-  ground_h = 1
-  ground_b = 65
+--[[
   ground_node = gr.node('ground_node');
   ground_node:translate(-ground_w/2, 0, 0);
   rootnode:add_child(ground_node);
-
   ground_primt = gr.cube('ground_primt');
   ground_primt:scale(ground_w, ground_h, ground_b);
   ground_primt:set_texture(grass_t);
   ground_primt:set_material(grass_c);
   ground_node:add_child(ground_primt);
+]]
 
+  model_node = gr.node('model_node');
+  model_node:translate(0, 0, 0);
+  rootnode:add_child(model_node);
+
+  model_primt = gr.model('model_primt');
+  model_primt:scale(ground_w, ground_h, ground_b);
+  model_primt:set_texture(grass_t);
+  model_primt:set_material(grass_c);
+  model_primt:set_filename("models/castle_model_3/terrain.obj");
+  model_node:add_child(model_primt);
 
 -- main hall --
 -- centecastle_wall_c on screen, cube that makes up body of castle --
@@ -221,21 +232,15 @@ battlement_thickness = mh_thickness;
 
   end
 
+--[[
   sphere_primt = gr.sphere('sphere_primt');
   sphere_primt:translate(-30, 40, 60);
   sphere_primt:scale(10, 10, 10);
   sphere_primt:set_material(red);
   rootnode:add_child(sphere_primt);
-
 ]]
-
-model_primt = gr.model('model');
-model_primt:scale(8, 8, 8);
-model_primt:set_filename("models/castle_model_3/terrain.obj");
-rootnode:add_child(model_primt);
-
 -- end castle battlements --
 --rootnode:translate(8.0, 0, 0.0)
-rootnode:scale(0.5, 0.5, 0.5);
+rootnode:scale(0.3, 0.3, 0.3);
 --rootnode:rotate('y', -20.0)
 return rootnode

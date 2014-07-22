@@ -101,8 +101,8 @@ scene.o scene.d : scene.cpp scene.hpp /usr/include/c++/4.6/list \
  perlinnoise.hpp perlin.hpp includes/SOIL.h celshading.hpp \
  /usr/include/libio.h /usr/include/_G_config.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
- /usr/include/x86_64-linux-gnu/bits/sys_errlist.h material.hpp a2.hpp \
- /usr/include/c++/4.6/vector \
+ /usr/include/x86_64-linux-gnu/bits/sys_errlist.h glm.h material.hpp \
+ a2.hpp /usr/include/c++/4.6/vector \
  /usr/include/c++/4.6/bits/stl_uninitialized.h \
  /usr/include/c++/4.6/bits/stl_vector.h \
  /usr/include/c++/4.6/bits/stl_bvector.h \

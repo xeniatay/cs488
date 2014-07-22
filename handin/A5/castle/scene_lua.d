@@ -102,7 +102,7 @@ scene_lua.o scene_lua.d : scene_lua.cpp scene_lua.hpp /usr/include/c++/4.6/strin
  perlinnoise.hpp perlin.hpp includes/SOIL.h celshading.hpp \
  /usr/include/libio.h /usr/include/_G_config.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
- /usr/include/x86_64-linux-gnu/bits/sys_errlist.h material.hpp \
+ /usr/include/x86_64-linux-gnu/bits/sys_errlist.h glm.h material.hpp \
  /usr/include/c++/4.6/cstring /usr/include/string.h \
  /usr/include/c++/4.6/cstdio lua488.hpp /usr/include/lua5.1/lua.h \
  /usr/include/lua5.1/luaconf.h \

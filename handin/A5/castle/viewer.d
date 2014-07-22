@@ -1115,4 +1115,4 @@ viewer.o viewer.d : viewer.cpp viewer.hpp /usr/include/GL/glew.h \
  /usr/include/c++/4.6/iostream scene.hpp algebra.hpp primitive.hpp \
  texture.hpp /usr/include/GL/glut.h /usr/include/GL/freeglut_std.h \
  image.hpp perlinnoise.hpp perlin.hpp includes/SOIL.h celshading.hpp \
- material.hpp trackball.hpp events.hpp a2.hpp glm.h
+ glm.h material.hpp trackball.hpp events.hpp a2.hpp

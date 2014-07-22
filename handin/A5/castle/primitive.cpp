@@ -117,12 +117,7 @@ void Cube::walk_gl(bool texture, Vector3D scale)
 {
   //cerr << "Cube Walk GL" << endl;
 
-  if (m_celshading == true) {
-    cerr << "CELSHADING HAPPENING ===" << endl;
-    // read shader.txt
-    read_shader();
-    init_celshading();
-  }
+  init_celshading();
 
   glNewList(dl_cube, GL_COMPILE);
 
@@ -154,9 +149,7 @@ void Cube::walk_gl(bool texture, Vector3D scale)
 
   glCallList (dl_cube);
 
-  if (m_celshading == true) {
-    destruct_celshading();
-  }
+  destruct_celshading();
 
   //cerr << "Cube End Walk GL" << endl;
 }
@@ -239,16 +232,7 @@ void Cube::draw_face(Matrix4x4 coords, Matrix4x4 texcoords) {
   Vector3D cross = v1.cross(v2);
   GLdouble normal[] = {cross[0], cross[1], cross[2]};
 
-  if (m_celshading == true) {
-    // calculate lighting stuff from http://tomdalling.com/blog/modern-opengl/06-diffuse-point-lighting/
-    Vector3D lightPos = Vector3D{0 - coords[3][0], 800 - coords[3][1], 1000 - coords[3][2]}; // hardcoded, please change
-    lightPos.normalize();
-    double tmpShade = cross.dot(lightPos);
-    if (tmpShade < 0.0) { tmpShade = 0.0; }
-    int lightIndex = (int)tmpShade;
-    double gray = shaderData[lightIndex][1];
-    glColor4d( gray, gray, gray, 1);
-  }
+  //get_celshading(cross);
 
   // bottom left
   if (has_texture) {
@@ -280,51 +264,33 @@ void Cube::draw_face(Matrix4x4 coords, Matrix4x4 texcoords) {
 
 }
 
-bool Primitive::read_shader() {
-
-  int i;                            // Looping Variable
-  char Line[255];                       // Storage For 255 Characters
-
-  FILE *In  = NULL;                     // File Pointer
-
-  In = fopen("./Shader.txt", "r");            // Open The Shader File
-
-  if(In) {
-    for(i = 0; i < 32; i++) {
-      if(feof(In)) {
-        break;
-      }
-      fgets(Line, 255, In);                // Get The Current Line
-      shaderData[i][0] = shaderData[i][1] = shaderData[i][2] = double(atof(Line)); // Copy Over The Value
-    }
-    fclose(In);                      // Close The File
-  } else {
-    return false;                     // It Went Horribly Horribly Wrong
-  }
-
-  return false;
-}
-
 // http://www.gamedev.net/page/resources/_/technical/graphics-programming-and-theory/cel-shading-r1438
 void Primitive::init_celshading() {
-  // these are defaults
-  glClearDepth(1.0f);                    // Depth Buffer Setup
-  glEnable(GL_DEPTH_TEST);                 // Enable Depth Testing
-  glDepthFunc(GL_LESS);                    // The Type Of Depth Test To Do
+  if (m_celshading == true) {
+    // read shader.txt, TODO do this only once
+    read_shader();
 
-  // this is default
-  glShadeModel(GL_SMOOTH);                 // Enables Smooth Color Shading
+    // these are defaults
+    glClearDepth(1.0f);                    // Depth Buffer Setup
+    glEnable(GL_DEPTH_TEST);                 // Enable Depth Testing
+    glDepthFunc(GL_LESS);                    // The Type Of Depth Test To Do
 
-  glDisable(GL_LINE_SMOOTH);                 // Initially Disable Line Smoothing
-  glEnable(GL_CULL_FACE);                  // Enable OpenGL Face Culling
-  glCullFace(GL_FRONT);
-  glDisable(GL_LIGHTING);                  // Disable OpenGL Lighting
+    // this is default
+    glShadeModel(GL_SMOOTH);                 // Enables Smooth Color Shading
+
+    glDisable(GL_LINE_SMOOTH);                 // Initially Disable Line Smoothing
+    glEnable(GL_CULL_FACE);                  // Enable OpenGL Face Culling
+    glCullFace(GL_FRONT);
+    glDisable(GL_LIGHTING);                  // Disable OpenGL Lighting
+  }
 }
 
 void Primitive::destruct_celshading() {
-  glDisable(GL_CULL_FACE);
-  glEnable(GL_LINE_SMOOTH);                 // Initially Disable Line Smoothing
-  glEnable(GL_LIGHTING);                  // Disable OpenGL Lighting
+  if (m_celshading == true) {
+    glDisable(GL_CULL_FACE);
+    glEnable(GL_LINE_SMOOTH);                 // Initially Disable Line Smoothing
+    glEnable(GL_LIGHTING);                  // Disable OpenGL Lighting
+  }
 }
 
 void Cube::draw_cube_outline(double i, double j, double k) {
@@ -346,4 +312,54 @@ void Cube::draw_cube_outline(double i, double j, double k) {
   glPolygonMode(GL_BACK, GL_FILL); // Reset Back-Facing Polygon Drawing Mode
   //glDisable(GL_BLEND);
   glDisable(GL_CULL_FACE);
+}
+
+// http://www.d.umn.edu/~ddunham/cs5721f07/schedule/resources/lab_opengl07.html
+void Primitive::walk_gl_castle(char* filename) {
+
+  //init_celshading();
+
+  //glEnable(GL_BLEND);
+  //glBlendFunc(GL_ONE, GL_SRC_ALPHA);
+
+/*
+  glEnable(GL_TEXTURE_2D);
+  glBindTexture( GL_TEXTURE_2D, Texture::CASTLE_WALL);
+
+  // select modulate to mix texture with color for shading
+  glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+  // when texture area is small, bilinear filter the closest mipmap
+  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST );
+  // when texture area is large, bilinear filter the original
+  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+  // the texture wraps over at the edges (repeat)
+  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+
+  Image *img_png = new Image(300, 300, 3);
+  img_png->loadPng("assets/castle_wall_texture_3.png");
+  gluBuild2DMipmaps( GL_TEXTURE_2D, 3, 300, 300, GL_RGBA, GL_UNSIGNED_BYTE, img_png->data());
+
+  glColor4f(1.0, 0.9, 0.9, 0.7);
+  */
+
+  glScaled(8, 8, 8);
+
+  GLMmodel *model = glmReadOBJ(filename);
+  //GLMmodel *model = glmReadOBJ("models/dragon.obj");
+
+  if (!model) {
+    cerr << "ERROR: model " << filename << " not found"<< endl;
+    exit(0);
+  }
+
+  glmUnitize(model);
+  glmFacetNormals(model);
+  glmLinearTexture(model);
+  glmVertexNormals(model, 90.0);
+
+  glmDraw(model, GLM_SMOOTH | GLM_TEXTURE | GLM_CELSHADING);
+
+  //destruct_celshading();
+
 }

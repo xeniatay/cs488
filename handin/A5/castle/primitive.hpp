@@ -6,7 +6,9 @@
 #include "algebra.hpp"
 #include "texture.hpp"
 #include <iostream>
+#include <string>
 #include "celshading.hpp"
+#include "glm.h"
 
 using namespace std;
 
@@ -19,15 +21,15 @@ public:
 
   bool has_texture;
   Vector3D m_scale;
-  double shaderData[32][3];
-
-  bool read_shader();
 
   int m_w, m_h, m_b;
 
   void init_celshading();
   void destruct_celshading();
+  void get_celshading(Vector3D normal);
   bool m_celshading;
+
+  void walk_gl_castle(char *filename);
 
 };
 

@@ -86,7 +86,7 @@ bool initGL()         // We call this right after our OpenGL window is created.
 
   int i;                            // Looping Variable
   char Line[255];                       // Storage For 255 Characters
-  float shaderData[32][3];                  // Storate For The 96 Shader Values
+  float shader_data[32][3];                  // Storate For The 96 Shader Values
 
   FILE *In  = NULL;                     // File Pointer
 
@@ -120,7 +120,7 @@ bool initGL()         // We call this right after our OpenGL window is created.
 
       fgets(Line, 255, In);                // Get The Current Line
 
-      shaderData[i][0] = shaderData[i][1] = shaderData[i][2] = double(atof(Line)); // Copy Over The Value
+      shader_data[i][0] = shader_data[i][1] = shader_data[i][2] = double(atof(Line)); // Copy Over The Value
     }
 
     fclose(In);                      // Close The File
@@ -137,7 +137,7 @@ bool initGL()         // We call this right after our OpenGL window is created.
   glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-  glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB, 32, 0, GL_RGB , GL_FLOAT, shaderData);  // Upload
+  glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB, 32, 0, GL_RGB , GL_FLOAT, shader_data);  // Upload
 
   lightAngle.X = 0.0f;                    // Set The X Direction
   lightAngle.Y = 0.0f;                    // Set The Y Direction
@@ -175,7 +175,6 @@ void DrawGLScene() {
   glColor3f(1.0f, 1.0f, 1.0f);               // Set The Color Of The Model
 
   glBegin(GL_TRIANGLES);
-  /*
     for(i = 0; i < polyNum; i++) {
       for(j = 0; j < 3; j++) {
         TmpNormal.X = polyData[i].Verts[j].Nor.X;   // Fill Up The TmpNormal Structure With
@@ -192,8 +191,6 @@ void DrawGLScene() {
         glVertex3fv(&polyData[i].Verts[j].Pos.X);    // Send The Vertex Position
       }
     }
-    */
-
   glEnd();
   glDisable(GL_TEXTURE_1D);                  // Disable 1D Textures
 

@@ -20,7 +20,6 @@
 #include "a2.hpp"
 #include "texture.hpp"
 #include "celshading.hpp"
-#include "glm.h" // http://www.d.umn.edu/~ddunham/cs5721f07/schedule/resources/lab_opengl07.html
 
 using std::vector;
 

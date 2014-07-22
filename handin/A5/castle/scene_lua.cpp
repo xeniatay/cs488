@@ -175,6 +175,24 @@ int gr_cube_cmd(lua_State* L)
   return 1;
 }
 
+// Create a model node
+extern "C"
+int gr_model_cmd(lua_State* L)
+{
+  GRLUA_DEBUG_CALL;
+
+  gr_node_ud* data = (gr_node_ud*)lua_newuserdata(L, sizeof(gr_node_ud));
+  data->node = 0;
+
+  const char* name = luaL_checkstring(L, 1);
+  data->node = new GeometryNode(name, new Model());
+
+  luaL_getmetatable(L, "gr.node");
+  lua_setmetatable(L, -2);
+
+  return 1;
+}
+
 // Create a material
 extern "C"
 int gr_material_cmd(lua_State* L)
@@ -299,6 +317,26 @@ int gr_node_set_material_cmd(lua_State* L)
   Material* material = matdata->material;
 
   self->set_material(material);
+
+  return 0;
+}
+
+// Set a node's filename
+extern "C"
+int gr_node_set_filename_cmd(lua_State* L) {
+  GRLUA_DEBUG_CALL;
+
+  gr_node_ud* selfdata = (gr_node_ud*)luaL_checkudata(L, 1, "gr.node");
+  luaL_argcheck(L, selfdata != 0, 1, "Node expected");
+
+  GeometryNode* self = dynamic_cast<GeometryNode*>(selfdata->node);
+
+  luaL_argcheck(L, self != 0, 1, "Geometry node expected");
+
+  const char* filename = luaL_checkstring(L, 2);
+  char *fn = const_cast<char*>(filename);
+
+  self->set_filename(fn);
 
   return 0;
 }
@@ -439,6 +477,7 @@ static const luaL_reg grlib_functions[] = {
   {"joint", gr_joint_cmd},
   {"sphere", gr_sphere_cmd},
   {"cube", gr_cube_cmd},
+  {"model", gr_model_cmd},
   {"material", gr_material_cmd},
   {"texture", gr_texture_cmd},
   {0, 0}
@@ -461,6 +500,7 @@ static const luaL_reg grlib_node_methods[] = {
   {"add_child", gr_node_add_child_cmd},
   {"set_material", gr_node_set_material_cmd},
   {"set_texture", gr_node_set_texture_cmd},
+  {"set_filename", gr_node_set_filename_cmd},
   {"scale", gr_node_scale_cmd},
   {"rotate", gr_node_rotate_cmd},
   {"dimensions", gr_node_dimensions_cmd},

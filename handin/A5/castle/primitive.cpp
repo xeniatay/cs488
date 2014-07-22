@@ -5,6 +5,7 @@ using std::endl;
 
 Primitive::Primitive() {
   m_celshading = false;
+  m_filename = new char[200];
 }
 
 Primitive::~Primitive() {
@@ -314,42 +315,20 @@ void Cube::draw_cube_outline(double i, double j, double k) {
   glDisable(GL_CULL_FACE);
 }
 
-// http://www.d.umn.edu/~ddunham/cs5721f07/schedule/resources/lab_opengl07.html
-void Primitive::walk_gl_castle(char* filename) {
+Model::Model() {
+}
 
-  //init_celshading();
+Model::~Model() {
+}
 
-  //glEnable(GL_BLEND);
-  //glBlendFunc(GL_ONE, GL_SRC_ALPHA);
-
-/*
-  glEnable(GL_TEXTURE_2D);
-  glBindTexture( GL_TEXTURE_2D, Texture::CASTLE_WALL);
-
-  // select modulate to mix texture with color for shading
-  glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-  // when texture area is small, bilinear filter the closest mipmap
-  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST );
-  // when texture area is large, bilinear filter the original
-  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-  // the texture wraps over at the edges (repeat)
-  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-
-  Image *img_png = new Image(300, 300, 3);
-  img_png->loadPng("assets/castle_wall_texture_3.png");
-  gluBuild2DMipmaps( GL_TEXTURE_2D, 3, 300, 300, GL_RGBA, GL_UNSIGNED_BYTE, img_png->data());
-
-  glColor4f(1.0, 0.9, 0.9, 0.7);
-  */
-
-  glScaled(8, 8, 8);
-
-  GLMmodel *model = glmReadOBJ(filename);
-  //GLMmodel *model = glmReadOBJ("models/dragon.obj");
+void Model::walk_gl(bool texture, Vector3D scale) {
+  cerr << "model awlk gl" << m_filename <<endl;
+  //glScaled(8, 8, 8);
+  if (m_filename) {
+    GLMmodel *model = glmReadOBJ(m_filename);
 
   if (!model) {
-    cerr << "ERROR: model " << filename << " not found"<< endl;
+    cerr << "ERROR: model " << m_filename << " not found"<< endl;
     exit(0);
   }
 
@@ -359,7 +338,5 @@ void Primitive::walk_gl_castle(char* filename) {
   glmVertexNormals(model, 90.0);
 
   glmDraw(model, GLM_SMOOTH | GLM_TEXTURE | GLM_CELSHADING);
-
-  //destruct_celshading();
-
+  }
 }

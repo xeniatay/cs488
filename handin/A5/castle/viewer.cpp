@@ -111,13 +111,6 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   // Draw scene
   m_scenenode->walk_gl();
 
-  // Draw hardcoded models
-  Primitive *model = new Primitive();
-  model->m_celshading = true;
-  model->walk_gl_castle("models/castle_model_3/terrain.obj");
-  //model->walk_gl_castle("models/dragon.obj");
-
-
 
 /*
   // Lens Flare

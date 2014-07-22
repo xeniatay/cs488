@@ -228,6 +228,12 @@ battlement_thickness = mh_thickness;
   rootnode:add_child(sphere_primt);
 
 ]]
+
+model_primt = gr.model('model');
+model_primt:scale(8, 8, 8);
+model_primt:set_filename("models/castle_model_3/terrain.obj");
+rootnode:add_child(model_primt);
+
 -- end castle battlements --
 --rootnode:translate(8.0, 0, 0.0)
 rootnode:scale(0.5, 0.5, 0.5);

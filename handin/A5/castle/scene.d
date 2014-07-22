@@ -106,4 +106,4 @@ scene.o scene.d : scene.cpp scene.hpp /usr/include/c++/4.6/list \
  /usr/include/c++/4.6/bits/stl_uninitialized.h \
  /usr/include/c++/4.6/bits/stl_vector.h \
  /usr/include/c++/4.6/bits/stl_bvector.h \
- /usr/include/c++/4.6/bits/vector.tcc
+ /usr/include/c++/4.6/bits/vector.tcc /usr/include/string.h

@@ -29,7 +29,7 @@ public:
   void get_celshading(Vector3D normal);
   bool m_celshading;
 
-  void walk_gl_castle(char *filename);
+  char* m_filename;
 
 };
 
@@ -51,6 +51,14 @@ public:
   void walk_gl(bool texture, Vector3D scale);
   void draw_cube_outline(double x, double y, double z);
   GLuint dl_cube;
+};
+
+class Model : public Primitive {
+public:
+  Model();
+  virtual ~Model();
+  void walk_gl(bool texture, Vector3D scale);
+  void set_filename(char* filename);
 };
 
 #endif

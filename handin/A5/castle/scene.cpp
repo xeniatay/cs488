@@ -2,6 +2,8 @@
 #include <iostream>
 #include "a2.hpp"
 #include <vector>
+#include <stdio.h>
+#include <string.h>
 
 using std::vector;
 using std::cerr;
@@ -155,6 +157,11 @@ void GeometryNode::dimensions(int w, int h, int b) {
 
 void GeometryNode::celshading(int has_shade) {
   //m_primitive->m_celshading = true;
+}
+
+void GeometryNode::set_filename(char* filename) {
+  //FILENAME CANT BE MORE THAN 200 CHARS FUCK C++
+  strcpy(m_primitive->m_filename, filename);
 }
 
 void GeometryNode::walk_gl(bool picking)

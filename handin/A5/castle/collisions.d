@@ -86,8 +86,21 @@ collisions.o collisions.d : collisions.cpp collisions.hpp /usr/include/c++/4.6/c
  /usr/include/c++/4.6/bits/stl_uninitialized.h \
  /usr/include/c++/4.6/bits/stl_vector.h \
  /usr/include/c++/4.6/bits/stl_bvector.h \
- /usr/include/c++/4.6/bits/vector.tcc /usr/include/GL/glut.h \
- /usr/include/GL/freeglut_std.h /usr/include/GL/gl.h \
- /usr/include/GL/glext.h /usr/include/inttypes.h \
+ /usr/include/c++/4.6/bits/vector.tcc /usr/include/GL/glew.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdint.h /usr/include/stdint.h \
- /usr/include/GL/glu.h imageloader.h vec3f.h
+ /usr/include/GL/glu.h /usr/include/GL/gl.h /usr/include/GL/glut.h \
+ /usr/include/GL/freeglut_std.h imageloader.h vec3f.h texture.hpp \
+ /usr/include/math.h /usr/include/x86_64-linux-gnu/bits/huge_val.h \
+ /usr/include/x86_64-linux-gnu/bits/huge_valf.h \
+ /usr/include/x86_64-linux-gnu/bits/huge_vall.h \
+ /usr/include/x86_64-linux-gnu/bits/inf.h \
+ /usr/include/x86_64-linux-gnu/bits/nan.h \
+ /usr/include/x86_64-linux-gnu/bits/mathdef.h \
+ /usr/include/x86_64-linux-gnu/bits/mathcalls.h image.hpp perlinnoise.hpp \
+ /usr/include/c++/4.6/cmath perlin.hpp algebra.hpp \
+ /usr/include/c++/4.6/algorithm /usr/include/c++/4.6/utility \
+ /usr/include/c++/4.6/bits/stl_relops.h \
+ /usr/include/c++/4.6/bits/stl_algo.h \
+ /usr/include/c++/4.6/bits/algorithmfwd.h \
+ /usr/include/c++/4.6/bits/stl_heap.h \
+ /usr/include/c++/4.6/bits/stl_tempbuf.h includes/SOIL.h

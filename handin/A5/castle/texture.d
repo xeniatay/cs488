@@ -7,7 +7,8 @@ texture.o texture.d : texture.cpp texture.hpp /usr/include/GL/glew.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
  /usr/include/x86_64-linux-gnu/bits/wchar.h /usr/include/GL/glu.h \
- /usr/include/GL/gl.h /usr/include/stdlib.h \
+ /usr/include/GL/gl.h /usr/include/GL/glut.h \
+ /usr/include/GL/freeglut_std.h /usr/include/stdlib.h \
  /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/x86_64-linux-gnu/bits/endian.h \
@@ -21,7 +22,6 @@ texture.o texture.d : texture.cpp texture.hpp /usr/include/GL/glew.h \
  /usr/include/x86_64-linux-gnu/bits/time.h \
  /usr/include/x86_64-linux-gnu/sys/sysmacros.h \
  /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
- /usr/include/GL/glut.h /usr/include/GL/freeglut_std.h \
  /usr/include/math.h /usr/include/x86_64-linux-gnu/bits/huge_val.h \
  /usr/include/x86_64-linux-gnu/bits/huge_valf.h \
  /usr/include/x86_64-linux-gnu/bits/huge_vall.h \
@@ -98,4 +98,4 @@ texture.o texture.d : texture.cpp texture.hpp /usr/include/GL/glew.h \
  /usr/include/c++/4.6/bits/algorithmfwd.h \
  /usr/include/c++/4.6/bits/stl_heap.h \
  /usr/include/c++/4.6/bits/stl_tempbuf.h \
- /usr/include/c++/4.6/bits/stl_construct.h includes/SOIL.h
+ /usr/include/c++/4.6/bits/stl_construct.h includes/SOIL.h imageloader.h

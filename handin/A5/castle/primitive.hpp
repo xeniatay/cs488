@@ -59,6 +59,8 @@ public:
   virtual ~Model();
   void walk_gl(bool texture, Vector3D scale);
   void set_filename(char* filename);
+
+  GLMmodel *model;
 };
 
 #endif

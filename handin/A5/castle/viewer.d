@@ -1114,8 +1114,8 @@ viewer.o viewer.d : viewer.cpp viewer.hpp /usr/include/GL/glew.h \
  /usr/include/gtkglextmm-1.2/gtkmm/gl/drawingarea.h \
  /usr/include/c++/4.6/iostream scene.hpp algebra.hpp primitive.hpp \
  texture.hpp /usr/include/GL/glut.h /usr/include/GL/freeglut_std.h \
- image.hpp perlinnoise.hpp perlin.hpp includes/SOIL.h celshading.hpp \
- glm.h material.hpp trackball.hpp events.hpp a2.hpp bouncingball.hpp \
- collisions.hpp /usr/include/c++/4.6/set \
+ image.hpp perlinnoise.hpp perlin.hpp includes/SOIL.h imageloader.h \
+ celshading.hpp glm.h material.hpp trackball.hpp events.hpp a2.hpp \
+ bouncingball.hpp collisions.hpp /usr/include/c++/4.6/set \
  /usr/include/c++/4.6/bits/stl_set.h \
- /usr/include/c++/4.6/bits/stl_multiset.h imageloader.h vec3f.h
+ /usr/include/c++/4.6/bits/stl_multiset.h vec3f.h

@@ -38,15 +38,11 @@ const int MAX_OCTREE_DEPTH = 6;
 const int MIN_BALLS_PER_OCTREE = 3;
 const int MAX_BALLS_PER_OCTREE = 6;
 
-
-
 //Puts potential ball-ball collisions in potentialCollisions.  It must return
 //all actual collisions, but it need not return only actual collisions.
-void potentialBallBallCollisions(vector<BallPair> &potentialCollisions,
-								 vector<Ball*> &balls, Octree* octree) {
+void potentialBallBallCollisions(vector<BallPair> &potentialCollisions, vector<Ball*> &balls, Octree* octree) {
 	//Fast method
 	octree->potentialBallBallCollisions(potentialCollisions);
-
 	/*
 	//Slow method
 	for(unsigned int i = 0; i < balls.size(); i++) {
@@ -62,8 +58,7 @@ void potentialBallBallCollisions(vector<BallPair> &potentialCollisions,
 
 //Puts potential ball-wall collisions in potentialCollisions.  It must return
 //all actual collisions, but it need not return only actual collisions.
-void potentialBallWallCollisions(vector<BallWallPair> &potentialCollisions,
-								 vector<Ball*> &balls, Octree* octree) {
+void potentialBallWallCollisions(vector<BallWallPair> &potentialCollisions, vector<Ball*> &balls, Octree* octree) {
 	//Fast method
 	octree->potentialBallWallCollisions(potentialCollisions);
 
@@ -189,10 +184,7 @@ void performUpdate(vector<Ball*> &balls, Octree* octree) {
 
 //Advances the state of the balls by t.  timeUntilUpdate is the amount of time
 //until the next call to performUpdate.
-void advance(vector<Ball*> &balls,
-			 Octree* octree,
-			 float t,
-			 float &timeUntilUpdate) {
+void advance(vector<Ball*> &balls, Octree* octree, float t, float &timeUntilUpdate) {
 	while (t > 0) {
 		if (timeUntilUpdate <= t) {
 			moveBalls(balls, octree, timeUntilUpdate);
@@ -207,10 +199,6 @@ void advance(vector<Ball*> &balls,
 		}
 	}
 }
-
-
-
-
 
 vector<Ball*> _balls; //All of the balls in play
 float _angle = 0.0f; //The camera angle
@@ -227,8 +215,8 @@ void cleanup() {
 	delete _octree;
 }
 
-void createBalls() {
-	int numBalls = 5;
+// create any number of balls passed into numBalls
+void createBalls(int numBalls) {
 	for(int i = 0; i < numBalls; i++) {
 		Ball* ball = new Ball();
 		ball->pos = Vec3f(8 * randomFloat() - 4,
@@ -246,21 +234,6 @@ void createBalls() {
 	}
 }
 
-GLuint loadTexture(ImageBMP* image) {
-	GLuint textureId;
-	glGenTextures(1, &textureId);
-	glBindTexture(GL_TEXTURE_2D, textureId);
-	glTexImage2D(GL_TEXTURE_2D,
-				 0,
-				 GL_RGB,
-				 image->width, image->height,
-				 0,
-				 GL_RGB,
-				 GL_UNSIGNED_BYTE,
-				 image->pixels);
-	return textureId;
-}
-
 void initRendering() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
@@ -269,7 +242,7 @@ void initRendering() {
 	glEnable(GL_COLOR_MATERIAL);
 
 	ImageBMP *image = loadBMP("vtr.bmp");
-	_textureId = loadTexture(image);
+	_textureId = load_texture(image);
 	delete image;
 }
 
@@ -380,3 +353,4 @@ int main(int argc, char** argv) {
 	return 0;
 }
 */
+

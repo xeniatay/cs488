@@ -12,11 +12,14 @@
 #include <OpenGL/OpenGL.h>
 #include <GLUT/glut.h>
 #else
+#include <GL/glew.h>
+#include <GL/glu.h>
 #include <GL/glut.h>
 #endif
 
 #include "imageloader.h"
 #include "vec3f.h"
+#include "texture.hpp"
 
 using namespace std;
 
@@ -412,9 +415,7 @@ extern GLuint _textureId;
 //Deletes everything.  This should be called when exiting the program.
 void cleanup();
 
-void createBalls();
-
-GLuint loadTexture(ImageBMP* image);
+void createBalls(int numBalls);
 
 void initRendering();
 

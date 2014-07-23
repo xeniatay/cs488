@@ -3,8 +3,9 @@
 
 #include <GL/glew.h>
 #include <GL/glu.h>
-#include <stdlib.h>
 #include <GL/glut.h>
+
+#include <stdlib.h>
 #include <math.h>
 #include <string>
 #include <iostream>
@@ -12,6 +13,7 @@
 #include "perlinnoise.hpp"
 #include "perlin.hpp"
 #include "includes/SOIL.h"
+#include "imageloader.h"
 
 using namespace std;
 
@@ -60,5 +62,6 @@ class Texture {
 
 };
 
+GLuint load_texture(ImageBMP* image);
 
 #endif

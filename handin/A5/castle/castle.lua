@@ -128,6 +128,7 @@ rootnode = gr.node('rootnode');
 
 -- main hall --
 -- centecastle_wall_c on screen, cube that makes up body of castle --
+--[[
 mh_w = 2
 mh_h = 2
 mh_b = 2
@@ -144,7 +145,7 @@ mh_thickness = 1;
   mh_b_primt:set_texture(castle_wall_t);
   mh_b_primt:set_material(castle_wall_c);
   mh_b_node:add_child(mh_b_primt);
-
+]]
 --rootnode:translate(0.0, 0, 20.0)
 --rootnode:scale(5, 5, 5);
 --rootnode:rotate('y', -20.0)

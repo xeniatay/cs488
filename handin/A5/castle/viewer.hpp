@@ -72,6 +72,9 @@ class Viewer : public Gtk::GL::DrawingArea {
     // gl_settings
     void gl_settings();
 
+    // lens flare
+    void lens_flare();
+
     // timer
    void start_timer(int tick);
    bool tick_handler();

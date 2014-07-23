@@ -311,6 +311,7 @@ void Cube::draw_cube_outline(double i, double j, double k) {
 }
 
 Model::Model() {
+  model = NULL;
 }
 
 Model::~Model() {
@@ -318,11 +319,8 @@ Model::~Model() {
 
 void Model::walk_gl(bool texture, Vector3D scale) {
 
-  GLMmodel *model = glmReadOBJ(m_filename);
-
   if (!model) {
-    cerr << "ERROR: model " << m_filename << " not found"<< endl;
-    exit(0);
+    model = glmReadOBJ(m_filename);
   }
 
   // Celshading

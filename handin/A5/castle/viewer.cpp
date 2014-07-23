@@ -86,15 +86,12 @@ void Viewer::on_realize()
   read_shader();
 
   // timer
-  //start_timer(100);
-
-  // bouncingball
-  //reshape_bball(m_width, m_height);
+  start_timer(100);
 
   // collisions
   srand((unsigned int)time(0)); //Seed the random number generator
   _octree = new Octree(Vec3f(-BOX_SIZE / 2, -BOX_SIZE / 2, -BOX_SIZE / 2), Vec3f(BOX_SIZE / 2, BOX_SIZE / 2, BOX_SIZE / 2), 1);
-  createBalls();
+  createBalls(5);
 }
 
 bool Viewer::on_expose_event(GdkEventExpose* event)
@@ -122,74 +119,15 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   // Draw scene
   m_scenenode->walk_gl();
 
-
-  // Lens Flare: translucent box overlay
-  /*
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_ONE, GL_SRC_ALPHA);
-  glColor4f(0.1, 0.1, 0.1, 0.7);
-
-  GLfloat center_x = m_width * 0.5f;
-  GLfloat center_y = m_height * 0.5f;
-
-  // screenPos is the onscreen position of the sun
-  // mind that the pixel coordinates have been scaled
-  // to fit our viewport
-  GLfloat screenPos_x = 200;
-  GLfloat screenPos_y = 100;
-  cerr << center_x << " " << center_y << endl;
-  GLfloat dx = center_x - screenPos_x;
-  GLfloat dy = center_y - screenPos_y;
-  GLfloat len = sqrt(dx * dx + dy * dy);
-
-  // normalize the vector
-  GLfloat vx = dx / len;
-  GLfloat vy = dy / len;
-
-  // choose a spacing between elements
-  dx = vx * 0.4f;
-  dy = vy * 0.4f;
-  cerr << "vx, vy, len" << vx <<", " << vy << ", " << len << endl;
-
-  // note that we already are in 2D (orthogonal)
-  // mode here
-  glPushMatrix();
-  //glTranslatef(screenPos_x, screenPos_y, 0);
-
-  int numElements = 3;
-  // travel down the line and draw the elements
-  for(int i = 0; i < numElements; i++) {
-    cerr << "Drawing lens flare at " << dx <<", " << dy << ", " << " 0" << endl;
-    glTranslatef(dx, dy, 0);
-    glScaled(1.3, 1.3, 1);
-    // Drawing a polygonnn
-     glBegin(GL_POLYGON);            // These vertices form a closed polygon
-        glColor4f(1.0f, 1.0f, 0.0f, 0.7f); // Yellow
-        glVertex2f(0.4f, 0.2f);
-        glVertex2f(0.6f, 0.2f);
-        glVertex2f(0.7f, 0.4f);
-        glVertex2f(0.6f, 0.6f);
-        glVertex2f(0.4f, 0.6f);
-        glVertex2f(0.3f, 0.4f);
-     glEnd();
-    //draw_flare_element();
-  }
-  glPopMatrix();
-  //glRecti(0, 0, m_width, m_height);
-  glDisable(GL_BLEND);
-  */
+  //lens_flare();
 
   // celshading monster
-  //DrawGLScene();
-
-  //display_bball();
+  DrawGLScene();
 
   // collisions
-  /*
   initRendering();
   update(0);
   drawScene();
-  */
 
   // Swap the contents of the front and back buffers so we see what we
   // just drew. This should only be done if double buffering is enabled.
@@ -493,4 +431,64 @@ bool Viewer::tick_handler() {
   invalidate();
 
   return true;
+}
+
+void Viewer::lens_flare() {
+
+  // Lens Flare: translucent box overlay
+  /*
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_ONE, GL_SRC_ALPHA);
+  glColor4f(0.1, 0.1, 0.1, 0.7);
+
+  GLfloat center_x = m_width * 0.5f;
+  GLfloat center_y = m_height * 0.5f;
+
+  // screenPos is the onscreen position of the sun
+  // mind that the pixel coordinates have been scaled
+  // to fit our viewport
+  GLfloat screenPos_x = 200;
+  GLfloat screenPos_y = 100;
+  cerr << center_x << " " << center_y << endl;
+  GLfloat dx = center_x - screenPos_x;
+  GLfloat dy = center_y - screenPos_y;
+  GLfloat len = sqrt(dx * dx + dy * dy);
+
+  // normalize the vector
+  GLfloat vx = dx / len;
+  GLfloat vy = dy / len;
+
+  // choose a spacing between elements
+  dx = vx * 0.4f;
+  dy = vy * 0.4f;
+  cerr << "vx, vy, len" << vx <<", " << vy << ", " << len << endl;
+
+  // note that we already are in 2D (orthogonal)
+  // mode here
+  glPushMatrix();
+  //glTranslatef(screenPos_x, screenPos_y, 0);
+
+  int numElements = 3;
+  // travel down the line and draw the elements
+  for(int i = 0; i < numElements; i++) {
+    cerr << "Drawing lens flare at " << dx <<", " << dy << ", " << " 0" << endl;
+    glTranslatef(dx, dy, 0);
+    glScaled(1.3, 1.3, 1);
+    // Drawing a polygonnn
+     glBegin(GL_POLYGON);            // These vertices form a closed polygon
+        glColor4f(1.0f, 1.0f, 0.0f, 0.7f); // Yellow
+        glVertex2f(0.4f, 0.2f);
+        glVertex2f(0.6f, 0.2f);
+        glVertex2f(0.7f, 0.4f);
+        glVertex2f(0.6f, 0.6f);
+        glVertex2f(0.4f, 0.6f);
+        glVertex2f(0.3f, 0.4f);
+     glEnd();
+    //draw_flare_element();
+  }
+  glPopMatrix();
+  //glRecti(0, 0, m_width, m_height);
+  glDisable(GL_BLEND);
+  */
+
 }

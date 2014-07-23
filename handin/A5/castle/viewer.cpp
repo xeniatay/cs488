@@ -1,6 +1,6 @@
 #include "viewer.hpp"
 
-//#include "collisions.hpp"
+#include "collisions.hpp"
 
 using namespace std;
 
@@ -84,13 +84,15 @@ void Viewer::on_realize()
 
   // read shader file
   read_shader();
-  start_timer(100);
+  start_timer(10);
 
   // bouncingball
-  reshape_bball(m_width, m_height);
+  //reshape_bball(m_width, m_height);
 
   // collisions
   srand((unsigned int)time(0)); //Seed the random number generator
+  _octree = new Octree(Vec3f(-BOX_SIZE / 2, -BOX_SIZE / 2, -BOX_SIZE / 2), Vec3f(BOX_SIZE / 2, BOX_SIZE / 2, BOX_SIZE / 2), 1);
+  createBalls();
 }
 
 bool Viewer::on_expose_event(GdkEventExpose* event)
@@ -140,15 +142,12 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
 */
   //DrawGLScene();
 
-  display_bball();
+  //display_bball();
 
-  //initRendering();
-/*
-  _octree = new Octree(Vec3f(-BOX_SIZE / 2, -BOX_SIZE / 2, -BOX_SIZE / 2),
-             Vec3f(BOX_SIZE / 2, BOX_SIZE / 2, BOX_SIZE / 2), 1);
+  // collisions
+  initRendering();
+  update(0);
   drawScene();
-  createBalls();
-  */
 
   // Swap the contents of the front and back buffers so we see what we
   // just drew. This should only be done if double buffering is enabled.

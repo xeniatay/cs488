@@ -55,7 +55,6 @@ grass_t = gr.texture(tex_perlin, texid_grass, 64, 64, "", 8, 2);
 ---- rootnode ----
 rootnode = gr.node('rootnode');
 
---[[
   -- sky terrain --
   sky_w = 140
   sky_h = 60
@@ -74,7 +73,7 @@ rootnode = gr.node('rootnode');
   sky_primt:set_texture(sky_t);
   sky_primt:set_material(sky_c);
   sky_node:add_child(sky_primt);
-]]
+
 
   -- ground terrain --
 --[[
@@ -99,7 +98,7 @@ rootnode = gr.node('rootnode');
   model_primt:set_material(grass_c);
   model_primt:set_filename("models/castle_model_3/terrain.obj");
   model_node:add_child(model_primt);
-
+]]
 -- main hall --
 -- centecastle_wall_c on screen, cube that makes up body of castle --
 mh_w = 30
@@ -113,7 +112,7 @@ mh_thickness = 1;
   rootnode:add_child(mh_b_node);
 
   mh_b_primt = gr.cube('mh_b_primt');
-  mh_b_primt:dimensions(mh_w, mh_h, mh_thickness);
+  mh_b_primt:scale(mh_w, mh_h, mh_thickness);
   mh_b_primt:celshading();
   mh_b_primt:set_texture(castle_wall_t);
   mh_b_primt:set_material(castle_wall_c);
@@ -125,7 +124,7 @@ mh_thickness = 1;
   rootnode:add_child(mh_l_node);
 
   mh_l_primt = gr.cube('mh_l_primt');
-  mh_l_primt:dimensions(1, mh_h, mh_b);
+  mh_l_primt:scale(1, mh_h, mh_b);
   mh_l_primt:celshading();
   mh_l_primt:set_texture(castle_wall_t);
   mh_l_primt:set_material(castle_wall_c);
@@ -137,7 +136,7 @@ mh_thickness = 1;
   rootnode:add_child(mh_r_node);
 
   mh_r_primt = gr.cube('mh_r_primt');
-  mh_r_primt:dimensions(1, mh_h, mh_b);
+  mh_r_primt:scale(1, mh_h, mh_b);
   mh_r_primt:celshading();
   mh_r_primt:set_texture(castle_wall_t);
   mh_r_primt:set_material(castle_wall_c);
@@ -150,7 +149,7 @@ mh_thickness = 1;
 
   -- front wall left --
   mh_fl_primt = gr.cube('mh_fl_primt');
-  mh_fl_primt:dimensions(mh_w/3, mh_h, mh_thickness);
+  mh_fl_primt:scale(mh_w/3, mh_h, mh_thickness);
   mh_fl_primt:celshading();
   mh_fl_primt:set_texture(castle_wall_t);
   mh_fl_primt:set_material(castle_wall_c);
@@ -159,7 +158,7 @@ mh_thickness = 1;
   -- front wall middle bottom --
   mh_fmb_primt = gr.cube('mh_fmb_primt');
   mh_fmb_primt:translate(mh_w/3, 0, 0);
-  mh_fmb_primt:dimensions(mh_w/3, mh_h/3, mh_thickness);
+  mh_fmb_primt:scale(mh_w/3, mh_h/3, mh_thickness);
   mh_fmb_primt:celshading();
   mh_fmb_primt:set_texture(castle_wall_t);
   mh_fmb_primt:set_material(castle_wall_c);
@@ -175,7 +174,7 @@ mh_thickness = 1;
   -- front wall middle top --
   mh_fmt_primt = gr.cube('mh_fmt_primt');
   mh_fmt_primt:translate(mh_w/3, 2 * mh_h/3, 0);
-  mh_fmt_primt:dimensions(mh_w/3, mh_h/3, mh_thickness);
+  mh_fmt_primt:scale(mh_w/3, mh_h/3, mh_thickness);
   mh_fmt_primt:celshading();
   mh_fmt_primt:set_texture(castle_wall_t);
   mh_fmt_primt:set_material(castle_wall_c);
@@ -184,7 +183,7 @@ mh_thickness = 1;
   -- front wall right --
   mh_fr_primt = gr.cube('mh_fr_primt');
   mh_fr_primt:translate(2 * mh_w/3, 0, 0);
-  mh_fr_primt:dimensions(mh_w/3, mh_h, mh_thickness);
+  mh_fr_primt:scale(mh_w/3, mh_h, mh_thickness);
   mh_fr_primt:celshading();
   mh_fr_primt:set_texture(castle_wall_t);
   mh_fr_primt:set_material(castle_wall_c);
@@ -209,7 +208,7 @@ battlement_thickness = mh_thickness;
     mh_b_node:add_child(battlement_node)
 
     battlement_primt = gr.cube("battlement_primt_" .. i);
-    battlement_primt:dimensions(battlement_w, battlement_h, battlement_thickness);
+    battlement_primt:scale(battlement_w, battlement_h, battlement_thickness);
     battlement_primt:set_texture(castle_wall_t);
     battlement_primt:set_material(castle_wall_c)
     battlement_node:add_child(battlement_primt)
@@ -227,13 +226,14 @@ battlement_thickness = mh_thickness;
     mh_r_node:add_child(battlement_node)
 
     battlement_primt = gr.cube("battlement_primt_" .. i);
-    battlement_primt:dimensions(battlement_thickness, battlement_h, battlement_w);
+    battlement_primt:scale(battlement_thickness, battlement_h, battlement_w);
     battlement_primt:set_texture(castle_wall_t);
     battlement_primt:set_material(castle_wall_c)
     battlement_node:add_child(battlement_primt)
 
   end
 
+--[[
   sphere_primt = gr.sphere('sphere_primt');
   sphere_primt:translate(-30, 40, 60);
   sphere_primt:scale(10, 10, 10);

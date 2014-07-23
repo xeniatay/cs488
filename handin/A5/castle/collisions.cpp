@@ -258,10 +258,12 @@ void handleResize(int w, int h) {
 void drawScene() {
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+/*
 	glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 	glTranslatef(0.0f, 0.0f, -20.0f);
-	//glRotatef(-_angle, 0.0f, 1.0f, 0.0f);
+	glRotatef(-_angle, 0.0f, 1.0f, 0.0f);
+*/
 
 	//Draw the balls
 	for(unsigned int i = 0; i < _balls.size(); i++) {

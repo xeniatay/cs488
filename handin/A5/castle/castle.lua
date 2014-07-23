@@ -39,7 +39,7 @@ blue = gr.material({0.0, 0.0, 1.0}, {0.1, 0.1, 0.1}, 1.0, -1 );
 green = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 1.0, -1);
 white = gr.material({1.0, 1.0, 1.0}, {0.1, 0.1, 0.1}, 1.0, -1);
 black = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 1.0, 1);
-grass_c = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 1.0, 1);
+grass_c = gr.material({0.0, 0.0, 1.0}, {0.1, 0.1, 0.1}, 1.0, 1);
 sky_c = gr.material({1.0, 1.0, 1.0}, {0.1, 0.1, 0.1}, 1.0, 1);
 castle_wall_c = gr.material({1.0, 1.0, 1.0}, {0.1, 0.1, 0.1}, 1.0, 1);
 crystal_c = gr.material({0.7, 0.3, 0.6}, {0.1, 0.1, 0.1}, 0.4, -1);
@@ -51,7 +51,7 @@ none_t = gr.texture(tex_none, 0, 0, 0, "", 0, 0);
 castle_wall_t = gr.texture(tex_image, texid_cw, 256, 256, castle_wall_fn, 0, 0);
 sky_t = gr.texture(tex_image, texid_sky, 900, 600, sky_fn, 0, 0);
 --sky_t = gr.texture(tex_perlin, texid_sky, 64, 64, "", 4, 2);
-grass_t = gr.texture(tex_perlin, texid_grass, 64, 64, "", 8, 2);
+grass_t = gr.texture(tex_perlin, texid_grass, 64, 64, "", 16, 2);
 
 ---- rootnode ----
 rootnode = gr.node('rootnode');
@@ -76,7 +76,7 @@ rootnode = gr.node('rootnode');
 
   -- terrain --
   terrain_w = 100
-  terrain_h = 3
+  terrain_h = 8
   terrain_b = 100
   terrain_primt = gr.model('terrain_primt');
   terrain_primt:translate(0, -terrain_h, 0);
@@ -90,9 +90,10 @@ rootnode = gr.node('rootnode');
   -- castle --
   castle_w = 6
   castle_h = 6
-  castle_b = 4
+  castle_b = 6
   castle_primt = gr.model('castle_primt');
   castle_primt:scale(castle_w, castle_h, castle_b);
+  castle_primt:rotate('y', -90.0);
   castle_primt:set_texture(castle_wall_t);
   castle_primt:set_material(castle_wall_c);
   castle_primt:celshading();

@@ -112,14 +112,14 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   glLoadIdentity();
 
   init_glew();
-  init_light();
+  //init_light();
   init_trackball();
   fly_camera();
 
   // Draw scene
   m_scenenode->walk_gl();
 
-  //lens_flare();
+  lens_flare();
 
   // celshading monster
   DrawGLScene();
@@ -444,7 +444,6 @@ bool Viewer::tick_handler() {
 void Viewer::lens_flare() {
 
   // Lens Flare: translucent box overlay
-  /*
   glEnable(GL_BLEND);
   glBlendFunc(GL_ONE, GL_SRC_ALPHA);
   glColor4f(0.1, 0.1, 0.1, 0.7);
@@ -479,7 +478,7 @@ void Viewer::lens_flare() {
   int numElements = 3;
   // travel down the line and draw the elements
   for(int i = 0; i < numElements; i++) {
-    cerr << "Drawing lens flare at " << dx <<", " << dy << ", " << " 0" << endl;
+    cerr << "Drawing lens flare at " << dx << ", " << dy << ", " << " 0" << endl;
     glTranslatef(dx, dy, 0);
     glScaled(1.3, 1.3, 1);
     // Drawing a polygonnn
@@ -497,7 +496,6 @@ void Viewer::lens_flare() {
   glPopMatrix();
   //glRecti(0, 0, m_width, m_height);
   glDisable(GL_BLEND);
-  */
 
 }
 

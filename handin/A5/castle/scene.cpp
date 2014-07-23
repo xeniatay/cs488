@@ -156,7 +156,7 @@ void GeometryNode::dimensions(int w, int h, int b) {
 }
 
 void GeometryNode::celshading(int has_shade) {
-  //m_primitive->m_celshading = true;
+  m_primitive->m_celshading = true;
 }
 
 void GeometryNode::set_filename(char* filename) {

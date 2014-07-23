@@ -42,7 +42,8 @@ black = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 1.0, 1);
 grass_c = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 1.0, 1);
 sky_c = gr.material({0.2, 0.4, 1.0}, {0.1, 0.1, 0.1}, 1.0, 1);
 castle_wall_c = gr.material({0.6, 0.5, 0.5}, {0.1, 0.1, 0.1}, 1.0, 1);
-castle_wall_window_c = gr.material({0.8, 1.0, 1.0}, {0.1, 0.1, 0.1}, 0.1, -1);
+crystal_c = gr.material({0.7, 0.3, 0.6}, {0.1, 0.1, 0.1}, 0.4, -1);
+crystal2_c = gr.material({0.3, 0.4, 0.7}, {0.1, 0.1, 0.1}, 0.5, -1);
 
 -- textures
 -- tex_type, tex_id, tex_w, tex_h, tex_filename
@@ -83,6 +84,7 @@ rootnode = gr.node('rootnode');
   terrain_primt:translate(0, -terrain_h, 0);
   terrain_primt:scale(terrain_w, terrain_h, terrain_b);
   terrain_primt:set_texture(grass_t);
+  terrain_primt:set_material(grass_c);
   terrain_primt:celshading();
   terrain_primt:set_filename("models/terrain.obj");
   model_node:add_child(terrain_primt);
@@ -94,23 +96,36 @@ rootnode = gr.node('rootnode');
   castle_primt = gr.model('castle_primt');
   castle_primt:scale(castle_w, castle_h, castle_b);
   castle_primt:set_texture(castle_wall_t);
+  castle_primt:set_material(castle_wall_c);
   castle_primt:celshading();
-  castle_primt:set_filename("models/castle7/castle.obj");
+  castle_primt:set_filename("models/castle2/castle.obj");
   model_node:add_child(castle_primt);
 
-  --[[
-  ground_w = 50
-  ground_h = 50
-  ground_b = 30
-  ground_node = gr.node('ground_node');
-  ground_node:translate(-ground_w/2, 0, 0);
-  rootnode:add_child(ground_node);
-  ground_primt = gr.cube('ground_primt');
-  ground_primt:scale(ground_w, ground_h, ground_b);
-  ground_primt:set_texture(grass_t);
-  ground_primt:set_material(grass_c);
-  ground_node:add_child(ground_primt);
-]]
+  -- crystals --
+  crystal_w = 2
+  crystal_h = 2
+  crystal_b = 2
+  crystal_primt = gr.model('crystal_primt');
+  crystal_primt:rotate('x', 90.0);
+  crystal_primt:translate(-10, 0, 5);
+  crystal_primt:scale(crystal_w, crystal_h, crystal_b);
+  crystal_primt:set_material(crystal_c);
+  crystal_primt:set_filename("models/crystal2/crystal.obj");
+  model_node:add_child(crystal_primt);
+
+  crystal_w = 3
+  crystal_h = 3
+  crystal_b = 3
+  crystal_primt = gr.model('crystal_primt');
+  crystal_primt:rotate('x', 90.0);
+  crystal_primt:rotate('y', 3.0);
+  crystal_primt:rotate('z', 3.0);
+  crystal_primt:translate(10, 0, 5);
+  crystal_primt:scale(crystal_w, crystal_h, crystal_b);
+  crystal_primt:set_material(crystal2_c);
+  crystal_primt:set_filename("models/crystal2/crystal.obj");
+  model_node:add_child(crystal_primt);
+
 -- main hall --
 -- centecastle_wall_c on screen, cube that makes up body of castle --
 mh_w = 2
@@ -120,7 +135,7 @@ mh_thickness = 1;
 
   -- back wall --
   mh_b_node = gr.node('mh_b_node');
-  mh_b_node:translate(-mh_w/2, 0, 1);
+  mh_b_node:translate(-mh_w*2, 0, 1);
   rootnode:add_child(mh_b_node);
 
   mh_b_primt = gr.cube('mh_b_primt');

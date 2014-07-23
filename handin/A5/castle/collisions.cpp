@@ -32,7 +32,7 @@ const float BOX_SIZE = 12.0f; //The length of one side of the box
 //The amount of time between each time that we handle collisions and apply the
 //effects of gravity
 const float TIME_BETWEEN_UPDATES = 0.01f;
-const int TIMER_MS = 100; //The number of milliseconds to which the timer is set
+const int TIMER_MS = 500; //The number of milliseconds to which the timer is set
 
 const int MAX_OCTREE_DEPTH = 6;
 const int MIN_BALLS_PER_OCTREE = 3;

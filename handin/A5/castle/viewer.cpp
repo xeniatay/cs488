@@ -603,7 +603,7 @@ void Viewer::toggle_balls() {
   if (SHOW_BALLS && !balls_inited) {
     _octree = new Octree(Vec3f(-BOX_SIZE / 2, -BOX_SIZE / 2, -BOX_SIZE / 2), Vec3f(BOX_SIZE / 2, BOX_SIZE / 2, BOX_SIZE / 2), 1);
     initBounceSounds();
-    createBalls(5);
+    createBalls(10);
     balls_inited = true;
   }
 }

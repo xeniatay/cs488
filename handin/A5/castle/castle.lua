@@ -66,7 +66,7 @@ guard_t2 = gr.texture(tex_image, texid_tree, 300, 300, guard_fn2, 0, 0);
 crystal_t = gr.texture(tex_image, texid_tree, 300, 300, crystal_fn, 0, 0);
 crystal_t2 = gr.texture(tex_image, texid_tree, 300, 300, crystal_fn2, 0, 0);
 grass_t = gr.texture(tex_perlin, texid_grass, 64, 64, "", 16, 2);
-sky_perlin_t = gr.texture(tex_perlin, texid_sky, 64, 64, "", 4, 2);
+sky_perlin_t = gr.texture(tex_perlin, texid_sky, 64, 64, "", 16, 2);
 
 ---- rootnode ----
 rootnode = gr.node('rootnode');
@@ -96,7 +96,7 @@ rootnode = gr.node('rootnode');
   terrain_primt = gr.model('terrain_primt');
   terrain_primt:translate(0, -5 - terrain_h, 0);
   terrain_primt:scale(terrain_w, terrain_h, terrain_b);
-  terrain_primt:set_texture(sky_perlin_t);
+  terrain_primt:set_texture(grass_t);
   terrain_primt:set_material(grass_c);
   terrain_primt:celshading();
   terrain_primt:set_filename("models/terrain.obj");

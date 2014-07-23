@@ -263,30 +263,15 @@ void drawScene() {
 	glTranslatef(0.0f, 0.0f, -20.0f);
 	//glRotatef(-_angle, 0.0f, 1.0f, 0.0f);
 
-	char c[50] = "models/ball.obj";
-    GLMmodel *model = glmReadOBJ(c);
-
 	//Draw the balls
 	for(unsigned int i = 0; i < _balls.size(); i++) {
 		Ball* ball = _balls[i];
 		glPushMatrix();
 		glTranslatef(ball->pos[0], ball->pos[1], ball->pos[2]);
 		glColor3f(ball->color[0], ball->color[1], ball->color[2]);
-
-/*
 	  GLUquadric *quadric = gluNewQuadric();
 	  gluQuadricOrientation(quadric, GLU_OUTSIDE);
 	  gluSphere(quadric, ball->r, 32, 32);
-
-	  */
-
-	  glmUnitize(model);
-	  glmFacetNormals(model);
-	  glmLinearTexture(model);
-	  glmVertexNormals(model, 90.0);
-	  glmDraw(model, GLM_SMOOTH | GLM_TEXTURE );
-
-		//glutSolidSphere(ball->r, 12, 12); //Draw a sphere
 		glPopMatrix();
 	}
 }

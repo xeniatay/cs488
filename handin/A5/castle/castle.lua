@@ -60,10 +60,6 @@ rootnode = gr.node('rootnode');
   sky_h = 60
   sky_b = 1
 
-  ground_w = 50
-  ground_h = 50
-  ground_b = 30
-
 --[[
   sky_node = gr.node('sky_node');
   sky_node:translate(-sky_w/2, -ground_h/2, 0);
@@ -76,8 +72,36 @@ rootnode = gr.node('rootnode');
   sky_node:add_child(sky_primt);
 ]]
 
-  -- ground terrain --
---[[
+  model_node = gr.node('model_node');
+  rootnode:add_child(model_node);
+
+  -- terrain --
+  terrain_w = 25
+  terrain_h = 3
+  terrain_b = 15
+  terrain_primt = gr.model('terrain_primt');
+  terrain_primt:translate(0, -terrain_h, 0);
+  terrain_primt:scale(terrain_w, terrain_h, terrain_b);
+  terrain_primt:set_texture(grass_t);
+  terrain_primt:celshading();
+  terrain_primt:set_filename("models/terrain.obj");
+  model_node:add_child(terrain_primt);
+
+  -- castle --
+  castle_w = 6
+  castle_h = 6
+  castle_b = 4
+  castle_primt = gr.model('castle_primt');
+  castle_primt:scale(castle_w, castle_h, castle_b);
+  castle_primt:set_texture(castle_wall_t);
+  castle_primt:celshading();
+  castle_primt:set_filename("models/castle7/castle.obj");
+  model_node:add_child(castle_primt);
+
+  --[[
+  ground_w = 50
+  ground_h = 50
+  ground_b = 30
   ground_node = gr.node('ground_node');
   ground_node:translate(-ground_w/2, 0, 0);
   rootnode:add_child(ground_node);
@@ -87,30 +111,13 @@ rootnode = gr.node('rootnode');
   ground_primt:set_material(grass_c);
   ground_node:add_child(ground_primt);
 ]]
-
-  castle_w = 6
-  castle_h = 6
-  castle_b = 4
-
-  model_node = gr.node('model_node');
-  model_node:translate(0, 0, 0);
-  rootnode:add_child(model_node);
-
-  model_primt = gr.model('model_primt');
-  model_primt:scale(castle_w, castle_h, castle_b);
-  model_primt:set_texture(castle_wall_t);
-  model_primt:celshading();
-  model_primt:set_filename("models/castle7/castle7.obj");
-  model_node:add_child(model_primt);
-
 -- main hall --
 -- centecastle_wall_c on screen, cube that makes up body of castle --
-mh_w = 30
-mh_h = 10
-mh_b = 10
+mh_w = 2
+mh_h = 2
+mh_b = 2
 mh_thickness = 1;
 
---[[
   -- back wall --
   mh_b_node = gr.node('mh_b_node');
   mh_b_node:translate(-mh_w/2, 0, 1);
@@ -123,129 +130,6 @@ mh_thickness = 1;
   mh_b_primt:set_material(castle_wall_c);
   mh_b_node:add_child(mh_b_primt);
 
-  -- left wall --
-  mh_l_node = gr.node('mh_l_node');
-  mh_l_node:translate(-mh_w/2, 0, 1);
-  rootnode:add_child(mh_l_node);
-
-  mh_l_primt = gr.cube('mh_l_primt');
-  mh_l_primt:scale(1, mh_h, mh_b);
-  mh_l_primt:celshading();
-  mh_l_primt:set_texture(castle_wall_t);
-  mh_l_primt:set_material(castle_wall_c);
-  mh_l_node:add_child(mh_l_primt);
-
-  -- right wall --
-  mh_r_node = gr.node('mh_r_node');
-  mh_r_node:translate(mh_w/2 - mh_thickness, 0, 1);
-  rootnode:add_child(mh_r_node);
-
-  mh_r_primt = gr.cube('mh_r_primt');
-  mh_r_primt:scale(1, mh_h, mh_b);
-  mh_r_primt:celshading();
-  mh_r_primt:set_texture(castle_wall_t);
-  mh_r_primt:set_material(castle_wall_c);
-  mh_r_node:add_child(mh_r_primt);
-
-  -- front wall --
-  mh_f_node = gr.node('mh_f_node');
-  mh_f_node:translate(-mh_w/2, 0, mh_b);
-  rootnode:add_child(mh_f_node);
-
-  -- front wall left --
-  mh_fl_primt = gr.cube('mh_fl_primt');
-  mh_fl_primt:scale(mh_w/3, mh_h, mh_thickness);
-  mh_fl_primt:celshading();
-  mh_fl_primt:set_texture(castle_wall_t);
-  mh_fl_primt:set_material(castle_wall_c);
-  mh_f_node:add_child(mh_fl_primt);
-
-  -- front wall middle bottom --
-  mh_fmb_primt = gr.cube('mh_fmb_primt');
-  mh_fmb_primt:translate(mh_w/3, 0, 0);
-  mh_fmb_primt:scale(mh_w/3, mh_h/3, mh_thickness);
-  mh_fmb_primt:celshading();
-  mh_fmb_primt:set_texture(castle_wall_t);
-  mh_fmb_primt:set_material(castle_wall_c);
-  mh_f_node:add_child(mh_fmb_primt);
-
-  -- front wall window --
-  mh_fw_primt = gr.cube('mh_fw_primt');
-  mh_fw_primt:translate(mh_w/3, mh_h/3, 0);
-  mh_fw_primt:scale(mh_w/3, mh_h/3, mh_thickness);
-  mh_fw_primt:set_material(castle_wall_window_c);
-  mh_f_node:add_child(mh_fw_primt);
-
-  -- front wall middle top --
-  mh_fmt_primt = gr.cube('mh_fmt_primt');
-  mh_fmt_primt:translate(mh_w/3, 2 * mh_h/3, 0);
-  mh_fmt_primt:scale(mh_w/3, mh_h/3, mh_thickness);
-  mh_fmt_primt:celshading();
-  mh_fmt_primt:set_texture(castle_wall_t);
-  mh_fmt_primt:set_material(castle_wall_c);
-  mh_f_node:add_child(mh_fmt_primt);
-
-  -- front wall right --
-  mh_fr_primt = gr.cube('mh_fr_primt');
-  mh_fr_primt:translate(2 * mh_w/3, 0, 0);
-  mh_fr_primt:scale(mh_w/3, mh_h, mh_thickness);
-  mh_fr_primt:celshading();
-  mh_fr_primt:set_texture(castle_wall_t);
-  mh_fr_primt:set_material(castle_wall_c);
-  mh_f_node:add_child(mh_fr_primt);
-
--- end main hall --
-
--- start castle battlements --
-
-battlement_w = mh_w / 11;
-battlement_h = 2;
-battlement_thickness = mh_thickness;
-
-  -- front and back battlements --
-  num_battlements = math.ceil(mh_w / battlement_w / 2);
-  for i = 0, (num_battlements - 1 ) do
-
-    -- generate battlements
-    battlement_node = gr.node("battlement_node_" .. i );
-    battlement_node:translate(i * battlement_w * 2, mh_h, 0);
-    mh_f_node:add_child(battlement_node)
-    mh_b_node:add_child(battlement_node)
-
-    battlement_primt = gr.cube("battlement_primt_" .. i);
-    battlement_primt:scale(battlement_w, battlement_h, battlement_thickness);
-    battlement_primt:set_texture(castle_wall_t);
-    battlement_primt:set_material(castle_wall_c)
-    battlement_node:add_child(battlement_primt)
-
-  end
-
-  -- left and right battlements --
-  num_battlements = math.ceil(mh_b / battlement_w / 2);
-  for i = 0, (num_battlements - 1 ) do
-
-    -- generate battlements
-    battlement_node = gr.node("battlement_node_" .. i );
-    battlement_node:translate(0, mh_h, i * battlement_w * 2);
-    mh_l_node:add_child(battlement_node)
-    mh_r_node:add_child(battlement_node)
-
-    battlement_primt = gr.cube("battlement_primt_" .. i);
-    battlement_primt:scale(battlement_thickness, battlement_h, battlement_w);
-    battlement_primt:set_texture(castle_wall_t);
-    battlement_primt:set_material(castle_wall_c)
-    battlement_node:add_child(battlement_primt)
-
-  end
-]]
---[[
-  sphere_primt = gr.sphere('sphere_primt');
-  sphere_primt:translate(-30, 40, 60);
-  sphere_primt:scale(10, 10, 10);
-  sphere_primt:set_material(red);
-  rootnode:add_child(sphere_primt);
-]]
--- end castle battlements --
 --rootnode:translate(0.0, 0, 20.0)
 --rootnode:scale(5, 5, 5);
 --rootnode:rotate('y', -20.0)

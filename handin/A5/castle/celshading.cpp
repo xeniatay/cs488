@@ -168,8 +168,8 @@ void DrawGLScene() {
   glGetFloatv(GL_MODELVIEW_MATRIX, TmpMatrix.Data);      // Get The Generated Matrix
 
   // Cel-Shading Code //
-  glDisable(GL_TEXTURE_2D);
-  glDisable(GL_TEXTURE_3D);
+  //glDisable(GL_TEXTURE_2D);
+  //glDisable(GL_TEXTURE_3D);
   glEnable(GL_TEXTURE_1D);                 // Enable 1D Texturing
   glBindTexture(GL_TEXTURE_1D, shaderTexture[0]);      // Bind Our Texture
   glColor3f(1.0f, 1.0f, 1.0f);               // Set The Color Of The Model

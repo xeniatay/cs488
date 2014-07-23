@@ -19,6 +19,9 @@
 #include <assert.h>
 #include "glm.h"
 #include "algebra.hpp"
+#include <iostream>
+
+using namespace std;
 
 #define T(x) (model->triangles[(x)])
 
@@ -1947,7 +1950,7 @@ void set_celshading(GLfloat *glnormal) {
   Vector3D normal = Vector3D(glnormal[0], glnormal[1], glnormal[2]);
 
   // hardcoded light position is directly in front
-  Vector3D l = Vector3D(100, 600, 1000);
+  Vector3D l = Vector3D(800, 600, 1000);
   Vector3D lightPos = Vector3D{l[0] - normal[0], l[1] - normal[1], l[2] - normal[2]};
   lightPos.normalize();
 
@@ -1956,5 +1959,6 @@ void set_celshading(GLfloat *glnormal) {
   int i = (int)index;
 
   double gray = shaderData[i][1];
+  //cerr << gray << " | " ;
   glColor4d( gray, gray, gray, 1);
 }

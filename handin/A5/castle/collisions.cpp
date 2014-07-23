@@ -19,7 +19,7 @@
 /* File for "Collision Detection" lesson of the OpenGL tutorial on
  * www.videotutorialsrock.com
  */
-
+ //http://www.videotutorialsrock.com/opengl_tutorial/collision_detection/text.php
 #include "collisions.hpp"
 
 //Returns a random float from 0 to < 1

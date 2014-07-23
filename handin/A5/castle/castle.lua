@@ -64,6 +64,7 @@ rootnode = gr.node('rootnode');
   ground_h = 50
   ground_b = 30
 
+--[[
   sky_node = gr.node('sky_node');
   sky_node:translate(-sky_w/2, -ground_h/2, 0);
   rootnode:add_child(sky_node);
@@ -73,7 +74,7 @@ rootnode = gr.node('rootnode');
   sky_primt:set_texture(sky_t);
   sky_primt:set_material(sky_c);
   sky_node:add_child(sky_primt);
-
+]]
 
   -- ground terrain --
 --[[
@@ -87,7 +88,6 @@ rootnode = gr.node('rootnode');
   ground_node:add_child(ground_primt);
 ]]
 
---[[
   model_node = gr.node('model_node');
   model_node:translate(0, 0, 0);
   rootnode:add_child(model_node);
@@ -96,9 +96,9 @@ rootnode = gr.node('rootnode');
   model_primt:scale(ground_w, ground_h, ground_b);
   model_primt:set_texture(grass_t);
   model_primt:set_material(grass_c);
-  model_primt:set_filename("models/castle_model_3/terrain.obj");
+  model_primt:set_filename("models/castle5/castle.obj");
   model_node:add_child(model_primt);
-]]
+
 -- main hall --
 -- centecastle_wall_c on screen, cube that makes up body of castle --
 mh_w = 30
@@ -106,6 +106,7 @@ mh_h = 10
 mh_b = 10
 mh_thickness = 1;
 
+--[[
   -- back wall --
   mh_b_node = gr.node('mh_b_node');
   mh_b_node:translate(-mh_w/2, 0, 1);
@@ -232,7 +233,7 @@ battlement_thickness = mh_thickness;
     battlement_node:add_child(battlement_primt)
 
   end
-
+]]
 --[[
   sphere_primt = gr.sphere('sphere_primt');
   sphere_primt:translate(-30, 40, 60);

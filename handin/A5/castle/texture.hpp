@@ -47,6 +47,7 @@ class Texture {
     GLubyte *img;
     Image *img_png;
     bool m_init;
+    GLuint m_bindid;
 
     void init();
     void apply_gl();

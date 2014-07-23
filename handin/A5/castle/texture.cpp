@@ -42,8 +42,13 @@ void Texture::build_texture() {
 
 void Texture::load_image() {
   cerr << "loading " << m_filename << endl;
-  img_png = new Image(m_w, m_h, 3);
-  img_png->loadPng(m_filename);
+  //img_png = new Image(m_w, m_h, 3);
+  //img_png->loadPng(m_filename);
+
+  const char *c = m_filename.c_str();
+
+  ImageBMP *image = loadBMP(c);
+  load_texture(image);
 
   // SOIL can't link
   /*
@@ -60,8 +65,18 @@ void Texture::init() {
   // only init texture once
   if (!m_init) {
     if (m_mode == IMAGE) {
-      load_image();
+
+      const char *c = m_filename.c_str();
+
+      ImageBMP *image = loadBMP(c);
+      m_bindid = load_texture(image);
+
+      //load_image();
     } else if (m_mode == PERLIN) {
+
+      // allocate a texture
+      glGenTextures( tex_count, &m_bindid );
+
       if (m_texid == SKY) {
         cerr << "SKYYY" << endl;
         makeSkyTexture(m_freq, m_amp);
@@ -79,26 +94,23 @@ void Texture::init() {
 }
 
 void Texture::apply_gl() {
-  // allocate a texture
-  GLuint texture = (GLuint)m_texid;
-  glGenTextures( tex_count, &texture );
+  // if texture hasn't been inited, init it
+  init();
 
   if (m_mode == NONE) {
     return;
   } else if (m_mode == IMAGE) {
     // activate our current texture
-    glBindTexture( GL_TEXTURE_2D, texture );
+    glBindTexture( GL_TEXTURE_2D, m_bindid );
     glDisable(GL_TEXTURE_3D);
     glEnable(GL_TEXTURE_2D);
   } else {
     glBlendFunc(GL_ONE, GL_ZERO);
-    glBindTexture( GL_TEXTURE_3D, texture );
+    glBindTexture( GL_TEXTURE_3D, m_bindid );
     glDisable(GL_TEXTURE_2D);
     glEnable(GL_TEXTURE_3D);
   }
 
-  // if texture hasn't been inited, init it
-  init();
 }
 
 // from: http://www.nullterminator.net/gltexture.html
@@ -108,6 +120,7 @@ void Texture::map_texture() {
   // mipmaps
   if (m_mode == IMAGE) {
     cerr << "start image texture" ;
+    /*
     // select modulate to mix texture with color for shading
     glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
 
@@ -121,6 +134,7 @@ void Texture::map_texture() {
 
     gluBuild2DMipmaps( GL_TEXTURE_2D, 3, m_w, m_h, GL_RGBA, GL_UNSIGNED_BYTE, img_png->data());
     img_png->~Image();
+    */
     cerr << "end" << endl;
   } else if (m_mode == PERLIN) {
     cerr << "start perlin texture" ;
@@ -136,6 +150,7 @@ void Texture::map_surface() {
 
   // not mipmaps
   if (m_mode == IMAGE) {
+    /*
     // Surface uses decal
     //glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
     glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
@@ -150,6 +165,7 @@ void Texture::map_surface() {
 
     //glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
     glTexImage2D(GL_TEXTURE_2D, 0, 3, m_w, m_h, 0, GL_RGB, GL_UNSIGNED_BYTE, img_png->data());
+    */
   } else if (m_mode == PERLIN) {
     init3DNoiseTexture();
     //glTexImage2D(GL_TEXTURE_2D, 0, 3, m_w, m_h, 0, GL_RGB, GL_UNSIGNED_BYTE, img);

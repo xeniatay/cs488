@@ -30,8 +30,8 @@ texid_grass = 1
 texid_sky = 2
 
 -- filenames for texs
-castle_wall_fn = "assets/castle_wall_texture_3.png";
-sky_fn = "assets/sky_texture_1.png";
+castle_wall_fn = "assets/castle_wall_texture_3.bmp";
+--sky_fn = "assets/sky_texture_1.png";
 
 -- materials
 red = gr.material({1.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 1.0, -1);
@@ -48,7 +48,7 @@ crystal2_c = gr.material({0.3, 0.4, 0.7}, {0.1, 0.1, 0.1}, 0.5, -1);
 -- textures
 -- tex_type, tex_id, tex_w, tex_h, tex_filename
 none_t = gr.texture(tex_none, 0, 0, 0, "", 0, 0);
-castle_wall_t = gr.texture(tex_image, texid_cw, 300, 300, castle_wall_fn, 0, 0);
+castle_wall_t = gr.texture(tex_image, texid_cw, 256, 256, castle_wall_fn, 0, 0);
 --sky_t = gr.texture(tex_image, texid_sky, 900, 600, sky_fn, 0, 0);
 sky_t = gr.texture(tex_perlin, texid_sky, 64, 64, "", 4, 2);
 grass_t = gr.texture(tex_perlin, texid_grass, 64, 64, "", 8, 2);

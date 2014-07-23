@@ -241,9 +241,11 @@ void initRendering() {
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_COLOR_MATERIAL);
 
+/*
 	ImageBMP *image = loadBMP("vtr.bmp");
 	_textureId = load_texture(image);
 	delete image;
+*/
 }
 
 void handleResize(int w, int h) {
@@ -257,50 +259,12 @@ void drawScene() {
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+  glLoadIdentity();
 	glTranslatef(0.0f, 0.0f, -20.0f);
 	//glRotatef(-_angle, 0.0f, 1.0f, 0.0f);
 
-	GLfloat ambientColor[] = {0.5f, 0.5f, 0.5f, 1.0f};
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
-
-	GLfloat lightColor[] = {0.7f, 0.7f, 0.7f, 1.0f};
-	GLfloat lightPos[] = {1.0f, 0.2f, 0.0f, 0.0f};
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor);
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
-
-	//Draw the top and the bottom of the box
-	glShadeModel(GL_FLAT);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, _textureId);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glBegin(GL_QUADS);
-
-	glNormal3f(0.0f, 1.0f, 0.0f);
-	glTexCoord2f(0.0f, 0.0f);
-	glVertex3f(-BOX_SIZE / 2, -BOX_SIZE / 2, -BOX_SIZE / 2);
-	glTexCoord2f(1.0f, 0.0f);
-	glVertex3f(-BOX_SIZE / 2, -BOX_SIZE / 2, BOX_SIZE / 2);
-	glTexCoord2f(1.0f, 1.0f);
-	glVertex3f(BOX_SIZE / 2, -BOX_SIZE / 2, BOX_SIZE / 2);
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(BOX_SIZE / 2, -BOX_SIZE / 2, -BOX_SIZE / 2);
-
-	glNormal3f(0.0f, -1.0f, 0.0f);
-	glTexCoord2f(1.0f, 0.0f);
-	glVertex3f(-BOX_SIZE / 2, BOX_SIZE / 2, -BOX_SIZE / 2);
-	glTexCoord2f(1.0f, 1.0f);
-	glVertex3f(BOX_SIZE / 2, BOX_SIZE / 2, -BOX_SIZE / 2);
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(BOX_SIZE / 2, BOX_SIZE / 2, BOX_SIZE / 2);
-	glTexCoord2f(0.0f, 0.0f);
-	glVertex3f(-BOX_SIZE / 2, BOX_SIZE / 2, BOX_SIZE / 2);
-
-	glEnd();
-	glShadeModel(GL_SMOOTH);
-	glDisable(GL_TEXTURE_2D);
+	char c[50] = "models/ball.obj";
+    GLMmodel *model = glmReadOBJ(c);
 
 	//Draw the balls
 	for(unsigned int i = 0; i < _balls.size(); i++) {
@@ -309,9 +273,18 @@ void drawScene() {
 		glTranslatef(ball->pos[0], ball->pos[1], ball->pos[2]);
 		glColor3f(ball->color[0], ball->color[1], ball->color[2]);
 
+/*
 	  GLUquadric *quadric = gluNewQuadric();
 	  gluQuadricOrientation(quadric, GLU_OUTSIDE);
 	  gluSphere(quadric, ball->r, 32, 32);
+
+	  */
+
+	  glmUnitize(model);
+	  glmFacetNormals(model);
+	  glmLinearTexture(model);
+	  glmVertexNormals(model, 90.0);
+	  glmDraw(model, GLM_SMOOTH | GLM_TEXTURE );
 
 		//glutSolidSphere(ball->r, 12, 12); //Draw a sphere
 		glPopMatrix();

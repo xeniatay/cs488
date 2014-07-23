@@ -124,12 +124,7 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   // celshading monster
   DrawGLScene();
 
-  // collisions
-  /*
-  initRendering();
-  update(0);
-  drawScene();
-  */
+  bouncing_balls();
 
   // Swap the contents of the front and back buffers so we see what we
   // just drew. This should only be done if double buffering is enabled.
@@ -347,23 +342,23 @@ void Viewer::keypress() {
 
 /// https://www.cse.msu.edu/~cse872/tutorial3.html
 void Viewer::init_light() {
-  GLfloat ambient[] = {0.2, 0.2, 0.2, 1.0};
-  // trying to make it like a sun
-  GLfloat position[] = {-m_width / 2, m_height, 1000, 1.0};
-  GLfloat mat_diffuse[] = {0.6, 0.6, 0.6, 1.0};
-  GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
-  GLfloat mat_shininess[] = {50.0};
-
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
   glEnable(GL_COLOR_MATERIAL);
 
+  GLfloat ambient[] = {0.2, 0.2, 0.2, 1.0};
+  // trying to make it like a sun
+  GLfloat position[] = {0, m_height, 0, 1.0};
+  GLfloat mat_diffuse[] = {0.6, 0.6, 0.6, 1.0};
+  GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
+  GLfloat mat_shininess[] = {50.0};
   glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
   glLightfv(GL_LIGHT0, GL_POSITION, position);
-
+/*
   glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
   glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
   glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+*/
 
   /*
 GLfloat white[] = {0.8f, 0.8f, 0.8f, 1.0f};
@@ -372,6 +367,17 @@ glMaterialfv(GL_FRONT, GL_DIFFUSE, cyan);
 glMaterialfv(GL_FRONT, GL_SPECULAR, white);
 GLfloat shininess[] = {50};
 glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
+*/
+
+
+/* from collision
+  GLfloat ambientColor[] = {0.5f, 0.5f, 0.5f, 1.0f};
+  glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
+
+  GLfloat lightColor[] = {0.7f, 0.7f, 0.7f, 1.0f};
+  GLfloat lightPos[] = {0.0f, 0.0f, 0.0f, 1.0f};
+  glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor);
+  glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
 */
 
 }
@@ -493,4 +499,11 @@ void Viewer::lens_flare() {
   glDisable(GL_BLEND);
   */
 
+}
+
+void Viewer::bouncing_balls() {
+  // collisions
+  initRendering();
+  update(0);
+  drawScene();
 }

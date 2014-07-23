@@ -30,7 +30,7 @@ texid_grass = 1
 texid_sky = 2
 
 -- filenames for texs
-castle_wall_fn = "assets/castle_wall_texture_3.bmp";
+castle_wall_fn = "assets/castle_wall_texture_1.bmp";
 sky_fn = "assets/sky_texture_1.bmp";
 
 -- materials
@@ -40,8 +40,8 @@ green = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 1.0, -1);
 white = gr.material({1.0, 1.0, 1.0}, {0.1, 0.1, 0.1}, 1.0, -1);
 black = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 1.0, 1);
 grass_c = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 1.0, 1);
-sky_c = gr.material({0.2, 0.4, 1.0}, {0.1, 0.1, 0.1}, 1.0, 1);
-castle_wall_c = gr.material({0.6, 0.5, 0.5}, {0.1, 0.1, 0.1}, 1.0, 1);
+sky_c = gr.material({1.0, 1.0, 1.0}, {0.1, 0.1, 0.1}, 1.0, 1);
+castle_wall_c = gr.material({1.0, 1.0, 1.0}, {0.1, 0.1, 0.1}, 1.0, 1);
 crystal_c = gr.material({0.7, 0.3, 0.6}, {0.1, 0.1, 0.1}, 0.4, -1);
 crystal2_c = gr.material({0.3, 0.4, 0.7}, {0.1, 0.1, 0.1}, 0.5, -1);
 
@@ -75,9 +75,9 @@ rootnode = gr.node('rootnode');
   rootnode:add_child(model_node);
 
   -- terrain --
-  terrain_w = 25
+  terrain_w = 100
   terrain_h = 3
-  terrain_b = 15
+  terrain_b = 100
   terrain_primt = gr.model('terrain_primt');
   terrain_primt:translate(0, -terrain_h, 0);
   terrain_primt:scale(terrain_w, terrain_h, terrain_b);

@@ -20,6 +20,7 @@
 #include "imageloader.h"
 #include "vec3f.h"
 #include "texture.hpp"
+#include "glm.h"
 
 using namespace std;
 

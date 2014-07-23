@@ -75,6 +75,9 @@ class Viewer : public Gtk::GL::DrawingArea {
     // lens flare
     void lens_flare();
 
+    // collisions
+    void bouncing_balls();
+
     // timer
    void start_timer(int tick);
    bool tick_handler();

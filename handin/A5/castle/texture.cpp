@@ -120,18 +120,18 @@ void Texture::map_texture() {
   // mipmaps
   if (m_mode == IMAGE) {
     cerr << "start image texture" ;
-    /*
     // select modulate to mix texture with color for shading
     glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
 
     // when texture area is small, bilinear filter the closest mipmap
-    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST );
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
     // when texture area is large, bilinear filter the original
     glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
     // the texture wraps over at the edges (repeat)
     glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
     glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 
+    /*
     gluBuild2DMipmaps( GL_TEXTURE_2D, 3, m_w, m_h, GL_RGBA, GL_UNSIGNED_BYTE, img_png->data());
     img_png->~Image();
     */

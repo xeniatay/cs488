@@ -103,4 +103,4 @@ collisions.o collisions.d : collisions.cpp collisions.hpp /usr/include/c++/4.6/c
  /usr/include/c++/4.6/bits/stl_algo.h \
  /usr/include/c++/4.6/bits/algorithmfwd.h \
  /usr/include/c++/4.6/bits/stl_heap.h \
- /usr/include/c++/4.6/bits/stl_tempbuf.h includes/SOIL.h
+ /usr/include/c++/4.6/bits/stl_tempbuf.h includes/SOIL.h glm.h

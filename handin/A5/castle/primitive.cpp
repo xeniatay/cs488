@@ -166,20 +166,6 @@ void Cube::draw_cube(double x = 0, double y = 0, double z = 2) {
 
   //cerr << "texcoords: " << endl << texcoords << endl;
 
-
-
-
-
-  float sz = 1.0f;
-  //Draw the top and the bottom of the box
-  glShadeModel(GL_FLAT);
-  //glEnable(GL_TEXTURE_2D);
-  //glBindTexture(GL_TEXTURE_2D, _textureId);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glColor3f(1.0f, 1.0f, 1.0f);
-  glBegin(GL_QUADS);
-
   glBegin(GL_QUADS);
 
     // bottom face
@@ -235,13 +221,6 @@ void Cube::draw_cube(double x = 0, double y = 0, double z = 2) {
   glEnd();
   glShadeModel(GL_SMOOTH);
   glDisable(GL_TEXTURE_2D);
-
-
-
-/*
-
-
-  */
 }
 
 void Cube::draw_face(Matrix4x4 coords, Matrix4x4 texcoords) {

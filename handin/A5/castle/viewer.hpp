@@ -21,6 +21,7 @@
 #include "texture.hpp"
 #include "celshading.hpp"
 #include "bouncingball.hpp"
+#include "glCamera.h"
 
 
 using std::vector;
@@ -74,6 +75,8 @@ class Viewer : public Gtk::GL::DrawingArea {
 
     // lens flare
     void lens_flare();
+    void init_lens_flare();
+    glCamera *cam;
 
     // collisions
     void bouncing_balls();

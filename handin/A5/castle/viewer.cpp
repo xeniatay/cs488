@@ -86,12 +86,14 @@ void Viewer::on_realize()
   read_shader();
 
   // timer
-  start_timer(100);
+  //start_timer(100);
 
   // collisions
   srand((unsigned int)time(0)); //Seed the random number generator
   _octree = new Octree(Vec3f(-BOX_SIZE / 2, -BOX_SIZE / 2, -BOX_SIZE / 2), Vec3f(BOX_SIZE / 2, BOX_SIZE / 2, BOX_SIZE / 2), 1);
   createBalls(5);
+
+  init_lens_flare();
 }
 
 bool Viewer::on_expose_event(GdkEventExpose* event)
@@ -119,7 +121,10 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   // Draw scene
   m_scenenode->walk_gl();
 
-  lens_flare();
+    glDisable(GL_TEXTURE_3D);
+    glEnable(GL_TEXTURE_2D);
+  cam->RenderLensFlare();
+  //lens_flare();
 
   // celshading monster
   DrawGLScene();
@@ -496,7 +501,6 @@ void Viewer::lens_flare() {
   glPopMatrix();
   //glRecti(0, 0, m_width, m_height);
   glDisable(GL_BLEND);
-
 }
 
 void Viewer::bouncing_balls() {
@@ -504,4 +508,53 @@ void Viewer::bouncing_balls() {
   initRendering();
   update(0);
   drawScene();
+}
+
+void Viewer::init_lens_flare() {
+  cam = new glCamera();
+
+  // Try and load the HardGlow texture tell the user if we can't find it then quit
+  string filename = "Art/HardGlow2.bmp";
+  const char *c = filename.c_str();
+  ImageBMP *image1 = loadBMP(c);
+  cam->m_GlowTexture = load_texture(image1);
+  cerr << "camglow" << cam->m_GlowTexture<<endl;
+  if(cam->m_GlowTexture == 0) {
+    cerr << "Failed to load hardglow texture" << endl;
+    exit(1);
+  }
+
+  // Try and load the BigGlow texture tell the user if we can't find it then quit
+  filename = "Art/BigGlow3.bmp";
+  const char *d = filename.c_str();
+  ImageBMP *image2 = loadBMP(d);
+  cam->m_BigGlowTexture = load_texture(image2);
+  cerr << "after bigglowtextureid: " << cam->m_BigGlowTexture << endl;
+  if(cam->m_BigGlowTexture == 0) {
+    cerr << "Failed to load bigglow texture" << endl;
+    exit(1);
+  }
+
+  // Try and load the Halo texture tell the user if we can't find it then quit
+  filename = "Art/Halo3.bmp";
+  const char *e = filename.c_str();
+  ImageBMP *image3 = loadBMP(e);
+  cam->m_HaloTexture = load_texture(image3);
+  cerr << "after halo: " << cam->m_HaloTexture << endl;
+  if(cam->m_HaloTexture == 0) {
+    cerr << "Failed to load halo texture" << endl;
+    exit(1);
+  }
+
+  // Try and load the Streaks texture tell the user if we can't find it then quit
+  filename = "Art/Streaks4.bmp";
+  const char *f = filename.c_str();
+  ImageBMP *image4 = loadBMP(f);
+  cam->m_StreakTexture = load_texture(image4);
+  cerr << "after streaks: " << cam->m_StreakTexture << endl;
+  if(cam->m_StreakTexture == 0) {
+    cerr << "Failed to load streaks texture" << endl;
+    exit(1);
+  }
+
 }

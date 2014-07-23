@@ -41,15 +41,12 @@ void Texture::build_texture() {
 }
 
 void Texture::load_image() {
+  /*
   cerr << "loading " << m_filename << endl;
-  //img_png = new Image(m_w, m_h, 3);
-  //img_png->loadPng(m_filename);
-
   const char *c = m_filename.c_str();
-
   ImageBMP *image = loadBMP(c);
   load_texture(image);
-
+  */
   // SOIL can't link
   /*
     GLuint myTexture;
@@ -67,7 +64,6 @@ void Texture::init() {
     if (m_mode == IMAGE) {
 
       const char *c = m_filename.c_str();
-
       ImageBMP *image = loadBMP(c);
       m_bindid = load_texture(image);
 
@@ -210,5 +206,18 @@ GLuint load_texture(ImageBMP* image) {
   glGenTextures(1, &textureId);
   glBindTexture(GL_TEXTURE_2D, textureId);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->pixels);
+  //cerr<< "Textureid: " << textureId << endl;
+
+
+    // select modulate to mix texture with color for shading
+    glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+
+    // when texture area is small, bilinear filter the closest mipmap
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+    // when texture area is large, bilinear filter the original
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    // the texture wraps over at the edges (repeat)
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
   return textureId;
 }

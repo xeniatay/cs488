@@ -1116,6 +1116,6 @@ viewer.o viewer.d : viewer.cpp viewer.hpp /usr/include/GL/glew.h \
  texture.hpp /usr/include/GL/glut.h /usr/include/GL/freeglut_std.h \
  image.hpp perlinnoise.hpp perlin.hpp includes/SOIL.h imageloader.h \
  celshading.hpp glm.h material.hpp trackball.hpp events.hpp a2.hpp \
- bouncingball.hpp collisions.hpp /usr/include/c++/4.6/set \
- /usr/include/c++/4.6/bits/stl_set.h \
+ bouncingball.hpp glCamera.h glPoint.h glVector.h collisions.hpp \
+ /usr/include/c++/4.6/set /usr/include/c++/4.6/bits/stl_set.h \
  /usr/include/c++/4.6/bits/stl_multiset.h vec3f.h

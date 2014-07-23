@@ -1118,4 +1118,4 @@ appwindow.o appwindow.d : appwindow.cpp appwindow.hpp /usr/include/gtkmm-2.4/gtk
  texture.hpp /usr/include/GL/glut.h /usr/include/GL/freeglut_std.h \
  image.hpp perlinnoise.hpp perlin.hpp includes/SOIL.h imageloader.h \
  celshading.hpp glm.h material.hpp trackball.hpp events.hpp a2.hpp \
- bouncingball.hpp
+ bouncingball.hpp glCamera.h glPoint.h glVector.h

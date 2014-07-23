@@ -55,6 +55,7 @@ grass_t = gr.texture(tex_perlin, texid_grass, 64, 64, "", 8, 2);
 ---- rootnode ----
 rootnode = gr.node('rootnode');
 
+--[[
   -- sky terrain --
   sky_w = 140
   sky_h = 60
@@ -73,7 +74,7 @@ rootnode = gr.node('rootnode');
   sky_primt:set_texture(sky_t);
   sky_primt:set_material(sky_c);
   sky_node:add_child(sky_primt);
-
+]]
 
   -- ground terrain --
 --[[
@@ -87,6 +88,7 @@ rootnode = gr.node('rootnode');
   ground_node:add_child(ground_primt);
 ]]
 
+--[[
   model_node = gr.node('model_node');
   model_node:translate(0, 0, 0);
   rootnode:add_child(model_node);
@@ -232,7 +234,6 @@ battlement_thickness = mh_thickness;
 
   end
 
---[[
   sphere_primt = gr.sphere('sphere_primt');
   sphere_primt:translate(-30, 40, 60);
   sphere_primt:scale(10, 10, 10);

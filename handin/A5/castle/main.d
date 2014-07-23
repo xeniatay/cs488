@@ -1116,4 +1116,4 @@ main.o main.d : main.cpp /usr/include/GL/glew.h \
  algebra.hpp primitive.hpp texture.hpp /usr/include/GL/glut.h \
  /usr/include/GL/freeglut_std.h image.hpp perlinnoise.hpp perlin.hpp \
  includes/SOIL.h celshading.hpp glm.h material.hpp trackball.hpp \
- events.hpp a2.hpp scene_lua.hpp
+ events.hpp a2.hpp bouncingball.hpp scene_lua.hpp

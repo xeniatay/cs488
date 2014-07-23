@@ -20,6 +20,8 @@
 #include "a2.hpp"
 #include "texture.hpp"
 #include "celshading.hpp"
+#include "bouncingball.hpp"
+
 
 using std::vector;
 
@@ -69,6 +71,11 @@ class Viewer : public Gtk::GL::DrawingArea {
 
     // gl_settings
     void gl_settings();
+
+    // timer
+   void start_timer(int tick);
+   bool tick_handler();
+   int m_totaltime, m_tick;
 
     // A useful function that forces this widget to rerender. If you
     // want to render a new frame, do not call on_expose_event

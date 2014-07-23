@@ -1,8 +1,8 @@
 #include "viewer.hpp"
 
-using std::cerr;
-using std::endl;
-using std::string;
+//#include "collisions.hpp"
+
+using namespace std;
 
 typedef std::list<SceneNode*> SN;
 extern SN all_scenenodes;
@@ -84,6 +84,13 @@ void Viewer::on_realize()
 
   // read shader file
   read_shader();
+  start_timer(100);
+
+  // bouncingball
+  reshape_bball(m_width, m_height);
+
+  // collisions
+  srand((unsigned int)time(0)); //Seed the random number generator
 }
 
 bool Viewer::on_expose_event(GdkEventExpose* event)
@@ -132,6 +139,16 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
 
 */
   //DrawGLScene();
+
+  display_bball();
+
+  //initRendering();
+/*
+  _octree = new Octree(Vec3f(-BOX_SIZE / 2, -BOX_SIZE / 2, -BOX_SIZE / 2),
+             Vec3f(BOX_SIZE / 2, BOX_SIZE / 2, BOX_SIZE / 2), 1);
+  drawScene();
+  createBalls();
+  */
 
   // Swap the contents of the front and back buffers so we see what we
   // just drew. This should only be done if double buffering is enabled.
@@ -419,4 +436,20 @@ void Viewer::gl_settings() {
   // Enable depth test done in on_realize
   // glEnable(GL_DEPTH_TEST);
 
+}
+
+void Viewer::start_timer(int tick) {
+  // Start ticker
+  m_totaltime = 0;
+  m_tick = tick;
+  sigc::slot0<bool> tick_slot = sigc::mem_fun(this, &Viewer::tick_handler);
+  Glib::signal_timeout().connect(tick_slot, m_tick);
+}
+
+bool Viewer::tick_handler() {
+  m_totaltime += m_tick;
+  // animate here
+  invalidate();
+
+  return true;
 }

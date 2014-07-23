@@ -125,9 +125,11 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   DrawGLScene();
 
   // collisions
+  /*
   initRendering();
   update(0);
   drawScene();
+  */
 
   // Swap the contents of the front and back buffers so we see what we
   // just drew. This should only be done if double buffering is enabled.

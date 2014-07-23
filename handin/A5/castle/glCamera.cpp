@@ -642,6 +642,7 @@ void glCamera::RenderLensFlare()
 
     if (!IsOccluded(m_LightSourcePos))  //Check if the center of the flare is occluded
     {
+      cerr << "hi what " <<endl;
       // Render the large hazy glow
       RenderBigGlow(0.60f, 0.60f, 0.8f, 1.0f, m_LightSourcePos, 16.0f);
       // Render the streaks

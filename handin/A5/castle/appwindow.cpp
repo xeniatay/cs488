@@ -81,6 +81,10 @@ bool AppWindow::on_key_press_event( GdkEventKey *ev ) {
     m_viewer.set_mode(m_viewer.SCALE);
   } else if (ev->keyval == 'p' || ev->keyval == 'P') {
     m_viewer.toggle_sound();
+  } else if (ev->keyval == 'l' || ev->keyval == 'L') {
+    m_viewer.toggle_lensflare();
+  } else if (ev->keyval == 'k' || ev->keyval == 'K') {
+    m_viewer.toggle_balls();
   } else if (ev->keyval == 'o' || ev->keyval == 'O') {
     m_viewer.play_bg();
   } else if (ev->keyval == 65362) {

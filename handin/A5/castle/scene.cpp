@@ -215,7 +215,7 @@ void GeometryNode::walk_gl(bool picking)
   glPopMatrix();
 
   //cerr << "GeometryNode " << m_name << " End Walk GL" << endl;
-  cerr << m_name << " drawn | ";
+  //cerr << m_name << " drawn | ";
 }
 
 // make the transform matrix into a gl_float

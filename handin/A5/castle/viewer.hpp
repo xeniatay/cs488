@@ -27,6 +27,8 @@
 
 using std::vector;
 
+extern bool SHOW_BALLS, SHOW_LENSFLARE;
+
 // The "main" OpenGL widget
 class Viewer : public Gtk::GL::DrawingArea {
 
@@ -78,9 +80,11 @@ class Viewer : public Gtk::GL::DrawingArea {
     void lens_flare();
     void init_lens_flare();
     glCamera *cam;
+    void toggle_lensflare();
 
     // collisions
     void bouncing_balls();
+    void toggle_balls();
 
     // sounds
     int ms_up, ms_down, ms_left, ms_right, ms_upz, ms_downz, ms_bg, ms_kp;

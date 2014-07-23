@@ -13,6 +13,8 @@ extern GN all_geonodes;
 
 typedef GLdouble Matrix[4][4];
 
+bool SHOW_BALLS = false, SHOW_LENSFLARE = true;
+
 Viewer::Viewer() {
   Glib::RefPtr<Gdk::GL::Config> glconfig;
 
@@ -76,9 +78,6 @@ void Viewer::on_realize()
 
   gldrawable->gl_end();
 
-  //cerr << "On realize!" << endl;
-  reset_all();
-
   // default mode
   m_mode = SCALE;
 
@@ -90,15 +89,14 @@ void Viewer::on_realize()
 
   // collisions
   srand((unsigned int)time(0)); //Seed the random number generator
-  _octree = new Octree(Vec3f(-BOX_SIZE / 2, -BOX_SIZE / 2, -BOX_SIZE / 2), Vec3f(BOX_SIZE / 2, BOX_SIZE / 2, BOX_SIZE / 2), 1);
-  initBounceSounds();
-  createBalls(20);
 
   init_lens_flare();
 
   char bg[50] = "sounds/bg.mp3";
   ms_bg = SM.LoadMusic(bg);
 
+  //cerr << "On realize!" << endl;
+  reset_all();
 }
 
 bool Viewer::on_expose_event(GdkEventExpose* event)
@@ -126,15 +124,19 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   // Draw scene
   m_scenenode->walk_gl();
 
-    glDisable(GL_TEXTURE_3D);
-    glEnable(GL_TEXTURE_2D);
-  cam->RenderLensFlare();
-  //lens_flare();
-
   // celshading monster
   DrawGLScene();
 
-  bouncing_balls();
+  if (SHOW_BALLS && _octree) {
+    bouncing_balls();
+  }
+
+  //lens_flare();
+  if (SHOW_LENSFLARE) {
+    glDisable(GL_TEXTURE_3D);
+    glEnable(GL_TEXTURE_2D);
+    cam->RenderLensFlare();
+  }
 
   // Swap the contents of the front and back buffers so we see what we
   // just drew. This should only be done if double buffering is enabled.
@@ -262,7 +264,10 @@ void Viewer::draw_trackball_circle()
 
 void Viewer::reset_all() {
 
+  SHOW_BALLS = false;
+  SHOW_LENSFLARE = true;
   PLAY_SOUND = false;
+
   m_bg_playing = false;
   m_bg_resume = false;
 
@@ -327,16 +332,12 @@ void Viewer::keypress() {
 
   switch (m_keypress) {
     case UP:
-      SM.PlayMusic(ms_up);
       break;
     case DOWN:
-      SM.PlayMusic(ms_down);
       break;
     case LEFT:
-      SM.PlayMusic(ms_left);
       break;
     case RIGHT:
-      SM.PlayMusic(ms_right);
       break;
     default:
       break;
@@ -595,10 +596,30 @@ void Viewer::play_bg() {
     m_bg_resume = true;
   } else {
     if (m_bg_resume) {
-      SM.ResumeMusic(ms_bg);
+      int play = SM.ResumeMusic(ms_bg);
+      if (!play) {
+        SM.PlayMusic(ms_bg);
+      }
     } else {
       SM.PlayMusic(ms_bg);
     }
   }
   m_bg_playing = !m_bg_playing;
+}
+
+void Viewer::toggle_balls() {
+  SHOW_BALLS = !SHOW_BALLS;
+  if (SHOW_BALLS) {
+    _octree = new Octree(Vec3f(-BOX_SIZE / 2, -BOX_SIZE / 2, -BOX_SIZE / 2), Vec3f(BOX_SIZE / 2, BOX_SIZE / 2, BOX_SIZE / 2), 1);
+    initBounceSounds();
+    createBalls(20);
+  } else {
+    if (_octree) {
+      cleanup();
+    }
+  }
+}
+
+void Viewer::toggle_lensflare() {
+  SHOW_LENSFLARE = !SHOW_LENSFLARE;
 }

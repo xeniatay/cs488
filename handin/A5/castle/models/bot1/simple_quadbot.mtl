@@ -1,0 +1,78 @@
+# MTL written from /Users/manapkoolman/Desktop/Yusup/NEW MODELS/QuadBot/quadbot/quadbot/simple_quadbot.obj
+newmtl Light
+Kd 0.64 0.64 0.64
+Ns 256
+d 1
+illum 2
+Ka 0.18 0.18 0.18
+Ks 0.5 0.5 0.5
+newmtl block
+Kd 0.073916 0.073916 0.073916
+Ns 256
+d 1
+illum 2
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+newmtl body_dark
+Kd 0.10232 0.102588 0.0774781
+Ns 256
+d 1
+illum 2
+Ka 0 0 0
+Ks 0.288618 0.288618 0.288618
+newmtl body_dark_old
+Kd 0.0462397 0.0454528 0.0414245
+Ns 256
+d 1
+illum 2
+Ka 0 0 0
+Ks 0.288618 0.288618 0.288618
+newmtl body_light
+Kd 0.254158 0.254825 0.192453
+Ns 256
+d 1
+illum 2
+Ka 0 0 0
+Ks 0.288618 0.288618 0.288618
+newmtl cables
+Kd 0.0819756 0.0819756 0.0819756
+Ns 256
+d 1
+illum 2
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+newmtl feet
+Kd 0.307492 0.253603 0.169733
+Ns 256
+d 1
+illum 2
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+newmtl light_2
+Kd 0.64 0.64 0.64
+Ns 256
+d 1
+illum 2
+Ka 0.18 0.18 0.18
+Ks 0.5 0.5 0.5
+newmtl metal
+Kd 0.64 0.64 0.64
+Ns 256
+d 1
+illum 2
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+newmtl metal_dark
+Kd 0.321568 0.0927814 0
+Ns 256
+d 1
+illum 2
+Ka 0 0 0
+Ks 0.5 0.5 0.5
+newmtl reflector_strong
+Kd 0.64 0.64 0.64
+Ns 256
+d 1
+illum 2
+Ka 0 0 0
+Ks 0.5 0.5 0.5

@@ -331,7 +331,16 @@ void Model::walk_gl(bool texture, Vector3D scale) {
   glmLinearTexture(model);
   glmVertexNormals(model, 90.0);
 
+  cerr << "GLM with celshading, texture" << endl;
   glmDraw(model, GLM_SMOOTH | GLM_TEXTURE | GLM_CELSHADING);
+  /*
+  if (m_celshading == true) {
+    cerr << "GLM with celshading and texture" << endl;
+  } else {
+    cerr << "GLM without celshading, with texture" << endl;
+    glmDraw(model, GLM_SMOOTH | GLM_TEXTURE | GLM_MATERIAL);
+  }
+  */
 
   // Draw outline
   glEnable(GL_BLEND);

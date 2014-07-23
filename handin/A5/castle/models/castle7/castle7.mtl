@@ -1,0 +1,68 @@
+# Blender MTL File: 'None'
+# Material Count: 6
+
+newmtl Cilindrer
+Ns 7.843137
+Ka 0.000000 0.000000 0.000000
+Kd 0.470560 0.470560 0.470560
+Ks 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd E:\Diego Data\1. Desing\1. 3D Models\VideoCopilot\Materials\Pro_Shaders_maps\Tile_maps\stone_tile_black_diffuse.jpg
+map_Bump -bm 0.3000 Map__14_Normal_Bump.tga
+map_Ka E:\\Diego Data\\1. Desing\\1. 3D Models\\VideoCopilot\\Materials\\Pro_Shaders_maps\\Tile_maps\\stone_tile_black_diffuse.jpg
+
+newmtl Coronets
+Ns 7.843137
+Ka 0.000000 0.000000 0.000000
+Kd 0.470560 0.470560 0.470560
+Ks 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd E:\Diego Data\1. Desing\1. 3D Models\VideoCopilot\Materials\Pro_Shaders_maps\Tile_maps\square_tiles_yellow_diffuse.jpg
+map_Bump -bm 0.3000 Map__3_Normal_Bump.tga
+map_Ka E:\\Diego Data\\1. Desing\\1. 3D Models\\VideoCopilot\\Materials\\Pro_Shaders_maps\\Tile_maps\\square_tiles_yellow_diffuse.jpg
+
+newmtl Material
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Sticks
+Ns 7.843137
+Ka 0.000000 0.000000 0.000000
+Kd 0.712160 0.715280 0.357680
+Ks 0.000000 0.000000 0.000000
+Ni 1.500000
+d 0.850000
+illum 2
+
+newmtl Towels
+Ns 5.882353
+Ka 0.000000 0.000000 0.000000
+Kd 0.470400 0.470400 0.470400
+Ks 0.657000 0.657000 0.657000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd E:\Diego Data\1. Desing\1. 3D Models\VideoCopilot\Materials\Pro_Shaders_maps\Tile_maps\brick_diffuse.jpg
+map_Bump -bm 0.3000 Map__6_Normal_Bump.tga
+map_Ka E:\\Diego Data\\1. Desing\\1. 3D Models\\VideoCopilot\\Materials\\Pro_Shaders_maps\\Tile_maps\\brick_diffuse.jpg
+
+newmtl Walls
+Ns 13.725490
+Ka 0.000000 0.000000 0.000000
+Kd 0.470560 0.470560 0.470560
+Ks 0.828000 0.828000 0.828000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd E:\Diego Data\1. Desing\1. 3D Models\VideoCopilot\Materials\Pro_Shaders_maps\Tile_maps\brick_diffuse.jpg
+map_Bump -bm 0.3000 Map__9_Normal_Bump.tga
+map_Ka E:\\Diego Data\\1. Desing\\1. 3D Models\\VideoCopilot\\Materials\\Pro_Shaders_maps\\Tile_maps\\brick_diffuse.jpg

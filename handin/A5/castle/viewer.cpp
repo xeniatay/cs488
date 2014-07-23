@@ -120,10 +120,11 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   fly_camera();
 
   // Draw scene
-  //m_scenenode->walk_gl();
+  m_scenenode->walk_gl();
 
 
   // Lens Flare: translucent box overlay
+  /*
   glEnable(GL_BLEND);
   glBlendFunc(GL_ONE, GL_SRC_ALPHA);
   glColor4f(0.1, 0.1, 0.1, 0.7);
@@ -176,6 +177,7 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   glPopMatrix();
   //glRecti(0, 0, m_width, m_height);
   glDisable(GL_BLEND);
+  */
 
   // celshading monster
   //DrawGLScene();

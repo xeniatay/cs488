@@ -87,30 +87,21 @@ rootnode = gr.node('rootnode');
   terrain_primt:set_filename("models/terrain.obj");
   model_node:add_child(terrain_primt);
 
-  -- castle --
-  castle_w = 6
-  castle_h = 6
-  castle_b = 6
-  castle_primt = gr.model('castle_primt');
-  castle_primt:scale(castle_w, castle_h, castle_b);
-  castle_primt:rotate('y', -90.0);
-  castle_primt:set_texture(castle_wall_t);
-  castle_primt:set_material(castle_wall_c);
-  castle_primt:celshading();
-  castle_primt:set_filename("models/castle2/castle.obj");
-  model_node:add_child(castle_primt);
 
   -- crystals --
   crystal_w = 2
   crystal_h = 2
   crystal_b = 2
+  crystal_node = gr.node('crystal_node');
+  model_node:add_child(crystal_node);
+
   crystal_primt = gr.model('crystal_primt');
   crystal_primt:rotate('x', 90.0);
   crystal_primt:translate(-10, 0, 5);
   crystal_primt:scale(crystal_w, crystal_h, crystal_b);
   crystal_primt:set_material(crystal_c);
   crystal_primt:set_filename("models/crystal2/crystal.obj");
-  model_node:add_child(crystal_primt);
+  crystal_node:add_child(crystal_primt);
 
   crystal_w = 3
   crystal_h = 3
@@ -124,27 +115,27 @@ rootnode = gr.node('rootnode');
   crystal_primt:set_material(crystal2_c);
   crystal_primt:set_filename("models/crystal2/crystal.obj");
   model_node:add_child(crystal_primt);
--- main hall --
--- centecastle_wall_c on screen, cube that makes up body of castle --
---[[
-mh_w = 2
-mh_h = 2
-mh_b = 2
-mh_thickness = 1;
 
-  -- back wall --
-  mh_b_node = gr.node('mh_b_node');
-  mh_b_node:translate(-mh_w*2, 0, 1);
-  rootnode:add_child(mh_b_node);
 
-  mh_b_primt = gr.cube('mh_b_primt');
-  mh_b_primt:scale(mh_w, mh_h, mh_thickness);
-  mh_b_primt:celshading();
-  mh_b_primt:set_texture(castle_wall_t);
-  mh_b_primt:set_material(castle_wall_c);
-  mh_b_node:add_child(mh_b_primt);
-]]
+  -- castle --
+  castle_w = 6
+  castle_h = 6
+  castle_b = 6
+
+  castle_node = gr.node('castle_node');
+  castle_node:translate(0, -castle_h, 0);
+  model_node:add_child(castle_node);
+
+  castle_primt = gr.model('castle_primt');
+  castle_primt:scale(castle_w, castle_h, castle_b);
+  castle_primt:rotate('y', -90.0);
+  castle_primt:set_texture(castle_wall_t);
+  castle_primt:set_material(castle_wall_c);
+  castle_primt:celshading();
+  castle_primt:set_filename("models/castle2/castle.obj");
+  castle_node:add_child(castle_primt);
+
 --rootnode:translate(0.0, 0, 20.0)
---rootnode:scale(5, 5, 5);
+--rootnode:scale(0.8, 0.8, 0.8);
 --rootnode:rotate('y', -20.0)
 return rootnode

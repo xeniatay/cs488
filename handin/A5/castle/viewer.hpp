@@ -22,6 +22,7 @@
 #include "celshading.hpp"
 #include "bouncingball.hpp"
 #include "glCamera.h"
+#include "SoundManager.h"
 
 
 using std::vector;
@@ -80,6 +81,12 @@ class Viewer : public Gtk::GL::DrawingArea {
 
     // collisions
     void bouncing_balls();
+
+    // sounds
+    int ms_up, ms_down, ms_left, ms_right, ms_upz, ms_downz, ms_bg, ms_kp;
+    bool m_sound, m_bg_playing, m_bg_resume;
+    void play_bg();
+    void toggle_sound();
 
     // timer
    void start_timer(int tick);

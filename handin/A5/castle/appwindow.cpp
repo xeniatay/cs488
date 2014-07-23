@@ -79,6 +79,10 @@ bool AppWindow::on_key_press_event( GdkEventKey *ev ) {
     m_viewer.set_mode(m_viewer.TRANSLATE);
   } else if (ev->keyval == 's' || ev->keyval == 'S') {
     m_viewer.set_mode(m_viewer.SCALE);
+  } else if (ev->keyval == 'p' || ev->keyval == 'P') {
+    m_viewer.toggle_sound();
+  } else if (ev->keyval == 'o' || ev->keyval == 'O') {
+    m_viewer.play_bg();
   } else if (ev->keyval == 65362) {
     m_viewer.set_keypress(m_viewer.UP);
     m_viewer.keypress();

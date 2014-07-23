@@ -21,6 +21,7 @@
 #include "vec3f.h"
 #include "texture.hpp"
 #include "glm.h"
+#include "SoundManager.h"
 
 using namespace std;
 
@@ -36,6 +37,7 @@ struct Ball {
   Vec3f pos; //Position
   float r; //Radius
   Vec3f color;
+  int sound;
 };
 
 enum Wall {WALL_LEFT, WALL_RIGHT, WALL_FAR, WALL_NEAR, WALL_TOP, WALL_BOTTOM};
@@ -55,6 +57,9 @@ struct BallWallPair {
 extern const int MAX_OCTREE_DEPTH;
 extern const int MIN_BALLS_PER_OCTREE;
 extern const int MAX_BALLS_PER_OCTREE;
+
+extern int NUM_SOUNDS, ms_b1, ms_b2, ms_b3, ms_b4, ms_b5, ms_b6, ms_b7, ms_b8;
+extern bool PLAY_SOUND;
 
 //Our data structure for making collision detection faster
 class Octree {
@@ -78,6 +83,7 @@ class Octree {
     int depth;
     //The number of balls in this, including those stored in its children
     int numBalls;
+
 
     //Adds a ball to or removes one from the children of this
     void fileBall(Ball* ball, Vec3f pos, bool addBall) {
@@ -426,5 +432,7 @@ void drawScene();
 
 //Called every TIMER_MS milliseconds
 void update(int value);
+
+void initBounceSounds();
 
 #endif

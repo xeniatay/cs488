@@ -86,14 +86,19 @@ void Viewer::on_realize()
   read_shader();
 
   // timer
-  //start_timer(100);
+  start_timer(100);
 
   // collisions
   srand((unsigned int)time(0)); //Seed the random number generator
   _octree = new Octree(Vec3f(-BOX_SIZE / 2, -BOX_SIZE / 2, -BOX_SIZE / 2), Vec3f(BOX_SIZE / 2, BOX_SIZE / 2, BOX_SIZE / 2), 1);
-  createBalls(5);
+  initBounceSounds();
+  createBalls(20);
 
   init_lens_flare();
+
+  char bg[50] = "sounds/bg.mp3";
+  ms_bg = SM.LoadMusic(bg);
+
 }
 
 bool Viewer::on_expose_event(GdkEventExpose* event)
@@ -257,6 +262,10 @@ void Viewer::draw_trackball_circle()
 
 void Viewer::reset_all() {
 
+  PLAY_SOUND = false;
+  m_bg_playing = false;
+  m_bg_resume = false;
+
   m_camera_scale = Vector3D(1, 1, 1);
   m_camera_translate = Vector3D();
   m_camera_rotate = Vector3D();
@@ -315,6 +324,23 @@ void Viewer::keypress() {
 
   // determine direction of transformation
   int transform_dir = (m_keypress == DOWN || m_keypress == LEFT) ? -1 : 1;
+
+  switch (m_keypress) {
+    case UP:
+      SM.PlayMusic(ms_up);
+      break;
+    case DOWN:
+      SM.PlayMusic(ms_down);
+      break;
+    case LEFT:
+      SM.PlayMusic(ms_left);
+      break;
+    case RIGHT:
+      SM.PlayMusic(ms_right);
+      break;
+    default:
+      break;
+  }
 
   if (m_mode == SCALE) {
     double s = 0.15 * transform_dir;
@@ -557,4 +583,22 @@ void Viewer::init_lens_flare() {
     exit(1);
   }
 
+}
+
+void Viewer::toggle_sound() {
+  PLAY_SOUND = !PLAY_SOUND;
+}
+
+void Viewer::play_bg() {
+  if (m_bg_playing) {
+    SM.PauseMusic(ms_bg);
+    m_bg_resume = true;
+  } else {
+    if (m_bg_resume) {
+      SM.ResumeMusic(ms_bg);
+    } else {
+      SM.PlayMusic(ms_bg);
+    }
+  }
+  m_bg_playing = !m_bg_playing;
 }

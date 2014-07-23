@@ -4,17 +4,17 @@ INCLUDES = \
 
 
 LIBS = \
-	-lGL -lGLU -lglut -lopenal
+	-lGL -lGLU -lglut -lopenal -lalut
 
 GPPFLAGS = \
     $(INCLUDES) \
 
 
 ICCFLAGS = \
-    $(INCLUDES) 
+    $(INCLUDES)
 
 
-CPP = g++ $(GPPFLAGS)
+CPP = g++ -v $(GPPFLAGS)
 #CPP = g++ $(IPPFLAGS)
 
 
@@ -25,7 +25,7 @@ CPP = g++ $(GPPFLAGS)
 
 OBJS = \
     SoundManager.o \
-    main.o 
+    main.o
 
 
 

@@ -32,11 +32,14 @@ const float BOX_SIZE = 12.0f; //The length of one side of the box
 //The amount of time between each time that we handle collisions and apply the
 //effects of gravity
 const float TIME_BETWEEN_UPDATES = 0.01f;
-const int TIMER_MS = 300; //The number of milliseconds to which the timer is set
+const int TIMER_MS = 100; //The number of milliseconds to which the timer is set
 
 const int MAX_OCTREE_DEPTH = 6;
 const int MIN_BALLS_PER_OCTREE = 3;
 const int MAX_BALLS_PER_OCTREE = 6;
+
+int NUM_SOUNDS = 2, ms_b1, ms_b2, ms_b3, ms_b4, ms_b5, ms_b6, ms_b7, ms_b8;
+bool PLAY_SOUND = false;
 
 //Puts potential ball-ball collisions in potentialCollisions.  It must return
 //all actual collisions, but it need not return only actual collisions.
@@ -124,6 +127,9 @@ void handleBallBallCollisions(vector<Ball*> &balls, Octree* octree) {
 			Vec3f displacement = (b1->pos - b2->pos).normalize();
 			b1->v -= 2 * displacement * b1->v.dot(displacement);
 			b2->v -= 2 * displacement * b2->v.dot(displacement);
+			if (PLAY_SOUND) {
+				SM.PlaySound(b1->sound);
+			}
 		}
 	}
 }
@@ -170,6 +176,9 @@ void handleBallWallCollisions(vector<Ball*> &balls, Octree* octree) {
 			//Make the ball reflect off of the wall
 			Vec3f dir = (wallDirection(w)).normalize();
 			b->v -= 2 * dir * b->v.dot(dir);
+			if (PLAY_SOUND) {
+				SM.PlaySound(b->sound);
+			}
 		}
 	}
 }
@@ -229,6 +238,29 @@ void createBalls(int numBalls) {
 		ball->color = Vec3f(0.6f * randomFloat() + 0.2f,
 							0.6f * randomFloat() + 0.2f,
 							0.6f * randomFloat() + 0.2f);
+
+
+		switch (rand() % NUM_SOUNDS) {
+			case 1:
+				ball->sound = ms_b1;
+				break;
+			case 2:
+				ball->sound = ms_b2;
+				break;
+			case 3:
+				ball->sound = ms_b3;
+				break;
+			case 4:
+				ball->sound = ms_b4;
+				break;
+			case 5:
+				ball->sound = ms_b5;
+				break;
+			default:
+				ball->sound = ms_b1;
+				break;
+		}
+
 		_balls.push_back(ball);
 		_octree->add(ball);
 	}
@@ -314,3 +346,16 @@ int main(int argc, char** argv) {
 }
 */
 
+void initBounceSounds() {
+
+  char b1[50] = "sounds/jump.wav";
+  ms_b1 = SM.LoadSound(b1);
+  //char b2[50] = "sounds/bounce2.mp3";
+  ms_b2 = SM.LoadSound(b1);
+  char b3[50] = "sounds/bounce3.mp3";
+  ms_b3 = SM.LoadMusic(b3);
+  char b4[50] = "sounds/bounce4.mp3";
+  ms_b4 = SM.LoadMusic(b4);
+  char b5[50] = "sounds/bounce5.mp3";
+  ms_b5 = SM.LoadMusic(b5);
+}

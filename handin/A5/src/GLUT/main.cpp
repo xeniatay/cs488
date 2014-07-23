@@ -13,7 +13,7 @@
  * ****************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
-#include <iostream.h>
+#include <iostream>
 
 
 #include "SoundManager.h"
@@ -38,7 +38,7 @@
 
 #define MICKEY 1
 //-------------------------------------------------------------------
-// GLUT data 
+// GLUT data
 //-------------------------------------------------------------------
 int scrWidth, scrHeight;
 float cur_x = -1;
@@ -86,7 +86,7 @@ void lights(){
     GLfloat light2[] = {0.5, 0.5, .5, 1.0};
     GLfloat zero[] = {0, 0, 0 , 0};
 
-    // setup 
+    // setup
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
 
@@ -97,7 +97,7 @@ void lights(){
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light1);
     glLightfv(GL_LIGHT0, GL_AMBIENT, light2);
     glLightfv(GL_LIGHT0, GL_POSITION, light_position1);
-    
+
 
 }
 
@@ -110,7 +110,7 @@ void render(){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glLoadIdentity(); // Reset the view
 
-    // move the scene 
+    // move the scene
     glTranslatef(xpos, ypos, -150);
     // draw s simple sphere
     glCallList(MICKEY);
@@ -119,7 +119,7 @@ void render(){
 
 
 //-------------------------------------------------------------------
-// motion 
+// motion
 //-------------------------------------------------------------------
 void motion(int x, int y){
 
@@ -127,19 +127,19 @@ void motion(int x, int y){
 	cur_x = x;
 	cur_y = y;
     }
- 
+
     xpos  += (float)(x-cur_x)/10.0f;
     ypos  += -(float)(y-cur_y)/10.0f;
 
     cur_x = x;
     cur_y = y;
- 
+
 
   glutPostRedisplay();
   }
 
 //-------------------------------------------------------------------
-// mouse 
+// mouse
 //-------------------------------------------------------------------
 void mouse(int button, int state, int x, int y)
   {
@@ -158,31 +158,31 @@ void mouse(int button, int state, int x, int y)
 		  SM.PlayMusic(MUS_ID_4);
 	      }	else {
 		  music_on = 0;
-		  SM.StopMusic(MUS_ID_4); 
+		  SM.StopMusic(MUS_ID_4);
 	      }
-	  } 
+	  }
       }
 
       buttons[button] = state;
-   
+
       glutPostRedisplay();
 
   }
-  
+
 //-------------------------------------------------------------------
-// display 
+// display
 //-------------------------------------------------------------------
 void display(void)
   {
-  
-	/* set up for perspective drawing 
+
+	/* set up for perspective drawing
      */
-	
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glViewport(0, 0, scrWidth, scrHeight);
 	gluPerspective(40.0, (GLfloat)scrWidth/(GLfloat)scrHeight, 0.1, 1000.0);
-	
+
 	/* change to model view for drawing
      */
 	glMatrixMode(GL_MODELVIEW);
@@ -199,7 +199,7 @@ void display(void)
      */
 
 	// set up the track ball
-	
+
 	// enable rescalling of the normals
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_DEPTH_TEST);
@@ -214,7 +214,7 @@ void display(void)
   }
 
 //-------------------------------------------------------------------
-// keyboard 
+// keyboard
 //-------------------------------------------------------------------
 void keyboard(unsigned char k, int x, int y)
   {
@@ -230,7 +230,7 @@ void keyboard(unsigned char k, int x, int y)
   }
 
 //-------------------------------------------------------------------
-// init 
+// init
 //-------------------------------------------------------------------
 void init(int argc, char** argv)
   {
@@ -240,19 +240,19 @@ void init(int argc, char** argv)
 	glEnable(GL_COLOR_MATERIAL);
 
 	// Black Background
-	glClearColor(0.00f, 0.80f, 0.80f, 0.0f);			
-	
-	glEnable(GL_DEPTH_TEST);					
+	glClearColor(0.00f, 0.80f, 0.80f, 0.0f);
+
+	glEnable(GL_DEPTH_TEST);
 
 	lights();
-	
-	//glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	
+
+	//glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	makeMickey();
 
   }
 
 //-------------------------------------------------------------------
-// reshape 
+// reshape
 //-------------------------------------------------------------------
 void reshape(int w, int h)
   {
@@ -272,26 +272,30 @@ void reshape(int w, int h)
   }
 
 //-------------------------------------------------------------------
-// main 
+// main
 //-------------------------------------------------------------------
 int main(int argc, char** argv){
-      
+
     int main_window;
     scrWidth = 700;
     scrHeight = 700;
-      
 
-    SND_ID_1 = SM.LoadSound("card.wav");
-    SND_ID_2 = SM.LoadSound("OBS.wav");
-    SND_ID_3 = SM.LoadSound("ghost.wav");
-    MUS_ID_4 = SM.LoadMusic("UNREAL.S3M");
+
+    char card[50] = "card.wav";
+    SND_ID_1 = SM.LoadSound(card);
+    char OBS[50] = "OBS.wav";
+    SND_ID_2 = SM.LoadSound(OBS);
+    char ghost[50] = "ghost.wav";
+    SND_ID_3 = SM.LoadSound(ghost);
+    char UNREAL[50] = "UNREAL.S3M";
+    MUS_ID_4 = SM.LoadMusic(UNREAL);
 
     // intialize glut and main window
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA|GLUT_DOUBLE|GLUT_DEPTH);
     glutInitWindowSize(scrWidth, scrHeight);
     main_window = glutCreateWindow("Render Test");
-	
+
     // initialize callback
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
@@ -302,10 +306,10 @@ int main(int argc, char** argv){
     init(argc, argv);
 
     reshape(scrWidth, scrHeight);
-  
+
 
     glutMainLoop();
-  
+
     return 0;
 }
 

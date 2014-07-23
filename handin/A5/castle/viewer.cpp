@@ -89,6 +89,7 @@ void Viewer::on_realize()
 
   // collisions
   srand((unsigned int)time(0)); //Seed the random number generator
+  balls_inited = false;
 
   init_lens_flare();
 
@@ -127,7 +128,7 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
   // celshading monster
   DrawGLScene();
 
-  if (SHOW_BALLS && _octree) {
+  if (SHOW_BALLS && balls_inited) {
     bouncing_balls();
   }
 
@@ -609,14 +610,11 @@ void Viewer::play_bg() {
 
 void Viewer::toggle_balls() {
   SHOW_BALLS = !SHOW_BALLS;
-  if (SHOW_BALLS) {
+  if (SHOW_BALLS && !balls_inited) {
     _octree = new Octree(Vec3f(-BOX_SIZE / 2, -BOX_SIZE / 2, -BOX_SIZE / 2), Vec3f(BOX_SIZE / 2, BOX_SIZE / 2, BOX_SIZE / 2), 1);
     initBounceSounds();
     createBalls(20);
-  } else {
-    if (_octree) {
-      cleanup();
-    }
+    balls_inited = true;
   }
 }
 

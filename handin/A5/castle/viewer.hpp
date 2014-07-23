@@ -85,6 +85,7 @@ class Viewer : public Gtk::GL::DrawingArea {
     // collisions
     void bouncing_balls();
     void toggle_balls();
+    bool balls_inited;
 
     // sounds
     int ms_up, ms_down, ms_left, ms_right, ms_upz, ms_downz, ms_bg, ms_kp;

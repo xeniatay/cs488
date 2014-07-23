@@ -79,7 +79,7 @@ void Viewer::on_realize()
   gldrawable->gl_end();
 
   // default mode
-  m_mode = SCALE;
+  m_mode = TRANSLATE;
 
   // read shader file
   read_shader();
@@ -113,20 +113,24 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
 
   gl_settings();
 
+  fly_camera();
+
   // Change to model view for drawing
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 
+  // fly camera for WCS
+  glScaled(m_camera_scale[0], m_camera_scale[1], m_camera_scale[2]);
+
   init_glew();
-  //init_light();
+  init_light();
   init_trackball();
-  fly_camera();
 
   // Draw scene
   m_scenenode->walk_gl();
 
   // celshading monster
-  DrawGLScene();
+  //DrawGLScene();
 
   if (SHOW_BALLS && balls_inited) {
     bouncing_balls();
@@ -137,6 +141,9 @@ bool Viewer::on_expose_event(GdkEventExpose* event)
     glDisable(GL_TEXTURE_3D);
     glEnable(GL_TEXTURE_2D);
     cam->RenderLensFlare();
+    glMatrixMode(GL_PROJECTION);
+    glTranslated(0, 0, -20);
+    glMatrixMode(GL_MODELVIEW);
   }
 
   // Swap the contents of the front and back buffers so we see what we
@@ -377,33 +384,18 @@ void Viewer::keypress() {
 void Viewer::init_light() {
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
+  glEnable(GL_NORMALIZE);
   glEnable(GL_COLOR_MATERIAL);
 
   GLfloat ambient[] = {0.2, 0.2, 0.2, 1.0};
   // trying to make it like a sun
-  GLfloat position[] = {0, m_height, 0, 1.0};
+  GLfloat position[] = {0, 10.0, 0, 1.0};
   GLfloat mat_diffuse[] = {0.6, 0.6, 0.6, 1.0};
   GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
   GLfloat mat_shininess[] = {50.0};
   glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
   glLightfv(GL_LIGHT0, GL_POSITION, position);
-/*
-  glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
-  glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-  glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-*/
 
-  /*
-GLfloat white[] = {0.8f, 0.8f, 0.8f, 1.0f};
-GLfloat cyan[] = {0.f, .8f, .8f, 1.f};
-glMaterialfv(GL_FRONT, GL_DIFFUSE, cyan);
-glMaterialfv(GL_FRONT, GL_SPECULAR, white);
-GLfloat shininess[] = {50};
-glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
-*/
-
-
-/* from collision
   GLfloat ambientColor[] = {0.5f, 0.5f, 0.5f, 1.0f};
   glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
 
@@ -411,12 +403,10 @@ glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
   GLfloat lightPos[] = {0.0f, 0.0f, 0.0f, 1.0f};
   glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor);
   glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
-*/
 
 }
 
 void Viewer::fly_camera() {
-  glScaled(m_camera_scale[0], m_camera_scale[1], m_camera_scale[2]);
   glRotated(m_camera_rotate[0], 1, 0, 0);
   glRotated(m_camera_rotate[1], 0, 1, 0);
   glRotated(m_camera_rotate[2], 0, 0, 1);
@@ -613,7 +603,7 @@ void Viewer::toggle_balls() {
   if (SHOW_BALLS && !balls_inited) {
     _octree = new Octree(Vec3f(-BOX_SIZE / 2, -BOX_SIZE / 2, -BOX_SIZE / 2), Vec3f(BOX_SIZE / 2, BOX_SIZE / 2, BOX_SIZE / 2), 1);
     initBounceSounds();
-    createBalls(20);
+    createBalls(5);
     balls_inited = true;
   }
 }

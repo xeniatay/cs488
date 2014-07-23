@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 #include <GL/glu.h>
 #include "algebra.hpp"
+#include "glm.h"
 
 class Material {
 public:

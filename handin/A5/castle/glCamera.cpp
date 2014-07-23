@@ -33,9 +33,9 @@ glCamera::glCamera()
   m_PitchDegrees      = 0.0f;
   m_MaxForwardVelocity  = 0.0f;
   m_ForwardVelocity   = 0.0f;
-  m_LightSourcePos.x      = 8.0f;
-  m_LightSourcePos.y      = 10.0f;
-  m_LightSourcePos.z      = 10.0f;
+  m_LightSourcePos.x      = -8.0f;
+  m_LightSourcePos.y      = 5.0f;
+  m_LightSourcePos.z      = 1.0f;
   m_GlowTexture           = 0;
   m_HaloTexture     = 0;
   m_StreakTexture     = 0;

@@ -34,6 +34,7 @@ typedef struct _GLMnode {
     struct _GLMnode* next;
 } GLMnode;
 
+double GLM_CELSHADING_ALPHA = 1.0;
 
 /* glmMax: returns the maximum of two floats */
 static GLfloat
@@ -1962,5 +1963,5 @@ void set_celshading(GLfloat *glnormal) {
 
   double gray = shaderData[i][1];
   //cerr << gray << " | " ;
-  glColor4d( gray, gray, gray, 1);
+  glColor4d( gray, gray, gray, GLM_CELSHADING_ALPHA);
 }

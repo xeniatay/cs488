@@ -90,8 +90,6 @@ void Texture::init() {
 }
 
 void Texture::apply_gl() {
-  // if texture hasn't been inited, init it
-  init();
 
   if (m_mode == NONE) {
     return;
@@ -101,12 +99,16 @@ void Texture::apply_gl() {
     glDisable(GL_TEXTURE_3D);
     glEnable(GL_TEXTURE_2D);
   } else {
-    glBlendFunc(GL_ONE, GL_ZERO);
+    //glBlendFunc(GL_SRC_COLOR,GL_ZERO);
+    //glBlendFunc(GL_ONE, GL_ZERO);
+    glDisable(GL_BLEND);
     glBindTexture( GL_TEXTURE_3D, m_bindid );
     glDisable(GL_TEXTURE_2D);
     glEnable(GL_TEXTURE_3D);
   }
 
+  // if texture hasn't been inited, init it
+  init();
 }
 
 // from: http://www.nullterminator.net/gltexture.html

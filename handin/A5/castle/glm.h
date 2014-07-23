@@ -34,6 +34,8 @@
 #define GLM_MATERIAL (1 << 4)       /* render with materials */
 #define GLM_CELSHADING (1 << 5)       /* render with celshading */
 
+extern double GLM_CELSHADING_ALPHA;
+
 
 /* GLMmaterial: Structure that defines a material in a model.
  */

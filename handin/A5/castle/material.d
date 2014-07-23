@@ -94,4 +94,5 @@ material.o material.d : material.cpp material.hpp /usr/include/GL/glew.h \
  /usr/include/x86_64-linux-gnu/bits/inf.h \
  /usr/include/x86_64-linux-gnu/bits/nan.h \
  /usr/include/x86_64-linux-gnu/bits/mathdef.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls.h
+ /usr/include/x86_64-linux-gnu/bits/mathcalls.h glm.h \
+ /usr/include/GL/glut.h /usr/include/GL/freeglut_std.h
